@@ -1,0 +1,321 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getAllNews } from "../../lib/sanity";
+import { urlFor } from "../../lib/image";
+
+// --- Static paths -------------------------------------------------------
+// One page per news post. We fetch the full list once (it carries every
+// field the detail page needs) and pass each post + a few siblings as props,
+// so no per-page round-trip to Sanity is required.
+export async function getStaticPaths() {
+	const posts = (await getAllNews()) ?? [];
+	return posts
+		.filter((p: any) => p.slug)
+		.map((post: any) => ({
+			params: { slug: post.slug },
+			props: {
+				post,
+				// Up to 3 other posts for the "Related" section.
+				related: posts
+					.filter((p: any) => p.slug && p.slug !== post.slug)
+					.slice(0, 3),
+			},
+		}));
+}
+
+const { post, related } = Astro.props;
+
+// --- Portable Text -> HTML ---------------------------------------------
+// Minimal, dependency-free serializer for the `body` (blockContent) field —
+// same approach used on /research/[slug] and /services.
+const esc = (s: string) =>
+	s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const blockText = (block: any) =>
+	(block.children ?? []).map((c: any) => esc(c.text ?? "")).join("");
+
+function blocksToHtml(blocks: any): string {
+	if (!Array.isArray(blocks)) return "";
+	let html = "";
+	let listTag: "ul" | "ol" | null = null;
+	const closeList = () => {
+		if (listTag) {
+			html += `</${listTag}>`;
+			listTag = null;
+		}
+	};
+	for (const block of blocks) {
+		if (block?._type !== "block") continue;
+		const text = blockText(block);
+		if (!text.trim()) continue;
+		if (block.listItem) {
+			const tag = block.listItem === "number" ? "ol" : "ul";
+			if (listTag !== tag) {
+				closeList();
+				html += `<${tag} class="mt-4 space-y-2 ${
+					tag === "ol" ? "list-decimal" : "list-disc"
+				} pl-5 text-lg leading-relaxed text-stone-700">`;
+				listTag = tag;
+			}
+			html += `<li>${text}</li>`;
+			continue;
+		}
+		closeList();
+		if (typeof block.style === "string" && /^h[1-6]$/.test(block.style)) {
+			html += `<h2 class="mt-10 text-2xl font-bold text-stone-900">${text}</h2>`;
+		} else {
+			html += `<p class="mt-6 text-lg leading-relaxed text-stone-700">${text}</p>`;
+		}
+	}
+	closeList();
+	return html;
+}
+
+const bodyHtml = blocksToHtml(post.body);
+const author = post.author ?? null;
+
+const fmtDate = (d?: string) =>
+	d
+		? new Date(d).toLocaleDateString("en-GB", {
+				year: "numeric",
+				month: "long",
+				day: "numeric",
+			})
+		: null;
+const publishedLabel = fmtDate(post.publishedAt);
+
+// --- Share links --------------------------------------------------------
+// Built at request time from the canonical post URL. Placeholder buttons for
+// the common networks; wired to share intents where one exists.
+const shareUrl = new URL(`/news/${post.slug}`, Astro.site ?? Astro.url).href;
+const shareTitle = post.title ?? "Kuijpers Research Field";
+const shareLinks = [
+	{
+		label: "Share on LinkedIn",
+		href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`,
+		path: "M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2zM4 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4z",
+	},
+	{
+		label: "Share on X",
+		href: `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareTitle)}`,
+		path: "M18 2h3l-7 8 8 12h-6l-5-7-5 7H2l8-9L2 2h6l4 6z",
+	},
+	{
+		label: "Share by email",
+		href: `mailto:?subject=${encodeURIComponent(shareTitle)}&body=${encodeURIComponent(shareUrl)}`,
+		path: "M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM2 7l10 6 10-6",
+	},
+];
+---
+
+<BaseLayout
+	title={`${post.title} — News — Kuijpers Research Field`}
+	description={post.excerpt ?? `News from the Kuijpers Research Field.`}
+>
+	<!-- 1. Hero image -->
+	<section class="relative bg-stone-900 text-white">
+		{
+			post.mainImage && (
+				<div class="absolute inset-0">
+					<img
+						src={urlFor(post.mainImage)
+							.width(1920)
+							.height(720)
+							.fit("crop")
+							.url()}
+						alt={post.mainImage.alt ?? post.title}
+						class="h-full w-full object-cover opacity-30"
+						loading="eager"
+					/>
+					<div class="absolute inset-0 bg-gradient-to-t from-stone-900 via-stone-900/70 to-stone-900/40" />
+				</div>
+			)
+		}
+		<div class="relative mx-auto max-w-3xl px-4 py-24 sm:px-6 lg:px-8">
+			<nav class="mb-6 text-sm text-stone-300">
+				<a href="/news" class="transition-colors hover:text-white">
+					News
+				</a>
+				<span class="mx-2 text-stone-500">/</span>
+				<span class="text-stone-100">{post.title}</span>
+			</nav>
+
+			{
+				publishedLabel && (
+					<time
+						datetime={post.publishedAt}
+						class="text-sm font-medium text-brand-200"
+					>
+						{publishedLabel}
+					</time>
+				)
+			}
+
+			<h1
+				class="mt-3 text-4xl font-extrabold tracking-tight sm:text-5xl"
+			>
+				{post.title}
+			</h1>
+
+			{/* Author info */}
+			{
+				author && (
+					<div class="mt-8 flex items-center gap-3">
+						{author.photo ? (
+							<img
+								src={urlFor(author.photo)
+									.width(96)
+									.height(96)
+									.fit("crop")
+									.url()}
+								alt={author.name}
+								width="48"
+								height="48"
+								class="h-12 w-12 rounded-full object-cover ring-2 ring-white/20"
+								loading="eager"
+							/>
+						) : (
+							<div class="flex h-12 w-12 items-center justify-center rounded-full bg-brand-700 ring-2 ring-white/20">
+								<span class="text-lg font-bold text-white">
+									{(author.name ?? "?")
+										.charAt(0)
+										.toUpperCase()}
+								</span>
+							</div>
+						)}
+						<div>
+							<p class="text-sm font-semibold text-white">
+								{author.name}
+							</p>
+							{author.role && (
+								<p class="text-sm text-stone-300">
+									{author.role}
+								</p>
+							)}
+						</div>
+					</div>
+				)
+			}
+		</div>
+	</section>
+
+	<!-- 2. Body content -->
+	<section class="bg-white">
+		<div class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+			{
+				bodyHtml ? (
+					<article set:html={bodyHtml} />
+				) : post.excerpt ? (
+					<p class="text-lg leading-relaxed text-stone-700">
+						{post.excerpt}
+					</p>
+				) : (
+					<p class="text-stone-500">
+						The full story for this post is coming soon.
+					</p>
+				)
+			}
+
+			{/* Share buttons */}
+			<div
+				class="mt-12 flex items-center gap-3 border-t border-stone-200 pt-8"
+			>
+				<span class="text-sm font-semibold text-stone-700">Share:</span>
+				{
+					shareLinks.map((link) => (
+						<a
+							href={link.href}
+							target="_blank"
+							rel="noopener noreferrer"
+							aria-label={link.label}
+							class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-stone-200 text-stone-500 transition-colors hover:border-brand-600 hover:bg-brand-50 hover:text-brand-700"
+						>
+							<svg
+								class="h-5 w-5"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								aria-hidden="true"
+							>
+								<path d={link.path} />
+							</svg>
+						</a>
+					))
+				}
+			</div>
+		</div>
+	</section>
+
+	<!-- 3. Related posts -->
+	{
+		related.length > 0 && (
+			<section class="bg-stone-50">
+				<div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+					<div class="flex items-end justify-between">
+						<h2 class="text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl">
+							Related posts
+						</h2>
+						<a
+							href="/news"
+							class="hidden text-sm font-semibold text-brand-600 hover:text-brand-700 sm:inline"
+						>
+							View all →
+						</a>
+					</div>
+
+					<div class="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+						{related.map((rel: any) => (
+							<a
+								href={`/news/${rel.slug}`}
+								class="group flex flex-col overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm transition-shadow hover:shadow-md"
+							>
+								<div class="relative aspect-[16/9] w-full overflow-hidden bg-gradient-to-br from-brand-100 to-brand-50">
+									{rel.mainImage ? (
+										<img
+											src={urlFor(rel.mainImage)
+												.width(700)
+												.height(394)
+												.fit("crop")
+												.url()}
+											alt={rel.mainImage.alt ?? rel.title}
+											width="700"
+											height="394"
+											class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+											loading="lazy"
+										/>
+									) : (
+										<div class="flex h-full w-full items-center justify-center">
+											<span class="text-sm font-medium text-brand-400">
+												Kuijpers Research Field
+											</span>
+										</div>
+									)}
+								</div>
+								<div class="flex flex-1 flex-col p-6">
+									{rel.publishedAt && (
+										<time
+											datetime={rel.publishedAt}
+											class="text-sm text-stone-500"
+										>
+											{fmtDate(rel.publishedAt)}
+										</time>
+									)}
+									<h3 class="mt-2 text-lg font-semibold text-stone-900 group-hover:text-brand-700">
+										{rel.title}
+									</h3>
+									{rel.excerpt && (
+										<p class="mt-2 line-clamp-2 text-sm leading-relaxed text-stone-600">
+											{rel.excerpt}
+										</p>
+									)}
+								</div>
+							</a>
+						))}
+					</div>
+				</div>
+			</section>
+		)
+	}
+</BaseLayout>
