@@ -7,61 +7,20 @@ import { urlFor } from "../lib/image";
 const services = (await getAllServices()) ?? [];
 const advantages = (await getAllAdvantages()) ?? [];
 
-// --- Portable Text -> HTML ---------------------------------------------
-// Minimal, dependency-free serializer for the `body` (blockContent) field.
-// Handles paragraphs, headings and bullet/number lists — enough for the
-// "full description" of a service. Rich marks/embeds are flattened to text.
-const esc = (s: string) =>
-	s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-const blockText = (block: any) =>
-	(block.children ?? []).map((c: any) => esc(c.text ?? "")).join("");
-
-function blocksToHtml(blocks: any): string {
-	if (!Array.isArray(blocks)) return "";
-	let html = "";
-	let listTag: "ul" | "ol" | null = null;
-	const closeList = () => {
-		if (listTag) {
-			html += `</${listTag}>`;
-			listTag = null;
-		}
-	};
-	for (const block of blocks) {
-		if (block?._type !== "block") continue;
-		const text = blockText(block);
-		if (!text.trim()) continue;
-		if (block.listItem) {
-			const tag = block.listItem === "number" ? "ol" : "ul";
-			if (listTag !== tag) {
-				closeList();
-				html += `<${tag} class="mt-4 space-y-2 ${
-					tag === "ol" ? "list-decimal" : "list-disc"
-				} pl-5 text-base leading-relaxed text-stone-600">`;
-				listTag = tag;
-			}
-			html += `<li>${text}</li>`;
-			continue;
-		}
-		closeList();
-		if (typeof block.style === "string" && /^h[1-6]$/.test(block.style)) {
-			html += `<h3 class="mt-6 text-xl font-semibold text-stone-900">${text}</h3>`;
-		} else {
-			html += `<p class="mt-4 text-base leading-relaxed text-stone-600">${text}</p>`;
-		}
-	}
-	closeList();
-	return html;
-}
-
-// Fallback Lucide-style icon (sparkle) when a service has no `icon` image.
-const defaultIcon =
-	'<path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .962 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.582a.5.5 0 0 1 0 .962L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.962 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/>';
-
-// `target audience` has no dedicated CMS field yet — use a sensible default
-// so the layout stays complete. Promote to a Sanity field when content needs
-// per-service audiences.
+// `target audience` has no dedicated CMS field yet — derive it from the
+// service title via keyword match, with a sensible default. Promote to a
+// Sanity field when content needs richer per-service audiences.
 const defaultAudience =
 	"Researchers, suppliers and producers working to improve poultry production.";
+
+const audienceFor = (title: string = "") => {
+	const t = title.toLowerCase();
+	if (t.includes("integrated")) return "Suppliers and innovation partners";
+	if (t.includes("optimization") || t.includes("optimisation"))
+		return "Processors and purchasers";
+	if (t.includes("digital twin")) return "Researchers and academia";
+	return defaultAudience;
+};
 
 // --- Process steps ------------------------------------------------------
 const steps = [
@@ -143,16 +102,31 @@ const comparison = [
 	description="Digital twin services for poultry production — from trial design and real-time monitoring to independent validation — and why teams choose Kuijpers Research Field."
 >
 	<!-- 1. Hero -->
-	<section class="bg-stone-50">
-		<div class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+	<section class="relative overflow-hidden bg-stone-900">
+		<!-- Full-bleed background photograph -->
+		<img
+			src="/images/service-hero.png"
+			alt=""
+			aria-hidden="true"
+			class="absolute inset-0 h-full w-full object-cover"
+			loading="eager"
+		/>
+		<!-- Cinematic dark overlay for legibility -->
+		<div
+			class="absolute inset-0 bg-gradient-to-b from-stone-950/70 via-stone-950/55 to-stone-950/75"
+		>
+		</div>
+		<div
+			class="relative mx-auto max-w-7xl px-4 py-28 sm:px-6 sm:py-32 lg:px-8"
+		>
 			<div class="mx-auto max-w-3xl text-center">
 				<h1
-					class="text-4xl font-extrabold tracking-tight text-stone-900 sm:text-5xl lg:text-6xl"
+					class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl"
 				>
 					Our Services
 				</h1>
 				<p
-					class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-stone-600 sm:text-xl"
+					class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-stone-200 sm:text-xl"
 				>
 					From trial design to real-time monitoring, we help you test
 					and validate interventions in a controlled, data-rich
@@ -163,141 +137,121 @@ const comparison = [
 		</div>
 	</section>
 
-	<!-- 2. Service sections (alternating layout) -->
-	{
-		services.length > 0 ? (
-			services.map((service: any, i: number) => {
-				const bodyHtml = blocksToHtml(service.body);
-				const imageFirst = i % 2 === 1; // alternate: image right on odd
-				return (
-					<section class={i % 2 === 0 ? "bg-white" : "bg-stone-50"}>
-						<div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-							<div class="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
-								{/* Text column */}
-								<div class={imageFirst ? "lg:order-2" : "lg:order-1"}>
-									<div class="flex h-12 w-12 items-center justify-center overflow-hidden rounded-lg bg-brand-50 text-brand-600">
-										{service.icon ? (
-											<img
-												src={urlFor(service.icon)
-													.width(96)
-													.height(96)
-													.fit("crop")
-													.url()}
-												alt=""
-												width="48"
-												height="48"
-												class="h-full w-full object-cover"
-												loading="lazy"
-											/>
-										) : (
-											<svg
-												class="h-6 w-6"
-												viewBox="0 0 24 24"
-												fill="none"
-												stroke="currentColor"
-												stroke-width="2"
-												stroke-linecap="round"
-												stroke-linejoin="round"
-												aria-hidden="true"
-												set:html={defaultIcon}
-											/>
-										)}
+	<!-- 1b. Intro block -->
+	<section class="bg-stone-50">
+		<div class="mx-auto max-w-3xl px-4 py-24 text-center sm:px-6 lg:px-8 lg:py-28">
+			<span
+				class="text-sm font-semibold uppercase tracking-[0.15em] text-brand-600"
+			>
+				What We Do
+			</span>
+			<h2
+				class="mt-5 text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl lg:text-[3.25rem] lg:leading-[1.1]"
+			>
+				Built for <span class="text-brand-600">the questions</span> you can't
+				ask a live barn.
+			</h2>
+			<p
+				class="mx-auto mt-6 max-w-[680px] text-lg leading-[1.65] text-stone-600"
+			>
+				Whether you're validating a feed innovation, optimizing a supply
+				chain, or designing a multi-year research program, we run the full
+				process inside the research field — from first hypothesis to final,
+				publication-grade result.
+			</p>
+		</div>
+	</section>
+
+	<!-- 2. Service cards (grid layout) -->
+	<section class="bg-white">
+		<div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+			{
+				services.length > 0 ? (
+					<div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+						{services.map((service: any) => (
+							<div class="flex flex-col overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm transition-shadow hover:shadow-md">
+								{/* Image */}
+								{service.image ? (
+									<img
+										src={urlFor(service.image)
+											.width(720)
+											.height(432)
+											.fit("crop")
+											.url()}
+										alt={service.image.alt ?? service.title}
+										width="720"
+										height="432"
+										class="aspect-[5/3] w-full object-cover"
+										loading="lazy"
+									/>
+								) : (
+									<div class="flex aspect-[5/3] w-full items-center justify-center bg-gradient-to-br from-brand-100 to-brand-50">
+										<span class="text-sm font-medium text-brand-400">
+											Kuijpers Research Field
+										</span>
 									</div>
-									<h2 class="mt-5 text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl">
+								)}
+
+								{/* Body */}
+								<div class="flex flex-1 flex-col p-6">
+									<h2 class="text-xl font-semibold text-stone-900">
 										{service.title}
 									</h2>
 
-									{bodyHtml ? (
-										<div set:html={bodyHtml} />
-									) : (
-										service.shortDescription && (
-											<p class="mt-4 text-base leading-relaxed text-stone-600">
-												{service.shortDescription}
-											</p>
-										)
+									{service.shortDescription && (
+										<p class="mt-3 text-base leading-relaxed text-stone-600">
+											{service.shortDescription}
+										</p>
 									)}
 
-									{/* Target audience */}
-									<div class="mt-6 rounded-lg border border-stone-200 bg-white/60 p-4">
+									{/* Key features */}
+									{Array.isArray(service.features) &&
+										service.features.length > 0 && (
+											<ul class="mt-5 space-y-2">
+												{service.features.map(
+													(feature: string) => (
+														<li class="flex items-start gap-2 text-sm leading-relaxed text-stone-700">
+															<svg
+																class="mt-0.5 h-4 w-4 flex-shrink-0 text-brand-600"
+																viewBox="0 0 24 24"
+																fill="none"
+																stroke="currentColor"
+																stroke-width="2"
+																stroke-linecap="round"
+																stroke-linejoin="round"
+																aria-hidden="true"
+															>
+																<path d="M20 6 9 17l-5-5" />
+															</svg>
+															<span>{feature}</span>
+														</li>
+													),
+												)}
+											</ul>
+										)}
+
+									{/* Who it's for */}
+									<div class="mt-auto pt-6">
 										<p class="text-xs font-semibold uppercase tracking-wider text-brand-600">
 											Who it's for
 										</p>
-										<p class="mt-1 text-sm leading-relaxed text-stone-600">
-											{defaultAudience}
+										<p class="mt-1 text-sm leading-relaxed text-stone-500">
+											{audienceFor(service.title)}
 										</p>
 									</div>
-
-									{/* Outcomes / key features */}
-									{Array.isArray(service.features) &&
-										service.features.length > 0 && (
-											<div class="mt-6">
-												<p class="text-xs font-semibold uppercase tracking-wider text-stone-500">
-													What you get
-												</p>
-												<ul class="mt-3 space-y-2">
-													{service.features.map(
-														(feature: string) => (
-															<li class="flex items-start gap-2 text-base leading-relaxed text-stone-700">
-																<svg
-																	class="mt-1 h-5 w-5 flex-shrink-0 text-brand-600"
-																	viewBox="0 0 24 24"
-																	fill="none"
-																	stroke="currentColor"
-																	stroke-width="2"
-																	stroke-linecap="round"
-																	stroke-linejoin="round"
-																	aria-hidden="true"
-																>
-																	<path d="M20 6 9 17l-5-5" />
-																</svg>
-																<span>{feature}</span>
-															</li>
-														),
-													)}
-												</ul>
-											</div>
-										)}
-								</div>
-
-								{/* Image column */}
-								<div class={imageFirst ? "lg:order-1" : "lg:order-2"}>
-									{service.image ? (
-										<img
-											src={urlFor(service.image)
-												.width(900)
-												.height(700)
-												.fit("crop")
-												.url()}
-											alt={service.image.alt ?? service.title}
-											width="900"
-											height="700"
-											class="aspect-[9/7] w-full rounded-xl object-cover shadow-sm"
-											loading="lazy"
-										/>
-									) : (
-										<div class="flex aspect-[9/7] w-full items-center justify-center rounded-xl bg-gradient-to-br from-brand-100 to-brand-50 shadow-sm">
-											<span class="text-sm font-medium text-brand-400">
-												Kuijpers Research Field
-											</span>
-										</div>
-									)}
 								</div>
 							</div>
-						</div>
-					</section>
-				);
-			})
-		) : (
-			<section class="bg-white">
-				<div class="mx-auto max-w-7xl px-4 py-20 text-center sm:px-6 lg:px-8">
-					<p class="text-stone-500">
+						))}
+					</div>
+				) : (
+					<p class="text-center text-stone-500">
 						Service details are coming soon — get in touch and we'll
 						walk you through what we offer.
 					</p>
-				</div>
-			</section>
-		)
-	}
+				)
+			}
+		</div>
+	</section>
 
 	<!-- 3. Process -->
 	<section class="bg-brand-950 text-white">
@@ -373,7 +327,7 @@ const comparison = [
 		</div>
 	</section>
 
-	<!-- 5. Comparison table -->
+	<!-- 5. The Difference (side-by-side comparison) -->
 	<section class="bg-stone-50">
 		<div class="mx-auto max-w-5xl px-4 py-20 sm:px-6 lg:px-8">
 			<div class="mx-auto max-w-2xl text-center">
@@ -389,70 +343,82 @@ const comparison = [
 				</h2>
 			</div>
 
-			<div
-				class="mt-12 overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm"
-			>
-				<table class="w-full border-collapse text-left">
-					<thead>
-						<tr class="bg-stone-100">
-							<th
-								class="hidden px-6 py-4 text-sm font-semibold uppercase tracking-wider text-stone-500 sm:table-cell"
-							>
-							</th>
-							<th
-								class="px-6 py-4 text-sm font-semibold text-stone-600"
-							>
-								Traditional consulting
-							</th>
-							<th
-								class="px-6 py-4 text-sm font-semibold text-brand-700"
-							>
-								Kuijpers approach
-							</th>
-						</tr>
-					</thead>
-					<tbody>
-						{
-							comparison.map((row, i) => (
-								<tr
-									class={
-										i % 2 === 0 ? "bg-white" : "bg-stone-50/60"
-									}
+			<div class="mt-12 grid items-stretch gap-6 lg:grid-cols-2 lg:gap-8">
+				<!-- Traditional consulting -->
+				<div
+					class="flex flex-col rounded-2xl border border-stone-200 bg-white p-8 shadow-sm"
+				>
+					<h3 class="text-lg font-semibold text-stone-500">
+						Traditional consulting
+					</h3>
+					<ul class="mt-6 space-y-5">
+						{comparison.map((row) => (
+							<li class="flex items-start gap-3">
+								<svg
+									class="mt-0.5 h-5 w-5 flex-shrink-0 text-stone-300"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2.5"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									aria-hidden="true"
 								>
-									<th
-										scope="row"
-										class="hidden px-6 py-5 align-top text-sm font-semibold text-stone-900 sm:table-cell"
-									>
+									<path d="M18 6 6 18" />
+									<path d="m6 6 12 12" />
+								</svg>
+								<div>
+									<p class="text-xs font-semibold uppercase tracking-wider text-stone-400">
 										{row.aspect}
-									</th>
-									<td class="px-6 py-5 align-top text-sm leading-relaxed text-stone-600">
-										<span class="mb-1 block font-semibold text-stone-900 sm:hidden">
-											{row.aspect}
-										</span>
+									</p>
+									<p class="mt-0.5 text-base leading-relaxed text-stone-500">
 										{row.traditional}
-									</td>
-									<td class="px-6 py-5 align-top text-sm font-medium leading-relaxed text-stone-800">
-										<span class="inline-flex items-start gap-2">
-											<svg
-												class="mt-0.5 h-4 w-4 flex-shrink-0 text-brand-600"
-												viewBox="0 0 24 24"
-												fill="none"
-												stroke="currentColor"
-												stroke-width="2.5"
-												stroke-linecap="round"
-												stroke-linejoin="round"
-												aria-hidden="true"
-											>
-												<path d="M20 6 9 17l-5-5" />
-											</svg>
-											<span>{row.kuijpers}</span>
-										</span>
-									</td>
-								</tr>
-							))
-						}
-					</tbody>
-				</table>
+									</p>
+								</div>
+							</li>
+						))}
+					</ul>
+				</div>
+
+				<!-- The Kuijpers approach (elevated) -->
+				<div
+					class="relative flex flex-col rounded-2xl bg-brand-700 p-8 text-white shadow-xl ring-1 ring-brand-600 lg:-translate-y-2"
+				>
+					<span
+						class="absolute right-6 top-6 inline-flex items-center rounded-full bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white"
+					>
+						Our approach
+					</span>
+					<h3 class="text-lg font-bold text-white">
+						The Kuijpers approach
+					</h3>
+					<ul class="mt-6 space-y-5">
+						{comparison.map((row) => (
+							<li class="flex items-start gap-3">
+								<svg
+									class="mt-0.5 h-5 w-5 flex-shrink-0 text-white"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2.5"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									aria-hidden="true"
+								>
+									<path d="M20 6 9 17l-5-5" />
+								</svg>
+								<div>
+									<p class="text-xs font-semibold uppercase tracking-wider text-brand-200">
+										{row.aspect}
+									</p>
+									<p class="mt-0.5 text-base font-medium leading-relaxed text-white">
+										{row.kuijpers}
+									</p>
+								</div>
+							</li>
+						))}
+					</ul>
+				</div>
 			</div>
 		</div>
 	</section>

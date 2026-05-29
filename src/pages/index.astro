@@ -4,7 +4,7 @@ import {
 	getAllServices,
 	getAllResearchProjects,
 	getAllAdvantages,
-	getAllNews,
+	getAllPublications,
 } from "../lib/sanity";
 import { urlFor } from "../lib/image";
 
@@ -12,36 +12,41 @@ import { urlFor } from "../lib/image";
 const services = (await getAllServices()) ?? [];
 const allResearch = (await getAllResearchProjects()) ?? [];
 const advantages = (await getAllAdvantages()) ?? [];
-const allNews = (await getAllNews()) ?? [];
+const allPublications = (await getAllPublications()) ?? [];
 
 // Featured research: 3 most recent (query is already ordered).
 const featuredResearch = allResearch.slice(0, 3);
-// Latest news: 3 most recent (query is already ordered).
-const latestNews = allNews.slice(0, 3);
+// Latest publications: 3 most recent (query is already ordered).
+const latestPublications = allPublications.slice(0, 3);
 
-// --- Lucide-style icon map ---------------------------------------------
-// Inner SVG markup keyed by the `icon` string stored on each service.
-// Rendered inside a <svg fill="none" stroke="currentColor"> wrapper below.
-// Unknown / missing keys fall back to `default`.
-const icons: Record<string, string> = {
-	users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
-	database:
-		'<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/>',
-	cpu: '<rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M15 2v2M15 20v2M2 15h2M2 9h2M20 15h2M20 9h2M9 2v2M9 20v2"/>',
-	leaf: '<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>',
-	chart: '<path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>',
-	"bar-chart":
-		'<path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>',
-	"line-chart": '<path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/>',
-	beaker: '<path d="M4.5 3h15"/><path d="M6 3v16a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V3"/><path d="M6 14h12"/>',
-	flask: '<path d="M8.5 2h7"/><path d="M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2"/><path d="M6.453 15h11.094"/>',
-	microscope:
-		'<path d="M6 18h8"/><path d="M3 22h18"/><path d="M14 22a7 7 0 1 0 0-14h-1"/><path d="M9 14h2"/><path d="M9 6h.01"/><path d="M8 6h8a1 1 0 0 1 1 1v2H7V7a1 1 0 0 1 1-1Z"/>',
-	default:
-		'<path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .962 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.582a.5.5 0 0 1 0 .962L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.962 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/>',
+// --- Publication helpers ------------------------------------------------
+const TYPE_META: Record<string, { label: string; badge: string }> = {
+	paper: { label: "Paper", badge: "bg-brand-100 text-brand-800 ring-brand-600/20" },
+	report: {
+		label: "Report",
+		badge: "bg-emerald-100 text-emerald-800 ring-emerald-600/20",
+	},
+	article: {
+		label: "Article",
+		badge: "bg-amber-100 text-amber-800 ring-amber-600/20",
+	},
 };
-const iconMarkup = (key?: string | null) =>
-	icons[(key ?? "").toLowerCase()] ?? icons.default;
+const typeMeta = (type: string) =>
+	TYPE_META[type] ?? {
+		label: type ?? "Other",
+		badge: "bg-stone-100 text-stone-700 ring-stone-500/20",
+	};
+
+// Combine linked team authors and free-text authors into one byline.
+const authorNames = (pub: any): string => {
+	const team = (pub.teamAuthors ?? []).map((a: any) => a?.name).filter(Boolean);
+	const free = Array.isArray(pub.authors)
+		? pub.authors.filter(Boolean)
+		: pub.authors
+			? [pub.authors]
+			: [];
+	return [...team, ...free].join(", ");
+};
 
 // Status badge styling for research cards.
 const statusStyles: Record<string, string> = {
@@ -77,38 +82,96 @@ const formatDate = (value?: string) =>
 	description="Digital twin technology for smarter, healthier and more sustainable poultry production."
 >
 	<!-- 1. Hero -->
-	<section class="bg-stone-50">
-		<div class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
-			<div class="mx-auto max-w-3xl text-center">
+	<section class="relative overflow-hidden bg-stone-900">
+		<!-- Full-bleed background photograph -->
+		<img
+			src="/images/hero.png"
+			alt=""
+			aria-hidden="true"
+			class="absolute inset-0 h-full w-full object-cover"
+			loading="eager"
+		/>
+		<!-- Cinematic dark overlay for legibility (stronger on the left) -->
+		<div
+			class="absolute inset-0 bg-gradient-to-r from-stone-950/70 via-stone-950/45 to-stone-900/20"
+		>
+		</div>
+		<div
+			class="absolute inset-0 bg-gradient-to-t from-stone-950/55 via-transparent to-stone-950/15"
+		>
+		</div>
+
+		<!-- Digital-twin accent: thin data lines + glowing measurement points -->
+		<svg
+			class="pointer-events-none absolute inset-0 h-full w-full text-brand-400"
+			viewBox="0 0 1200 600"
+			preserveAspectRatio="xMidYMid slice"
+			fill="none"
+			aria-hidden="true"
+		>
+			<g stroke="currentColor" stroke-width="1" opacity="0.25">
+				<path d="M0 120 H1200" />
+				<path d="M0 300 H1200" />
+				<path d="M0 480 H1200" />
+				<path d="M820 0 L1050 600" />
+				<path d="M980 0 L760 600" />
+			</g>
+			<g fill="currentColor">
+				<circle cx="820" cy="120" r="4" class="hero-node" />
+				<circle cx="1050" cy="300" r="4" class="hero-node hero-node-2" />
+				<circle cx="760" cy="480" r="4" class="hero-node hero-node-3" />
+				<circle cx="980" cy="300" r="3" class="hero-node hero-node-2" />
+			</g>
+		</svg>
+
+		<div
+			class="relative mx-auto max-w-7xl px-4 py-28 sm:px-6 sm:py-32 lg:px-8 lg:py-40"
+		>
+			<div class="max-w-3xl">
 				<h1
-					class="text-4xl font-extrabold tracking-tight text-stone-900 sm:text-5xl lg:text-6xl"
+					class="text-4xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl"
 				>
-					Digital twin technology for sustainable poultry
-					production
+					Two barns. One real. One digital. Both telling the truth.
 				</h1>
 				<p
-					class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-stone-600 sm:text-xl"
+					class="mt-6 max-w-[640px] text-lg leading-[1.65] text-stone-200 sm:text-xl"
 				>
-					We build virtual replicas of poultry production systems that
-					turn real-time data into actionable insight — advancing
-					animal welfare, efficiency and sustainability with
-					research-grade technology.
+					We test feed, housing, climate, and welfare interventions inside
+					a fully instrumented research field — paired with a digital twin
+					that captures every variable in real time. By the time an idea
+					leaves us, it's already proven.
 				</p>
-				<div
-					class="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
-				>
+				<div class="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center">
 					<a
-						href="/research"
-						class="w-full rounded-lg bg-brand-600 px-6 py-3 text-center text-base font-semibold text-white shadow-sm transition-colors hover:bg-brand-700 sm:w-auto"
+						href="/services"
+						class="w-full rounded-lg bg-brand-600 px-7 py-3.5 text-center text-base font-semibold text-white shadow-sm transition-colors hover:bg-brand-700 sm:w-auto"
 					>
-						Explore Our Research
+						See How It Works
 					</a>
 					<a
 						href="/contact"
-						class="w-full rounded-lg border border-stone-300 bg-white px-6 py-3 text-center text-base font-semibold text-stone-700 transition-colors hover:bg-stone-100 sm:w-auto"
+						class="w-full rounded-lg border border-white/40 px-7 py-3.5 text-center text-base font-semibold text-white transition-colors hover:bg-white/10 sm:w-auto"
 					>
-						Get in Touch
+						Start a Project
 					</a>
+				</div>
+
+				<!-- Live indicator -->
+				<div
+					class="mt-8 flex items-center gap-2.5 text-sm text-stone-300"
+				>
+					<span class="relative flex h-2.5 w-2.5">
+						<span
+							class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"
+						></span>
+						<span
+							class="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400"
+						></span>
+					</span>
+					<span>
+						<span class="font-semibold text-stone-100">Live:</span> 47
+						variables measured · Updated 12 seconds ago
+					</span>
 				</div>
 			</div>
 		</div>
@@ -125,16 +188,14 @@ const formatDate = (value?: string) =>
 			<h2
 				class="mt-4 text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl"
 			>
-				Bridging science and practice for a more sustainable food
-				system
+				Turning data into decisions the whole chain can trust.
 			</h2>
 			<p class="mt-6 text-lg leading-relaxed text-stone-600">
-				Kuijpers Research Field unites cutting-edge digital twin
-				technology with hands-on poultry expertise. By validating
-				interventions in a controlled, data-rich environment, we help
-				researchers, suppliers and producers make decisions that improve
-				animal welfare, reduce environmental impact and strengthen the
-				entire broiler value chain.
+				We advance animal welfare, production efficiency, and
+				environmental sustainability by transforming real-time data from
+				the poultry chain into validated, actionable insight — insight
+				that producers, suppliers, and policymakers can act on with
+				confidence.
 			</p>
 		</div>
 	</section>
@@ -160,32 +221,41 @@ const formatDate = (value?: string) =>
 			>
 				{
 					services.map((service: any) => (
-						<div class="flex flex-col rounded-xl border border-stone-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
-							<div class="flex h-12 w-12 items-center justify-center rounded-lg bg-brand-50 text-brand-600">
-								<svg
-									class="h-6 w-6"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="2"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									aria-hidden="true"
-									set:html={iconMarkup(service.icon)}
+						<div class="flex flex-col overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm transition-shadow hover:shadow-md">
+							{service.image ? (
+								<img
+									src={urlFor(service.image)
+										.width(600)
+										.height(360)
+										.fit("crop")
+										.url()}
+									alt={service.image.alt ?? service.title}
+									width="600"
+									height="360"
+									class="aspect-[5/3] w-full object-cover"
+									loading="lazy"
 								/>
+							) : (
+								<div class="flex aspect-[5/3] w-full items-center justify-center bg-gradient-to-br from-brand-100 to-brand-50">
+									<span class="text-sm font-medium text-brand-400">
+										Kuijpers Research Field
+									</span>
+								</div>
+							)}
+							<div class="flex flex-1 flex-col p-6">
+								<h3 class="text-lg font-semibold text-stone-900">
+									{service.title}
+								</h3>
+								<p class="mt-2 flex-1 text-sm leading-relaxed text-stone-600">
+									{service.shortDescription}
+								</p>
+								<a
+									href="/services"
+									class="mt-4 inline-flex items-center text-sm font-semibold text-brand-600 transition-colors hover:text-brand-700"
+								>
+									Learn more &rarr;
+								</a>
 							</div>
-							<h3 class="mt-5 text-lg font-semibold text-stone-900">
-								{service.title}
-							</h3>
-							<p class="mt-2 flex-1 text-sm leading-relaxed text-stone-600">
-								{service.shortDescription}
-							</p>
-							<a
-								href="/services"
-								class="mt-4 inline-flex items-center text-sm font-semibold text-brand-600 transition-colors hover:text-brand-700"
-							>
-								Learn more &rarr;
-							</a>
 						</div>
 					))
 				}
@@ -321,70 +391,85 @@ const formatDate = (value?: string) =>
 		</div>
 	</section>
 
-	<!-- 7. News teasers -->
+	<!-- 7. Latest publications -->
 	<section class="bg-stone-50">
 		<div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
 			<div class="mx-auto max-w-2xl text-center">
 				<span
 					class="text-sm font-semibold uppercase tracking-wider text-brand-600"
 				>
-					Latest News
+					Latest Publications
 				</span>
 				<h2
 					class="mt-4 text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl"
 				>
-					From the field
+					The validated science
 				</h2>
 			</div>
 
 			{
-				latestNews.length > 0 ? (
+				latestPublications.length > 0 ? (
 					<div class="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-3">
-						{latestNews.map((post: any) => (
-							<a
-								href={`/news/${post.slug}`}
-								class="group flex flex-col overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm transition-shadow hover:shadow-md"
-							>
-								{post.mainImage ? (
-									<img
-										src={urlFor(post.mainImage)
-											.width(700)
-											.height(400)
-											.fit("crop")
-											.url()}
-										alt={post.title}
-										width="700"
-										height="400"
-										class="aspect-[7/4] w-full object-cover"
-										loading="lazy"
-									/>
-								) : (
-									<div class="aspect-[7/4] w-full bg-gradient-to-br from-stone-200 to-stone-100" />
-								)}
-								<div class="flex flex-1 flex-col p-6">
-									<time class="text-xs font-medium uppercase tracking-wider text-stone-500">
-										{formatDate(post.publishedAt)}
-									</time>
-									<h3 class="mt-2 text-lg font-semibold text-stone-900 transition-colors group-hover:text-brand-700">
-										{post.title}
+						{latestPublications.map((pub: any) => {
+							const meta = typeMeta(pub.publicationType);
+							const authors = authorNames(pub);
+							const href = pub.pdfUrl ?? pub.url ?? "/publications";
+							const external = Boolean(pub.pdfUrl ?? pub.url);
+							return (
+								<a
+									href={href}
+									target={external ? "_blank" : undefined}
+									rel={external ? "noopener noreferrer" : undefined}
+									class="group flex flex-col rounded-xl border border-stone-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
+								>
+									<div class="flex flex-wrap items-center gap-3">
+										<span
+											class={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ring-1 ring-inset ${meta.badge}`}
+										>
+											{meta.label}
+										</span>
+										{pub.publicationDate && (
+											<time class="text-xs font-medium uppercase tracking-wider text-stone-500">
+												{formatDate(pub.publicationDate)}
+											</time>
+										)}
+									</div>
+									<h3 class="mt-3 text-lg font-semibold text-stone-900 transition-colors group-hover:text-brand-700">
+										{pub.title}
 									</h3>
-									<p class="mt-2 flex-1 text-sm leading-relaxed text-stone-600">
-										{post.excerpt}
-									</p>
+									{authors && (
+										<p class="mt-1 text-sm font-medium text-stone-600">
+											{authors}
+										</p>
+									)}
+									{pub.venue && (
+										<p class="mt-1 flex-1 text-sm italic text-stone-500">
+											{pub.venue}
+										</p>
+									)}
 									<span class="mt-4 inline-flex items-center text-sm font-semibold text-brand-600">
-										Read more &rarr;
+										{external ? "Read publication" : "View publication"}{" "}
+										&rarr;
 									</span>
-								</div>
-							</a>
-						))}
+								</a>
+							);
+						})}
 					</div>
 				) : (
 					<p class="mt-12 text-center text-stone-500">
-						No news yet — check back soon for updates from the
-						research field.
+						Publications are coming soon — check back shortly.
 					</p>
 				)
 			}
+
+			<div class="mt-12 text-center">
+				<a
+					href="/publications"
+					class="inline-flex items-center text-base font-semibold text-brand-600 transition-colors hover:text-brand-700"
+				>
+					See all publications &rarr;
+				</a>
+			</div>
 		</div>
 	</section>
 
@@ -413,3 +498,32 @@ const formatDate = (value?: string) =>
 		</div>
 	</section>
 </BaseLayout>
+
+<style>
+	/* Softly glowing/pulsing measurement points on the hero data overlay. */
+	.hero-node {
+		animation: hero-glow 3s ease-in-out infinite;
+		filter: drop-shadow(0 0 4px currentColor);
+	}
+	.hero-node-2 {
+		animation-delay: 1s;
+	}
+	.hero-node-3 {
+		animation-delay: 2s;
+	}
+	@keyframes hero-glow {
+		0%,
+		100% {
+			opacity: 0.35;
+		}
+		50% {
+			opacity: 1;
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.hero-node {
+			animation: none;
+			opacity: 0.7;
+		}
+	}
+</style>
