@@ -1,0 +1,509 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getAllServices, getAllAdvantages } from "../lib/sanity";
+import { urlFor } from "../lib/image";
+
+// --- Data fetching ------------------------------------------------------
+const services = (await getAllServices()) ?? [];
+const advantages = (await getAllAdvantages()) ?? [];
+
+// --- Portable Text -> HTML ---------------------------------------------
+// Minimal, dependency-free serializer for the `body` (blockContent) field.
+// Handles paragraphs, headings and bullet/number lists — enough for the
+// "full description" of a service. Rich marks/embeds are flattened to text.
+const esc = (s: string) =>
+	s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const blockText = (block: any) =>
+	(block.children ?? []).map((c: any) => esc(c.text ?? "")).join("");
+
+function blocksToHtml(blocks: any): string {
+	if (!Array.isArray(blocks)) return "";
+	let html = "";
+	let listTag: "ul" | "ol" | null = null;
+	const closeList = () => {
+		if (listTag) {
+			html += `</${listTag}>`;
+			listTag = null;
+		}
+	};
+	for (const block of blocks) {
+		if (block?._type !== "block") continue;
+		const text = blockText(block);
+		if (!text.trim()) continue;
+		if (block.listItem) {
+			const tag = block.listItem === "number" ? "ol" : "ul";
+			if (listTag !== tag) {
+				closeList();
+				html += `<${tag} class="mt-4 space-y-2 ${
+					tag === "ol" ? "list-decimal" : "list-disc"
+				} pl-5 text-base leading-relaxed text-stone-600">`;
+				listTag = tag;
+			}
+			html += `<li>${text}</li>`;
+			continue;
+		}
+		closeList();
+		if (typeof block.style === "string" && /^h[1-6]$/.test(block.style)) {
+			html += `<h3 class="mt-6 text-xl font-semibold text-stone-900">${text}</h3>`;
+		} else {
+			html += `<p class="mt-4 text-base leading-relaxed text-stone-600">${text}</p>`;
+		}
+	}
+	closeList();
+	return html;
+}
+
+// Fallback Lucide-style icon (sparkle) when a service has no `icon` image.
+const defaultIcon =
+	'<path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .962 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.582a.5.5 0 0 1 0 .962L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.962 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/>';
+
+// `target audience` has no dedicated CMS field yet — use a sensible default
+// so the layout stays complete. Promote to a Sanity field when content needs
+// per-service audiences.
+const defaultAudience =
+	"Researchers, suppliers and producers working to improve poultry production.";
+
+// --- Process steps ------------------------------------------------------
+const steps = [
+	{
+		title: "Discovery",
+		body: "We start by understanding your question, constraints and success criteria — mapping what you want to learn or validate before any sensors are placed.",
+	},
+	{
+		title: "Design",
+		body: "We design the trial and its digital twin together: housing, instrumentation, data pipelines and the analysis plan that will produce defensible results.",
+	},
+	{
+		title: "Implementation",
+		body: "We run the intervention in our instrumented research field, capturing real-time data while the digital twin mirrors conditions throughout the cycle.",
+	},
+	{
+		title: "Monitoring",
+		body: "We continuously monitor, validate and report — turning raw signals into clear, independently verifiable insight you can act on with confidence.",
+	},
+];
+
+// --- "Why us" stat blocks ----------------------------------------------
+// The advantage schema has no numeric `stat` field, so we supply positional
+// fallbacks to keep the stat grid visually balanced (same approach as the
+// homepage advantages strip). Promote `stat` to a Sanity field to make these
+// CMS-driven.
+const statFallbacks = [
+	{ stat: "20%", description: "Lower feed conversion ratio." },
+	{ stat: "24/7", description: "Continuous real-time monitoring." },
+	{ stat: "100%", description: "Independently validated results." },
+	{ stat: "3×", description: "Faster intervention testing." },
+];
+const statBlocks = Array.from({ length: 4 }).map((_, i) => {
+	const a = advantages[i];
+	return {
+		stat: a?.stat ?? statFallbacks[i].stat,
+		title: a?.title ?? statFallbacks[i].description,
+		description: a?.description ?? statFallbacks[i].description,
+	};
+});
+
+// --- Comparison rows ----------------------------------------------------
+const comparison = [
+	{
+		aspect: "Evidence",
+		traditional: "Opinion and benchmarks from elsewhere",
+		kuijpers: "Data measured in a controlled research field",
+	},
+	{
+		aspect: "Validation",
+		traditional: "Recommendations rarely tested before rollout",
+		kuijpers: "Interventions validated in a digital twin first",
+	},
+	{
+		aspect: "Risk",
+		traditional: "Trial and error in your live flock",
+		kuijpers: "Trial in our barn — your flock stays protected",
+	},
+	{
+		aspect: "Monitoring",
+		traditional: "Periodic site visits and snapshots",
+		kuijpers: "Continuous, real-time sensor data 24/7",
+	},
+	{
+		aspect: "Transparency",
+		traditional: "Black-box conclusions",
+		kuijpers: "Open methods and independently verifiable results",
+	},
+	{
+		aspect: "Speed",
+		traditional: "Months to see results in the field",
+		kuijpers: "Faster cycles through parallel digital testing",
+	},
+];
+---
+
+<BaseLayout
+	title="Our Services — Kuijpers Research Field"
+	description="Digital twin services for poultry production — from trial design and real-time monitoring to independent validation — and why teams choose Kuijpers Research Field."
+>
+	<!-- 1. Hero -->
+	<section class="bg-stone-50">
+		<div class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+			<div class="mx-auto max-w-3xl text-center">
+				<h1
+					class="text-4xl font-extrabold tracking-tight text-stone-900 sm:text-5xl lg:text-6xl"
+				>
+					Our Services
+				</h1>
+				<p
+					class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-stone-600 sm:text-xl"
+				>
+					From trial design to real-time monitoring, we help you test
+					and validate interventions in a controlled, data-rich
+					environment — pairing a fully instrumented research field with
+					a digital twin that mirrors it in real time.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- 2. Service sections (alternating layout) -->
+	{
+		services.length > 0 ? (
+			services.map((service: any, i: number) => {
+				const bodyHtml = blocksToHtml(service.body);
+				const imageFirst = i % 2 === 1; // alternate: image right on odd
+				return (
+					<section class={i % 2 === 0 ? "bg-white" : "bg-stone-50"}>
+						<div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+							<div class="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
+								{/* Text column */}
+								<div class={imageFirst ? "lg:order-2" : "lg:order-1"}>
+									<div class="flex h-12 w-12 items-center justify-center overflow-hidden rounded-lg bg-brand-50 text-brand-600">
+										{service.icon ? (
+											<img
+												src={urlFor(service.icon)
+													.width(96)
+													.height(96)
+													.fit("crop")
+													.url()}
+												alt=""
+												width="48"
+												height="48"
+												class="h-full w-full object-cover"
+												loading="lazy"
+											/>
+										) : (
+											<svg
+												class="h-6 w-6"
+												viewBox="0 0 24 24"
+												fill="none"
+												stroke="currentColor"
+												stroke-width="2"
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												aria-hidden="true"
+												set:html={defaultIcon}
+											/>
+										)}
+									</div>
+									<h2 class="mt-5 text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl">
+										{service.title}
+									</h2>
+
+									{bodyHtml ? (
+										<div set:html={bodyHtml} />
+									) : (
+										service.shortDescription && (
+											<p class="mt-4 text-base leading-relaxed text-stone-600">
+												{service.shortDescription}
+											</p>
+										)
+									)}
+
+									{/* Target audience */}
+									<div class="mt-6 rounded-lg border border-stone-200 bg-white/60 p-4">
+										<p class="text-xs font-semibold uppercase tracking-wider text-brand-600">
+											Who it's for
+										</p>
+										<p class="mt-1 text-sm leading-relaxed text-stone-600">
+											{defaultAudience}
+										</p>
+									</div>
+
+									{/* Outcomes / key features */}
+									{Array.isArray(service.features) &&
+										service.features.length > 0 && (
+											<div class="mt-6">
+												<p class="text-xs font-semibold uppercase tracking-wider text-stone-500">
+													What you get
+												</p>
+												<ul class="mt-3 space-y-2">
+													{service.features.map(
+														(feature: string) => (
+															<li class="flex items-start gap-2 text-base leading-relaxed text-stone-700">
+																<svg
+																	class="mt-1 h-5 w-5 flex-shrink-0 text-brand-600"
+																	viewBox="0 0 24 24"
+																	fill="none"
+																	stroke="currentColor"
+																	stroke-width="2"
+																	stroke-linecap="round"
+																	stroke-linejoin="round"
+																	aria-hidden="true"
+																>
+																	<path d="M20 6 9 17l-5-5" />
+																</svg>
+																<span>{feature}</span>
+															</li>
+														),
+													)}
+												</ul>
+											</div>
+										)}
+								</div>
+
+								{/* Image column */}
+								<div class={imageFirst ? "lg:order-1" : "lg:order-2"}>
+									{service.image ? (
+										<img
+											src={urlFor(service.image)
+												.width(900)
+												.height(700)
+												.fit("crop")
+												.url()}
+											alt={service.image.alt ?? service.title}
+											width="900"
+											height="700"
+											class="aspect-[9/7] w-full rounded-xl object-cover shadow-sm"
+											loading="lazy"
+										/>
+									) : (
+										<div class="flex aspect-[9/7] w-full items-center justify-center rounded-xl bg-gradient-to-br from-brand-100 to-brand-50 shadow-sm">
+											<span class="text-sm font-medium text-brand-400">
+												Kuijpers Research Field
+											</span>
+										</div>
+									)}
+								</div>
+							</div>
+						</div>
+					</section>
+				);
+			})
+		) : (
+			<section class="bg-white">
+				<div class="mx-auto max-w-7xl px-4 py-20 text-center sm:px-6 lg:px-8">
+					<p class="text-stone-500">
+						Service details are coming soon — get in touch and we'll
+						walk you through what we offer.
+					</p>
+				</div>
+			</section>
+		)
+	}
+
+	<!-- 3. Process -->
+	<section class="bg-brand-950 text-white">
+		<div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+			<div class="mx-auto max-w-2xl text-center">
+				<span
+					class="text-sm font-semibold uppercase tracking-wider text-brand-300"
+				>
+					How We Work
+				</span>
+				<h2
+					class="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl"
+				>
+					From question to validated insight
+				</h2>
+			</div>
+
+			<div class="mt-16 grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4">
+				{
+					steps.map((step, i) => (
+						<div class="flex flex-col items-center text-center sm:items-start sm:text-left">
+							<div class="flex h-14 w-14 items-center justify-center rounded-full bg-brand-600 text-xl font-bold text-white">
+								{i + 1}
+							</div>
+							<h3 class="mt-5 text-lg font-semibold text-white">
+								{step.title}
+							</h3>
+							<p class="mt-2 text-sm leading-relaxed text-brand-200">
+								{step.body}
+							</p>
+						</div>
+					))
+				}
+			</div>
+		</div>
+	</section>
+
+	<!-- 4. Why us — stat blocks -->
+	<section class="bg-white">
+		<div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+			<div class="mx-auto max-w-2xl text-center">
+				<span
+					class="text-sm font-semibold uppercase tracking-wider text-brand-600"
+				>
+					Why Kuijpers Research Field
+				</span>
+				<h2
+					class="mt-4 text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl"
+				>
+					Evidence you can act on
+				</h2>
+			</div>
+
+			<div
+				class="mt-12 grid grid-cols-1 gap-10 text-center sm:grid-cols-2 lg:grid-cols-4"
+			>
+				{
+					statBlocks.map((block) => (
+						<div class="flex flex-col items-center">
+							<p class="text-5xl font-extrabold tracking-tight text-brand-600">
+								{block.stat}
+							</p>
+							<p class="mt-3 text-lg font-semibold text-stone-900">
+								{block.title}
+							</p>
+							<p class="mt-2 text-sm leading-relaxed text-stone-600">
+								{block.description}
+							</p>
+						</div>
+					))
+				}
+			</div>
+		</div>
+	</section>
+
+	<!-- 5. Comparison table -->
+	<section class="bg-stone-50">
+		<div class="mx-auto max-w-5xl px-4 py-20 sm:px-6 lg:px-8">
+			<div class="mx-auto max-w-2xl text-center">
+				<span
+					class="text-sm font-semibold uppercase tracking-wider text-brand-600"
+				>
+					The Difference
+				</span>
+				<h2
+					class="mt-4 text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl"
+				>
+					Traditional consulting vs. the Kuijpers approach
+				</h2>
+			</div>
+
+			<div
+				class="mt-12 overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm"
+			>
+				<table class="w-full border-collapse text-left">
+					<thead>
+						<tr class="bg-stone-100">
+							<th
+								class="hidden px-6 py-4 text-sm font-semibold uppercase tracking-wider text-stone-500 sm:table-cell"
+							>
+							</th>
+							<th
+								class="px-6 py-4 text-sm font-semibold text-stone-600"
+							>
+								Traditional consulting
+							</th>
+							<th
+								class="px-6 py-4 text-sm font-semibold text-brand-700"
+							>
+								Kuijpers approach
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						{
+							comparison.map((row, i) => (
+								<tr
+									class={
+										i % 2 === 0 ? "bg-white" : "bg-stone-50/60"
+									}
+								>
+									<th
+										scope="row"
+										class="hidden px-6 py-5 align-top text-sm font-semibold text-stone-900 sm:table-cell"
+									>
+										{row.aspect}
+									</th>
+									<td class="px-6 py-5 align-top text-sm leading-relaxed text-stone-600">
+										<span class="mb-1 block font-semibold text-stone-900 sm:hidden">
+											{row.aspect}
+										</span>
+										{row.traditional}
+									</td>
+									<td class="px-6 py-5 align-top text-sm font-medium leading-relaxed text-stone-800">
+										<span class="inline-flex items-start gap-2">
+											<svg
+												class="mt-0.5 h-4 w-4 flex-shrink-0 text-brand-600"
+												viewBox="0 0 24 24"
+												fill="none"
+												stroke="currentColor"
+												stroke-width="2.5"
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												aria-hidden="true"
+											>
+												<path d="M20 6 9 17l-5-5" />
+											</svg>
+											<span>{row.kuijpers}</span>
+										</span>
+									</td>
+								</tr>
+							))
+						}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</section>
+
+	<!-- 6. Testimonial / quote placeholder -->
+	<section class="bg-white">
+		<div class="mx-auto max-w-4xl px-4 py-20 text-center sm:px-6 lg:px-8">
+			<svg
+				class="mx-auto h-10 w-10 text-brand-300"
+				viewBox="0 0 24 24"
+				fill="currentColor"
+				aria-hidden="true"
+			>
+				<path
+					d="M9.13 8.5C7.4 9.6 6.5 11.2 6.5 13.2c0 .3 0 .6.1.9.4-.2.8-.3 1.3-.3 1.5 0 2.7 1.2 2.7 2.8 0 1.6-1.3 2.9-2.9 2.9-2 0-3.6-1.7-3.6-4.3 0-3.5 2-6.3 5.2-7.9l.83 1.2zm8 0c-1.73 1.1-2.63 2.7-2.63 4.7 0 .3 0 .6.1.9.4-.2.8-.3 1.3-.3 1.5 0 2.7 1.2 2.7 2.8 0 1.6-1.3 2.9-2.9 2.9-2 0-3.6-1.7-3.6-4.3 0-3.5 2-6.3 5.2-7.9l.83 1.2z"
+				></path>
+			</svg>
+			<blockquote
+				class="mt-6 text-2xl font-medium leading-relaxed text-stone-800 sm:text-3xl"
+			>
+				“This is a placeholder for a client testimonial. Replace it with a
+				quote from a research partner, supplier or producer describing the
+				value they got from working with Kuijpers Research Field.”
+			</blockquote>
+			<div class="mt-8">
+				<p class="text-base font-semibold text-stone-900">Name Surname</p>
+				<p class="text-sm text-stone-500">Role, Organisation</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- 7. CTA -->
+	<section class="bg-brand-800">
+		<div class="mx-auto max-w-7xl px-4 py-20 text-center sm:px-6 lg:px-8">
+			<h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+				Discuss your project
+			</h2>
+			<p
+				class="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-brand-100"
+			>
+				Tell us what you want to learn or validate, and we'll show you how
+				digital twin technology can get you there.
+			</p>
+			<div class="mt-10">
+				<a
+					href="/contact"
+					class="inline-block rounded-lg bg-white px-8 py-3 text-base font-semibold text-brand-800 shadow-sm transition-colors hover:bg-stone-100"
+				>
+					Get in Touch
+				</a>
+			</div>
+		</div>
+	</section>
+</BaseLayout>

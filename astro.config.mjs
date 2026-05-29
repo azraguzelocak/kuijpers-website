@@ -7,6 +7,11 @@ import react from '@astrojs/react';
 
 // https://astro.build/config
 export default defineConfig({
+  // Old standalone Advantages page is now merged into /services.
+  redirects: {
+    '/advantages': '/services',
+  },
+
   vite: {
     plugins: [tailwindcss()]
   },
