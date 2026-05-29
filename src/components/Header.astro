@@ -1,0 +1,128 @@
+---
+const navLinks = [
+	{ label: "Home", href: "/" },
+	{ label: "About", href: "/about" },
+	{ label: "Services", href: "/services" },
+	{ label: "Research", href: "/research" },
+	{ label: "Publications", href: "/publications" },
+	{ label: "News", href: "/news" },
+	{ label: "Contact", href: "/contact" },
+];
+---
+
+<header
+	class="sticky top-0 z-50 w-full border-b border-stone-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80"
+>
+	<nav
+		class="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-4 sm:px-6 lg:px-8"
+		aria-label="Main navigation"
+	>
+		<!-- Logo -->
+		<a href="/" class="shrink-0" aria-label="Kuijpers Research Field — home">
+			<img
+				src="/logo.png"
+				alt="Kuijpers KIP Research Field"
+				width="450"
+				height="262"
+				class="h-11 w-auto sm:h-12"
+				loading="eager"
+			/>
+		</a>
+
+		<!-- Desktop nav links -->
+		<ul class="hidden items-center gap-1 lg:flex">
+			{
+				navLinks.map((link) => (
+					<li>
+						<a
+							href={link.href}
+							class="rounded-md px-3 py-2 text-sm font-medium text-stone-600 transition-colors hover:bg-brand-50 hover:text-brand-700"
+						>
+							{link.label}
+						</a>
+					</li>
+				))
+			}
+		</ul>
+
+		<!-- Right-side actions -->
+		<div class="flex items-center gap-2">
+			{/* TODO Phase 2: Login button */}
+
+			<!-- Mobile hamburger toggle -->
+			<button
+				id="mobile-menu-toggle"
+				type="button"
+				class="inline-flex items-center justify-center rounded-md p-2 text-stone-700 transition-colors hover:bg-stone-100 lg:hidden"
+				aria-label="Toggle navigation menu"
+				aria-controls="mobile-menu"
+				aria-expanded="false"
+			>
+				<!-- Hamburger icon -->
+				<svg
+					id="icon-open"
+					class="h-6 w-6"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke-width="2"
+					stroke="currentColor"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"></path>
+				</svg>
+				<!-- Close icon -->
+				<svg
+					id="icon-close"
+					class="hidden h-6 w-6"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke-width="2"
+					stroke="currentColor"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						d="M6 18L18 6M6 6l12 12"></path>
+				</svg>
+			</button>
+		</div>
+	</nav>
+
+	<!-- Mobile menu -->
+	<div id="mobile-menu" class="hidden border-t border-stone-200 bg-white lg:hidden">
+		<ul class="space-y-1 px-4 py-4 sm:px-6">
+			{
+				navLinks.map((link) => (
+					<li>
+						<a
+							href={link.href}
+							class="block rounded-md px-3 py-2 text-base font-medium text-stone-700 transition-colors hover:bg-brand-50 hover:text-brand-700"
+						>
+							{link.label}
+						</a>
+					</li>
+				))
+			}
+		</ul>
+	</div>
+</header>
+
+<script is:inline>
+	(function () {
+		const toggle = document.getElementById("mobile-menu-toggle");
+		const menu = document.getElementById("mobile-menu");
+		const iconOpen = document.getElementById("icon-open");
+		const iconClose = document.getElementById("icon-close");
+
+		if (!toggle || !menu) return;
+
+		toggle.addEventListener("click", function () {
+			const isHidden = menu.classList.toggle("hidden");
+			toggle.setAttribute("aria-expanded", String(!isHidden));
+			iconOpen?.classList.toggle("hidden", !isHidden);
+			iconClose?.classList.toggle("hidden", isHidden);
+		});
+	})();
+</script>

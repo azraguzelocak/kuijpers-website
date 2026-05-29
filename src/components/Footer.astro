@@ -1,0 +1,112 @@
+---
+const year = new Date().getFullYear();
+
+const navLinks = [
+	{ label: "Home", href: "/" },
+	{ label: "About", href: "/about" },
+	{ label: "Services", href: "/services" },
+	{ label: "Research", href: "/research" },
+	{ label: "Publications", href: "/publications" },
+	{ label: "News", href: "/news" },
+	{ label: "Contact", href: "/contact" },
+];
+---
+
+<footer class="bg-brand-900 text-stone-200">
+	<div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+		<div class="grid grid-cols-1 gap-10 md:grid-cols-3">
+			<!-- Column 1: Company info -->
+			<div>
+				<h2 class="text-lg font-bold text-white">
+					Kuijpers Research Field
+				</h2>
+				<p class="mt-4 max-w-sm text-sm leading-relaxed text-stone-400">
+					Advancing poultry production through digital twin technology
+					and data-driven research. Bridging science and practice for a
+					more sustainable, efficient future.
+				</p>
+			</div>
+
+			<!-- Column 2: Navigation -->
+			<div>
+				<h3
+					class="text-sm font-semibold uppercase tracking-wider text-stone-400"
+				>
+					Navigation
+				</h3>
+				<ul class="mt-4 space-y-2">
+					{
+						navLinks.map((link) => (
+							<li>
+								<a
+									href={link.href}
+									class="text-sm text-stone-300 transition-colors hover:text-white"
+								>
+									{link.label}
+								</a>
+							</li>
+						))
+					}
+				</ul>
+			</div>
+
+			<!-- Column 3: Contact info -->
+			<div>
+				<h3
+					class="text-sm font-semibold uppercase tracking-wider text-stone-400"
+				>
+					Contact
+				</h3>
+				<ul class="mt-4 space-y-2 text-sm text-stone-300">
+					<li>Kuijpers Research Field</li>
+					<li>The Netherlands</li>
+					<li>
+						<a
+							href="mailto:info@kuijpersresearchfield.com"
+							class="transition-colors hover:text-white"
+						>
+							info@kuijpersresearchfield.com
+						</a>
+					</li>
+					<li>
+						<a
+							href="tel:+31000000000"
+							class="transition-colors hover:text-white"
+						>
+							+31 (0)00 000 0000
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<!-- Bottom bar -->
+	<div class="border-t border-brand-800">
+		<div
+			class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-6 sm:flex-row sm:px-6 lg:px-8"
+		>
+			<p class="text-sm text-stone-400">
+				&copy; {year} Kuijpers Research Field. All rights reserved.
+			</p>
+			<ul class="flex items-center gap-6">
+				<li>
+					<a
+						href="/privacy"
+						class="text-sm text-stone-400 transition-colors hover:text-white"
+					>
+						Privacy Policy
+					</a>
+				</li>
+				<li>
+					<a
+						href="/cookies"
+						class="text-sm text-stone-400 transition-colors hover:text-white"
+					>
+						Cookies
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</footer>

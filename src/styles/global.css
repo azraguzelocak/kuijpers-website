@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+/* Kuijpers Research Field — brand palette */
+@theme {
+	--color-brand-50: #cee4fd;
+	--color-brand-100: #b9d8fc;
+	--color-brand-200: #8fc0fa;
+	--color-brand-300: #5aa3f9;
+	--color-brand-400: #0878f7;
+	--color-brand-500: #056ad8;
+	--color-brand-600: #054c9c;
+	--color-brand-700: #043c7c;
+	--color-brand-800: #032a57;
+	--color-brand-900: #021831;
+	--color-brand-950: #010f20;
+
+	--color-accent: #fab76b;
+	--color-accent-dark: #f49f3c;
+}

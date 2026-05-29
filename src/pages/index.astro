@@ -1,0 +1,75 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getAllResearchProjects } from '../lib/sanity'; /* SANITY_VERIFY_IMPORT */
+const researchProjects = await getAllResearchProjects(); /* SANITY_VERIFY_IMPORT */
+---
+
+<BaseLayout
+	title="Kuijpers Research Field — Digital Twins for Poultry Production"
+	description="Pioneering digital twin technology to make poultry production smarter, healthier, and more sustainable."
+>
+	<section
+		class="relative overflow-hidden bg-gradient-to-b from-brand-50/60 via-white to-white"
+	>
+		<div
+			class="mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8 lg:py-40"
+		>
+			<div class="mx-auto max-w-3xl text-center">
+				<span
+					class="inline-block rounded-full bg-brand-50 px-4 py-1.5 text-sm font-medium text-brand-700"
+				>
+					Digital Twin Technology
+				</span>
+
+				<h1
+					class="mt-6 text-4xl font-extrabold tracking-tight text-stone-900 sm:text-5xl lg:text-6xl"
+				>
+					Welcome to Kuijpers Research Field
+				</h1>
+
+				<p
+					class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-stone-600 sm:text-xl"
+				>
+					We build digital twins of poultry production systems —
+					virtual replicas that turn real-time data into actionable
+					insight. Optimize animal welfare, efficiency, and
+					sustainability with research-grade technology.
+				</p>
+
+				<div
+					class="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
+				>
+					<a
+						href="/services"
+						class="w-full rounded-lg bg-brand-600 px-6 py-3 text-center text-base font-semibold text-white shadow-sm transition-colors hover:bg-brand-700 sm:w-auto"
+					>
+						Explore our services
+					</a>
+					<a
+						href="/research"
+						class="w-full rounded-lg border border-stone-300 bg-white px-6 py-3 text-center text-base font-semibold text-stone-700 transition-colors hover:bg-stone-100 sm:w-auto"
+					>
+						View our research
+					</a>
+				</div>
+			</div>
+		</div>
+	</section>
+</BaseLayout>
+
+
+<!-- SANITY_VERIFY_BLOCK -->
+<section style="max-width:760px;margin:3rem auto;padding:1.5rem;border:1px dashed #888;border-radius:8px;font-family:system-ui,sans-serif;">
+  <h2 style="margin-top:0;">Sanity connection test — Research Projects</h2>
+  <p style="color:#666;">Fetched {researchProjects?.length ?? 0} document(s) from dataset <code>production</code>.</p>
+  {researchProjects && researchProjects.length > 0 ? (
+    <ul>
+      {researchProjects.map((p) => (
+        <li>{p.title}</li>
+      ))}
+    </ul>
+  ) : (
+    <p><em>No research projects found (the query ran, but the dataset returned nothing).</em></p>
+  )}
+</section>
+<!-- SANITY_VERIFY_BLOCK -->
