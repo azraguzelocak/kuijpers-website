@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Innovatiekaart Kuijpers — broiler</title>
+<style>
+:root{--bg:#faf9f5;--card:#ffffff;--surf0:#f1efe8;--surf1:#f6f4ee;--ink:#2c2c2a;--mut:#5f5e5a;--bd:#d3d1c7;--halo:#f6f4ee}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+.page{max-width:1000px;margin:0 auto;padding:26px 20px 60px}
+h1{font-size:22px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--mut);font-size:14px;margin:0 0 18px}
+.leg{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:12px;color:var(--mut);margin:0 0 10px;align-items:center}
+.leg span{display:inline-flex;align-items:center;gap:6px}
+.dot{width:11px;height:11px;border-radius:50%;display:inline-block}
+.line{width:16px;border-top-width:2px;border-top-style:solid;display:inline-block}
+.ck{font-size:12px;color:var(--mut);display:inline-flex;align-items:center;gap:5px;cursor:pointer;margin-left:auto}
+.card{background:var(--card);border:.5px solid var(--bd);border-radius:12px;padding:8px}
+.node{cursor:pointer}
+.node text{font-size:17px;fill:var(--ink);paint-order:stroke;stroke:var(--halo);stroke-width:3px;stroke-linejoin:round}
+.panel{background:var(--surf1);border-radius:12px;padding:14px 16px;margin-top:12px;min-height:130px}
+.brow{display:grid;grid-template-columns:104px 1fr 150px;align-items:center;gap:10px;margin:5px 0;font-size:12px}
+.track{height:13px;background:var(--surf0);border-radius:4px;position:relative;overflow:hidden}
+.fill{height:100%;position:absolute;top:0;left:0}
+.val{text-align:right;color:var(--mut);font-variant-numeric:tabular-nums}
+.tag{display:inline-block;padding:1px 8px;border-radius:10px;font-size:11px;margin:2px 4px 2px 0}
+.hint{font-size:12px;color:var(--mut);margin-top:14px}
+.foot{font-size:11px;color:var(--mut);margin-top:22px;border-top:.5px solid var(--bd);padding-top:12px}
+</style>
+</head>
+<body>
+<div class="page">
+<h1>Innovatiekaart in broiler-silhouet</h1>
+<p class="sub">Kuijpers Kip / Researchfield — 21 innovaties verspreid door het vleeskuiken: staart/rug (links) = emissie, romp (midden) = productie-efficiency &amp; veiligheid, borst/kop (rechts) = gezondheid &amp; welzijn. Relaties uit de kruistabel (1 = vereist, 2 = versterkend). Impact op basis van geslacht gewicht, 256.000 plaatsen × 7 cycli/jaar. Waarden indicatief.</p>
+<div class="leg">
+<span><i class="dot" style="background:#1D9E75"></i>Emissie</span>
+<span><i class="dot" style="background:#EF9F27"></i>Productie</span>
+<span><i class="dot" style="background:#7F77DD"></i>Gezondheid &amp; welzijn</span>
+<span><i class="dot" style="background:#378ADD"></i>Veiligheid</span>
+<span style="margin-left:6px"><i class="line" style="border-color:#E24B4A"></i>1 vereist</span>
+<span><i class="line" style="border-color:#639922"></i>2 versterkend</span>
+<label class="ck"><input type="checkbox" id="kall">toon alle relaties</label>
+</div>
+<div class="card">
+<svg id="ksvg" viewBox="0 0 1000 700" width="100%" style="max-height:640px">
+<g id="k-sil" fill="#5b6b61" opacity="0.16">
+<path d="M853,158 L826,156 C824,140 828,120 812,112 L822,100 L810,86 L799,101 L788,86 L777,102 L766,90 L757,106 C742,104 726,116 720,150 C724,166 712,176 700,178 C560,150 300,168 212,238 L150,204 L198,258 C150,330 150,432 214,504 C304,592 484,606 604,584 C700,568 764,514 788,442 C810,376 830,322 826,288 C822,252 814,220 816,208 L820,226 L808,234 L822,218 C832,198 848,168 853,158 Z"/>
+<polygon points="412,582 430,582 424,650 406,650"/><polygon points="522,586 540,586 534,652 516,652"/>
+<polygon points="406,646 442,644 406,658"/><polygon points="406,652 438,662 406,660"/>
+<polygon points="516,648 552,646 516,660"/><polygon points="516,654 548,664 516,662"/>
+</g>
+<g id="k-edges"></g><g id="k-nodes"></g>
+</svg>
+</div>
+<div class="panel" id="kpanel"></div>
+<p class="hint">Klik een innovatie voor het impactprofiel per kg geslacht én per jaar en de relaties. Grote bollen = directe, kwantificeerbare impact; kleine bollen = indirecte innovaties. Zet "toon alle relaties" aan voor het volledige netwerk.</p>
+<p class="foot">Voorlopige inschatting op indicatieve kengetallen; vervang door eigen meetdata voor onderbouwing richting het Nationaal Innovatieloket Veehouderij. Relaties overgenomen uit tab "Kruistabel voor visualisatie".</p>
+</div>
+<script>
+(function(){
+var KG=2924544;
+var N=[
+["fam","Familiewarmte / warmteterugwinning","Familiewarmte","emis",300,178,489.3,0,274907,0,0,0],
+["ren","Bioenergiecentrale, Renure productie","Renure","emis",170,238,35.8,0,0,-42991,0,30000],
+["voer","Eigen voerprogramma","Eigen voer","prod",470,222,0,0,0,0,0,0],
+["vac","Vaccinontwikkeling","Vaccin","gez",640,208,0,0,0,0,0,0],
+["zon","Zonnepanelen op productielocatie","Zonnepanelen","emis",240,308,170.2,0,0,515890,0,0],
+["kkt","Korte keten, vermeden transportkilometers","KK transport","prod",430,292,150,0,0,0,0,0],
+["licht","Lichtrecept","Lichtrecept","gez",660,304,0,0,0,0,0,0],
+["gg","Bioenergiecentrale, groengas productie","Groengas","emis",150,352,1473.3,0,687268,0,0,0],
+["lw","Luchtwasser","Luchtwasser","emis",330,368,-48.2,13921,0,-146169,-877,11464],
+["kkb","Korte keten, vermeden kruisbesmettingsrisico","KK biosecurity","prod",540,356,0,0,0,0,0,0],
+["vet","Veterinaire analyse ontwikkeling","Vet. analyse","gez",700,372,0,0,0,0,0,0],
+["ws","WaterSafe","WaterSafe","emis",250,414,-28.4,0,0,-85982,1755,0],
+["brand","Brandblustechniek","Brandblus","veil",450,426,0,0,0,0,0,0],
+["ai","AI-gestuurde gedragsherkenning vleeskuikens","AI-gedrag","gez",640,432,0,0,0,0,0,0],
+["n2","Bioenergiecentrale, N2-stripper digestaat","N2-stripper","emis",170,462,-14.2,1740,0,-42991,526,25000],
+["bws","Bioenergiecentrale, WaterSafe","Bio-WaterSafe","emis",380,478,-22.7,0,0,-68785,702,0],
+["vacm","Vaccinatiemethodeontwikkeling","Vacc.methode","gez",600,466,0,0,0,0,0,0],
+["anti","Voedselveiligheid, 0-antibiotica gebruik","0-antibiotica","veil",300,528,0,0,0,0,0,0],
+["dash","Welzijns- & gezondheidsdashboard","Welzijnsdashb.","gez",520,522,0,0,0,0,0,0],
+["omg","Omgevingsveiligheid, NH3/fijnstof/geur","Omgeving NH3","veil",420,566,0,0,0,0,0,0],
+["haan","Haanmanagement","Haanmgmt","gez",560,560,0,0,0,0,0,0]
+];
+var CAT={emis:"#1D9E75",prod:"#EF9F27",gez:"#7F77DD",veil:"#378ADD"};
+var LT={1:"#E24B4A",2:"#639922"};
+var E=[["ai","anti",2],["ai","dash",1],["ai","licht",2],["ai","omg",2],["ai","voer",2],["anti","brand",2],["anti","dash",1],["anti","haan",2],["anti","kkb",1],["anti","kkt",1],["anti","licht",1],["anti","lw",2],["anti","omg",1],["anti","vac",1],["anti","vacm",1],["anti","vet",1],["anti","voer",1],["brand","omg",1],["brand","ws",2],["bws","gg",1],["bws","kkb",2],["bws","kkt",1],["bws","lw",1],["bws","n2",1],["bws","omg",2],["bws","ren",1],["bws","ws",1],["dash","fam",2],["dash","licht",2],["dash","omg",2],["dash","vac",2],["dash","vacm",2],["dash","vet",2],["dash","voer",2],["fam","gg",2],["fam","lw",1],["fam","ws",2],["fam","zon",2],["gg","kkb",2],["gg","kkt",1],["gg","n2",1],["gg","ren",1],["gg","voer",2],["gg","ws",2],["haan","licht",2],["haan","omg",2],["kkb","kkt",1],["kkb","n2",2],["kkb","omg",1],["kkb","ren",2],["kkb","voer",2],["kkt","n2",2],["kkt","omg",1],["kkt","ren",2],["kkt","voer",2],["licht","omg",2],["licht","vacm",2],["licht","zon",2],["lw","n2",1],["lw","omg",1],["lw","ren",2],["lw","ws",1],["lw","zon",2],["n2","omg",2],["n2","ren",1],["n2","ws",1],["omg","ren",2],["omg","vac",1],["omg","vacm",1],["omg","vet",2],["omg","voer",2],["omg","ws",2],["ren","ws",1],["vac","vacm",2],["vac","vet",2],["vacm","vet",2],["ws","zon",2]];
+var map={};N.forEach(function(n){map[n[0]]=n;});
+var METRICS=[
+{k:"co2",lbl:"CO2",unit:"kg/kg",yunit:"ton/jr",f:function(n){return n[6]*1000/KG},yf:function(n){return n[6]}},
+{k:"nh3",lbl:"NH3",unit:"g/kg",yunit:"kg/jr",f:function(n){return n[7]*1000/KG},yf:function(n){return n[7]}},
+{k:"gas",lbl:"Gas",unit:"m3/kg",yunit:"m3/jr",f:function(n){return n[8]/KG},yf:function(n){return n[8]}},
+{k:"ele",lbl:"Elektra",unit:"kWh/kg",yunit:"kWh/jr",f:function(n){return n[9]/KG},yf:function(n){return n[9]}},
+{k:"wat",lbl:"Waterlozing",unit:"L/kg",yunit:"m3/jr",f:function(n){return n[10]*1000/KG},yf:function(n){return n[10]}},
+{k:"nut",lbl:"Nutrientbehoud",unit:"g N/kg",yunit:"kg N/jr",f:function(n){return n[11]*1000/KG},yf:function(n){return n[11]}}
+];
+var maxabs={};METRICS.forEach(function(m){var mx=0;N.forEach(function(n){mx=Math.max(mx,Math.abs(m.f(n)))});maxabs[m.k]=mx||1;});
+function fmt(v,d){v=Number(v);return Math.abs(v)>=1000?v.toLocaleString('nl-NL',{maximumFractionDigits:0}):v.toFixed(d);}
+function quant(n){return n[6]||n[7]||n[8]||n[9]||n[10]||n[11];}
+var eg=document.getElementById('k-edges'),ng=document.getElementById('k-nodes'),NS="http://www.w3.org/2000/svg";
+E.forEach(function(e){var a=map[e[0]],b=map[e[1]];var l=document.createElementNS(NS,'line');
+l.setAttribute('x1',a[4]);l.setAttribute('y1',a[5]);l.setAttribute('x2',b[4]);l.setAttribute('y2',b[5]);
+l.setAttribute('stroke',LT[e[2]]);l.setAttribute('stroke-width',1.6);l.setAttribute('opacity',0);
+l.setAttribute('data-a',e[0]);l.setAttribute('data-b',e[1]);l.setAttribute('class','k-edge');eg.appendChild(l);});
+N.forEach(function(n){var g=document.createElementNS(NS,'g');g.setAttribute('class','node');g.setAttribute('data-id',n[0]);
+var r=quant(n)?11:9;var c=document.createElementNS(NS,'circle');
+c.setAttribute('cx',n[4]);c.setAttribute('cy',n[5]);c.setAttribute('r',r);c.setAttribute('fill',CAT[n[3]]);
+c.setAttribute('opacity',quant(n)?0.97:0.62);c.setAttribute('stroke','#fff');c.setAttribute('stroke-width',1.6);g.appendChild(c);
+var t=document.createElementNS(NS,'text');t.setAttribute('x',n[4]+18);t.setAttribute('y',n[5]+6);t.textContent=n[2];g.appendChild(t);
+g.addEventListener('click',function(){select(n[0]);});ng.appendChild(g);});
+var showAll=false,sel=null;
+document.getElementById('kall').addEventListener('change',function(e){showAll=e.target.checked;paint();});
+function paint(){document.querySelectorAll('.k-edge').forEach(function(l){var on=sel&&(l.getAttribute('data-a')===sel||l.getAttribute('data-b')===sel);
+l.setAttribute('opacity',on?0.95:(showAll?0.16:0));l.setAttribute('stroke-width',on?2.8:1.3);});}
+function select(id){sel=id;paint();
+document.querySelectorAll('.node circle').forEach(function(c){c.setAttribute('stroke','#fff');c.setAttribute('stroke-width',1.6);});
+document.querySelectorAll('.node text').forEach(function(t){t.style.fontWeight='400';});
+var g=document.querySelector('.node[data-id="'+id+'"]');if(g){g.querySelector('circle').setAttribute('stroke','#2c2c2a');g.querySelector('circle').setAttribute('stroke-width',2.8);g.querySelector('text').style.fontWeight='700';}
+render(map[id]);}
+function render(n){var p=document.getElementById('kpanel');
+var links=E.filter(function(e){return e[0]===n[0]||e[1]===n[0];}).map(function(e){var o=map[e[0]===n[0]?e[1]:e[0]];
+var lab=e[2]===1?'vereist':'versterkend';return '<span class="tag" style="background:'+LT[e[2]]+'22;color:'+LT[e[2]]+'">'+o[2]+' · '+lab+'</span>';}).join('');
+var bars=METRICS.map(function(m){var v=m.f(n),yv=m.yf(n);var w=Math.min(100,Math.abs(v)/maxabs[m.k]*100);
+var col=v===0?'#b4b2a9':(v>0?'#1D9E75':'#E24B4A');
+var vtxt=v===0?'—':(fmt(v,m.k==='co2'?3:(m.k==='gas'||m.k==='ele'?4:2))+' '+m.unit);
+var ytxt=yv===0?'':(fmt(yv,1)+' '+m.yunit);
+return '<div class="brow"><span style="color:#5f5e5a">'+m.lbl+'</span><span class="track"><span class="fill" style="width:'+w+'%;background:'+col+'"></span></span><span class="val">'+vtxt+(ytxt?'<br><span style="font-size:11px">'+ytxt+'</span>':'')+'</span></div>';}).join('');
+p.innerHTML='<div style="font-size:15px;font-weight:600;margin-bottom:2px">'+n[1]+'</div><div style="font-size:12px;color:#5f5e5a;margin-bottom:8px">'+(quant(n)?'Geraamde impact (positief = reductie/behoud, rood = extra verbruik/lozing)':'Indirecte innovatie — werkt via de gelinkte innovaties')+'</div>'+bars+(links?'<div style="margin-top:10px;font-size:12px;color:#5f5e5a"><b style="color:#2c2c2a;font-weight:600">Relaties:</b><br>'+links+'</div>':'');}
+select('gg');
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,316 @@
+---
+// FarmView3D — a built (not photographed) Three.js model of the farm.
+// Outside auto-rotates; the Inside toggle moves the camera into the barn to
+// show the tiered cage rows, chickens and eggs. Solar panels + silos hint at
+// how advanced the operation is. Drag to orbit, scroll to zoom. No hotspots.
+---
+
+<section class="border-t border-stone-200 bg-stone-50">
+	<div class="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+		<div class="mx-auto mb-8 max-w-2xl text-center">
+			<span class="text-sm font-semibold uppercase tracking-[0.15em] text-brand-600">
+				Explore the site
+			</span>
+			<h2 class="mt-4 text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl">
+				From outside to inside
+			</h2>
+			<p class="mx-auto mt-4 max-w-xl text-stone-600">
+				The model turns on its own — switch to the inside to see the barns,
+				the birds and the egg rows, and how far the farm has been taken.
+			</p>
+		</div>
+
+		<div class="farm3d">
+			<div class="head">
+				<div class="title">
+					Kuijpers farm &middot; 3D model
+				</div>
+				<div class="sidepill" id="f3d-sidepill"><i></i><span id="f3d-sidetext">Outside</span></div>
+			</div>
+			<div class="stage" id="f3d-stage" tabindex="0" aria-label="3D farm. Drag to orbit, scroll to zoom. Use Inside to enter the barn.">
+				<div class="hint" id="f3d-hint">Drag to orbit &middot; scroll to zoom</div>
+				<div class="post post-warm"></div>
+				<div class="post post-grain"></div>
+				<div class="post post-vig"></div>
+				<div class="load" id="f3d-load">Building model&hellip;</div>
+			</div>
+			<div class="controls">
+				<div class="seg" role="tablist" aria-label="View">
+					<button id="f3d-out" class="on" role="tab" aria-selected="true">Outside</button>
+					<button id="f3d-in" role="tab" aria-selected="false">Inside</button>
+				</div>
+				<button class="btn playing" id="f3d-toggle" aria-label="Pause rotation">
+					<span class="ico"></span><span id="f3d-togtxt">Pause</span>
+				</button>
+			</div>
+		</div>
+	</div>
+</section>
+
+<style is:global>
+	.farm3d { --ink: #1c1917; --muted: #57534e; --line: rgba(0, 0, 0, 0.16); --red: #b5271f; --amber: #d98a2b; background: transparent; color: var(--ink); padding: 0; font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+	.farm3d * { box-sizing: border-box; }
+	.farm3d .head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 2px 2px 12px; }
+	.farm3d .title { font-weight: 600; font-size: 15px; }
+	.farm3d .title span { color: var(--muted); font-weight: 400; }
+	.farm3d .sidepill { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px; background: rgba(0, 0, 0, 0.03); white-space: nowrap; }
+	.farm3d .sidepill i { width: 7px; height: 7px; border-radius: 50%; background: var(--red); transition: background 0.4s; }
+	.farm3d .sidepill.inside i { background: var(--amber); }
+	.farm3d .stage { position: relative; width: 100%; height: 500px; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.7); cursor: grab; touch-action: none; user-select: none; background: #0b0d10; }
+	.farm3d .stage.drag { cursor: grabbing; }
+	.farm3d .stage canvas { display: block; width: 100%; height: 100%; }
+	.farm3d .hint { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); z-index: 5; font-size: 11.5px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255, 255, 255, 0.8); background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.16); padding: 5px 11px; border-radius: 999px; backdrop-filter: blur(4px); transition: opacity 0.5s; pointer-events: none; }
+	.farm3d .stage.touched .hint { opacity: 0; }
+	.farm3d .post { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
+	.farm3d .post-vig { box-shadow: inset 0 0 120px 26px rgba(0, 0, 0, 0.3), inset 0 0 40px 8px rgba(0, 0, 0, 0.12); }
+	.farm3d .post-warm { background: radial-gradient(90% 80% at 74% 32%, rgba(255, 214, 150, 0.14), rgba(255, 214, 150, 0) 55%), linear-gradient(180deg, rgba(255, 220, 170, 0.05), rgba(30, 40, 60, 0.06)); mix-blend-mode: soft-light; }
+	.farm3d .post-grain { opacity: 0.055; mix-blend-mode: overlay; background-size: 170px 170px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='170' height='170'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+	.farm3d .load { position: absolute; inset: 0; z-index: 6; display: flex; align-items: center; justify-content: center; color: #9ca3af; font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; background: #0b0d10; transition: opacity 0.6s; }
+	.farm3d .load.done { opacity: 0; pointer-events: none; }
+	.farm3d .controls { display: flex; align-items: center; gap: 12px; margin: 16px 4px 0; flex-wrap: wrap; }
+	.farm3d .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+	.farm3d .seg button { font-family: inherit; font-size: 12.5px; font-weight: 600; color: var(--muted); background: transparent; border: 0; padding: 9px 16px; cursor: pointer; transition: 0.18s; }
+	.farm3d .seg button.on { color: var(--ink); background: rgba(0, 0, 0, 0.06); }
+	.farm3d .btn { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-family: inherit; font-size: 12.5px; font-weight: 600; color: var(--ink); background: rgba(0, 0, 0, 0.03); border: 1px solid var(--line); border-radius: 10px; padding: 9px 13px; transition: 0.2s; }
+	.farm3d .btn:hover { background: rgba(0, 0, 0, 0.06); border-color: rgba(0, 0, 0, 0.24); }
+	.farm3d .btn .ico { width: 11px; height: 11px; border-left: 3px solid currentColor; border-right: 3px solid currentColor; }
+	.farm3d .btn.playing .ico { width: 0; height: 0; border: none; border-left: 9px solid currentColor; border-top: 6px solid transparent; border-bottom: 6px solid transparent; }
+	.farm3d .meta { flex: 1 1 200px; min-width: 0; }
+	.farm3d .meta .lead { font-size: 13px; line-height: 1.5; }
+	.farm3d .meta .sub { font-size: 12px; line-height: 1.5; color: var(--muted); margin-top: 2px; }
+</style>
+
+<script is:inline>
+	(function () {
+		var stage = document.getElementById("f3d-stage");
+		var loadEl = document.getElementById("f3d-load");
+		if (!stage) return;
+		function fail() { if (loadEl) { loadEl.textContent = "3D failed to load — refresh the page"; loadEl.classList.remove("done"); } }
+
+		var s = document.createElement("script");
+		s.src = "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js";
+		s.onload = function () { try { init(); } catch (e) { fail(); } };
+		s.onerror = fail;
+		document.head.appendChild(s);
+
+		function init() {
+			var THREE = window.THREE;
+			if (!THREE) { fail(); return; }
+			var W = stage.clientWidth, H = stage.clientHeight || 500;
+
+			var renderer = new THREE.WebGLRenderer({ antialias: true });
+			renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+			renderer.setSize(W, H);
+			renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+			renderer.outputEncoding = THREE.sRGBEncoding;
+			renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+			stage.insertBefore(renderer.domElement, stage.firstChild);
+
+			var scene = new THREE.Scene();
+			scene.background = new THREE.Color("#e6d7bd");
+			scene.fog = new THREE.Fog("#e6d7bd", 150, 560);
+			var camera = new THREE.PerspectiveCamera(41, W / H, 0.5, 3000);
+
+			function cv(w, h) { var c = document.createElement("canvas"); c.width = w; c.height = h; return c; }
+			function tex(c, rx, ry) { var t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; if (rx) t.repeat.set(rx, ry || rx); t.anisotropy = 4; return t; }
+			function normalFrom(hc, strength) {
+				var w = hc.width, h = hc.height, sctx = hc.getContext("2d"), src = sctx.getImageData(0, 0, w, h).data;
+				var out = cv(w, h), octx = out.getContext("2d"), img = octx.createImageData(w, h), d = img.data;
+				function Hv(x, y) { x = (x + w) % w; y = (y + h) % h; return src[(y * w + x) * 4] / 255; }
+				for (var y = 0; y < h; y++) for (var x = 0; x < w; x++) {
+					var dx = (Hv(x - 1, y) - Hv(x + 1, y)) * strength, dy = (Hv(x, y - 1) - Hv(x, y + 1)) * strength, dz = 1;
+					var l = Math.sqrt(dx * dx + dy * dy + dz * dz); var i = (y * w + x) * 4;
+					d[i] = Math.round((dx / l * 0.5 + 0.5) * 255); d[i + 1] = Math.round((dy / l * 0.5 + 0.5) * 255); d[i + 2] = Math.round((dz / l * 0.5 + 0.5) * 255); d[i + 3] = 255;
+				}
+				octx.putImageData(img, 0, 0); return out;
+			}
+			function mat(color, o) { o = o || {}; return new THREE.MeshStandardMaterial(Object.assign({ color: color, roughness: 0.9, metalness: 0.0 }, o)); }
+
+			// ---------- sky + environment map (real reflections on metal/roof) ----------
+			var skyC = cv(1024, 512), skx = skyC.getContext("2d");
+			var sg = skx.createLinearGradient(0, 0, 0, 512);
+			sg.addColorStop(0, "#5b90d6"); sg.addColorStop(0.45, "#c3d9ef"); sg.addColorStop(0.5, "#e7e0cf"); sg.addColorStop(1, "#bcab86");
+			skx.fillStyle = sg; skx.fillRect(0, 0, 1024, 512);
+			// a soft sun disc for reflections
+			skx.fillStyle = "rgba(255,250,235,0.9)"; skx.beginPath(); skx.arc(760, 150, 26, 0, 7); skx.fill();
+			// soft clouds (also picked up by the environment reflections)
+			for (var qi = 0; qi < 16; qi++) {
+				var qx = Math.random() * 1024, qy = 40 + Math.random() * 150, qr = 26 + Math.random() * 52;
+				var qg = skx.createRadialGradient(qx, qy, 0, qx, qy, qr);
+				qg.addColorStop(0, "rgba(255,255,255," + (0.45 + Math.random() * 0.4).toFixed(2) + ")"); qg.addColorStop(1, "rgba(255,255,255,0)");
+				skx.fillStyle = qg; skx.beginPath(); skx.ellipse(qx, qy, qr, qr * 0.55, 0, 0, 7); skx.fill();
+			}
+			var skyTex = new THREE.CanvasTexture(skyC); skyTex.mapping = THREE.EquirectangularReflectionMapping;
+			scene.background = skyTex;
+			var pmrem = new THREE.PMREMGenerator(renderer);
+			scene.environment = pmrem.fromEquirectangular(skyTex).texture;
+			pmrem.dispose();
+
+			var corrH = (function () { var c = cv(256, 8), x = c.getContext("2d"); for (var i = 0; i < 256; i++) { var v = Math.round(128 + 120 * Math.sin(i / 256 * Math.PI * 2)); x.fillStyle = "rgb(" + v + "," + v + "," + v + ")"; x.fillRect(i, 0, 1, 8); } return c; })();
+			var corrNormalC = normalFrom(corrH, 2.2);
+			function redAlbedo() { var c = cv(256, 256), x = c.getContext("2d"); x.fillStyle = "#b5271f"; x.fillRect(0, 0, 256, 256); var g = x.createLinearGradient(0, 150, 0, 256); g.addColorStop(0, "rgba(40,20,15,0)"); g.addColorStop(1, "rgba(40,20,15,0.28)"); x.fillStyle = g; x.fillRect(0, 150, 256, 106); for (var k = 0; k < 40; k++) { x.fillStyle = "rgba(60,30,22," + (0.05 + Math.random() * 0.08) + ")"; x.fillRect(Math.random() * 256, 180 + Math.random() * 70, 1 + Math.random() * 3, 6 + Math.random() * 20); } return c; }
+			function redPanel(reps, ry) { var m = mat("#b5271f", { roughness: 0.62, metalness: 0.16, envMapIntensity: 0.6, map: tex(redAlbedo(), 1, 1), normalMap: tex(corrNormalC, reps, ry || 1), side: THREE.DoubleSide }); m.normalScale = new THREE.Vector2(1, 1); return m; }
+			var seamH = (function () { var c = cv(256, 64), x = c.getContext("2d"); x.fillStyle = "#808080"; x.fillRect(0, 0, 256, 64); for (var i = 0; i < 256; i += 32) { x.fillStyle = "#ffffff"; x.fillRect(i, 0, 3, 64); x.fillStyle = "#3a3a3a"; x.fillRect(i + 3, 0, 2, 64); } return c; })();
+
+			var roofMat = mat("#9aa0a6", { metalness: 0.55, roughness: 0.5, side: THREE.DoubleSide, map: tex(seamH, 10, 3) });
+			var conC = cv(256, 256), cox = conC.getContext("2d"); cox.fillStyle = "#b7b3aa"; cox.fillRect(0, 0, 256, 256);
+			for (var pi = 0; pi < 2600; pi++) { var pv = 150 + (Math.random() * 42 | 0); cox.fillStyle = "rgba(" + pv + "," + pv + "," + (pv - 6) + "," + (0.08 + Math.random() * 0.22).toFixed(2) + ")"; cox.fillRect(Math.random() * 256, Math.random() * 256, 1 + Math.random() * 2, 1 + Math.random() * 2); }
+			var concreteMat = mat("#9c988d", { roughness: 0.94, side: THREE.DoubleSide, map: tex(conC, 8, 8) });
+			var cageMat = mat("#cbc6ba", { roughness: 0.82 });
+			var darkMetal = mat("#6b7076", { metalness: 0.6, roughness: 0.5 });
+			var metalMat = mat("#c2c8cf", { metalness: 0.72, roughness: 0.33 });
+			var tanMat = mat("#d3c199", { roughness: 0.6 });
+			var grassC = cv(256, 256), grx = grassC.getContext("2d"); grx.fillStyle = "#5f8f4a"; grx.fillRect(0, 0, 256, 256);
+			for (var gi = 0; gi < 7000; gi++) { grx.fillStyle = "rgba(" + (34 + (Math.random() * 60 | 0)) + "," + (86 + (Math.random() * 70 | 0)) + "," + (34 + (Math.random() * 40 | 0)) + "," + (0.12 + Math.random() * 0.28).toFixed(2) + ")"; grx.fillRect(Math.random() * 256, Math.random() * 256, 1, 1 + Math.random() * 3); }
+			var grassMat = mat("#6a9a52", { roughness: 1, map: tex(grassC, 90, 90) });
+			var litterMat = mat("#b79a77", { roughness: 0.95, side: THREE.DoubleSide });
+			var frameMat = mat("#8b9096", { metalness: 0.55, roughness: 0.5 });
+			var pipeMat = mat("#b9bdc2", { metalness: 0.7, roughness: 0.35 });
+			var chickMat = mat("#e9e2d2", { roughness: 0.9 });
+			var eggMat = mat("#f2ead6", { roughness: 0.45 });
+			var beltMat = mat("#3f4448", { roughness: 0.7, metalness: 0.2 });
+			var solarMat = new THREE.MeshStandardMaterial({ color: "#12294a", metalness: 0.45, roughness: 0.32, emissive: "#0a1a34", emissiveIntensity: 0.12 });
+			var screenMat = new THREE.MeshStandardMaterial({ color: "#0a2036", emissive: "#2f86df", emissiveIntensity: 0.7, roughness: 0.4 });
+			var tubeMat = new THREE.MeshStandardMaterial({ color: "#fff6e0", emissive: "#ffe6b0", emissiveIntensity: 1.3 });
+
+			function planeMesh(w, h, m) { var g = new THREE.Mesh(new THREE.PlaneGeometry(w, h), m); g.castShadow = true; g.receiveShadow = true; return g; }
+			function boxMesh(w, h, d, m) { var g = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); g.castShadow = true; g.receiveShadow = true; return g; }
+			function tri(a, b, c, m) { var g = new THREE.BufferGeometry(); g.setAttribute("position", new THREE.Float32BufferAttribute([a[0], a[1], a[2], b[0], b[1], b[2], c[0], c[1], c[2]], 3)); g.computeVertexNormals(); var mesh = new THREE.Mesh(g, m); mesh.castShadow = true; mesh.receiveShadow = true; return mesh; }
+
+			// ---------- barn shell ----------
+			var L = 44, HW = 9, WH = 8, RID = 13, HX = L / 2, aF = Math.atan2(RID - WH, HW), slopeLen = Math.hypot(HW, RID - WH);
+			var barn = new THREE.Group();
+			var front = planeMesh(L, WH, redPanel(6, 1)); front.position.set(0, WH / 2, HW); barn.add(front);
+			var backWall = planeMesh(L, WH, redPanel(6, 1)); backWall.position.set(0, WH / 2, -HW); barn.add(backWall);
+			var eL = planeMesh(2 * HW, WH, redPanel(3, 1)); eL.rotation.y = Math.PI / 2; eL.position.set(-HX, WH / 2, 0); barn.add(eL);
+			var eR = planeMesh(2 * HW, WH, redPanel(3, 1)); eR.rotation.y = -Math.PI / 2; eR.position.set(HX, WH / 2, 0); barn.add(eR);
+			barn.add(tri([-HX, WH, HW], [-HX, RID, 0], [-HX, WH, -HW], redPanel(1, 1)));
+			barn.add(tri([HX, WH, HW], [HX, WH, -HW], [HX, RID, 0], redPanel(1, 1)));
+			var rF = planeMesh(L, slopeLen, roofMat); rF.rotation.x = -(Math.PI / 2 - aF); rF.position.set(0, (WH + RID) / 2, HW / 2); barn.add(rF);
+			var rB = planeMesh(L, slopeLen, roofMat); rB.rotation.x = (Math.PI / 2 - aF); rB.position.set(0, (WH + RID) / 2, -HW / 2); barn.add(rB);
+			var ridge = boxMesh(L + 0.4, 0.4, 0.6, darkMetal); ridge.position.set(0, RID + 0.1, 0); barn.add(ridge);
+			var floor = planeMesh(L - 0.4, 2 * HW - 0.4, litterMat); floor.rotation.x = -Math.PI / 2; floor.position.set(0, 0.05, 0); barn.add(floor);
+
+			// ---------- interior: rows, chickens, eggs, tech ----------
+			var tiers = [1.0, 2.75, 4.5], rows = [-4.7, 4.7];
+			rows.forEach(function (zt) {
+				var frontOff = zt < 0 ? 1.3 : -1.3;
+				for (var px = -17; px <= 17; px += 3.2) { var post = boxMesh(0.16, 5.6, 0.16, frameMat); post.position.set(px, 2.8, zt + frontOff); barn.add(post); }
+				tiers.forEach(function (ty) {
+					var shelf = boxMesh(L - 8, 0.14, 2.7, cageMat); shelf.position.set(0, ty, zt); barn.add(shelf);
+					var back = boxMesh(L - 8, 1.5, 0.08, frameMat); back.position.set(0, ty + 0.75, zt - frontOff); barn.add(back);
+					var feed = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, L - 8, 10), pipeMat); feed.rotation.z = Math.PI / 2; feed.position.set(0, ty + 0.12, zt + frontOff); barn.add(feed);
+					// slanted egg-collection belt in front of each tier
+					var belt = boxMesh(L - 8, 0.06, 0.8, beltMat); belt.position.set(0, ty - 0.5, zt + frontOff * 1.35); belt.rotation.x = frontOff < 0 ? -0.28 : 0.28; barn.add(belt);
+				});
+				var water = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, L - 8, 8), pipeMat); water.rotation.z = Math.PI / 2; water.position.set(0, 5.4, zt); barn.add(water);
+			});
+			// (aisle columns removed — they blocked the corridor)
+			for (var tx = -18; tx <= 18; tx += 6) {
+				var tie = boxMesh(0.16, 0.16, 2 * HW - 0.4, darkMetal); tie.position.set(tx, WH + 0.5, 0); barn.add(tie);
+			}
+			for (var gx = -16; gx <= 16; gx += 8) { var tube = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 5.5, 8), tubeMat); tube.rotation.z = Math.PI / 2; tube.position.set(gx, 6.7, 0); barn.add(tube); }
+			var screen = boxMesh(2.6, 1.5, 0.14, screenMat); screen.position.set(HX - 0.25, 3.4, 3); screen.rotation.y = -Math.PI / 2; barn.add(screen);
+
+			// chickens (instanced) in the cages — none on the floor
+			var chickGeo = new THREE.SphereGeometry(0.3, 7, 6); chickGeo.scale(1.3, 0.9, 1);
+			var CN = 300, chick = new THREE.InstancedMesh(chickGeo, chickMat, CN), dO = new THREE.Object3D();
+			for (var ci = 0; ci < CN; ci++) {
+				var side = Math.random() < 0.5 ? -4.7 : 4.7;
+				var zz = side + (Math.random() * 1.4 - 0.7);
+				var yy = tiers[ci % 3] + 0.34;
+				dO.position.set((Math.random() * 2 - 1) * 17, yy, zz); dO.rotation.set(0, Math.random() * Math.PI * 2, 0);
+				var sc2 = 0.8 + Math.random() * 0.55; dO.scale.set(sc2, sc2, sc2); dO.updateMatrix(); chick.setMatrixAt(ci, dO.matrix);
+			}
+			chick.instanceMatrix.needsUpdate = true; barn.add(chick);
+
+			scene.add(barn);
+
+			// ---------- silos ----------
+			[-4.5, 0, 4.5].forEach(function (z) {
+				var body = new THREE.Mesh(new THREE.CylinderGeometry(1.7, 1.7, 11, 20), metalMat); body.castShadow = true; body.position.set(28, 7, z); barn.add(body);
+				var cone = new THREE.Mesh(new THREE.CylinderGeometry(0, 1.85, 2.4, 20), metalMat); cone.castShadow = true; cone.position.set(28, 13.7, z); barn.add(cone);
+				var hop = new THREE.Mesh(new THREE.CylinderGeometry(1.7, 0.35, 2.2, 20), metalMat); hop.castShadow = true; hop.position.set(28, 2.4, z); barn.add(hop);
+			});
+			var feedBin = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, 8, 18), tanMat); feedBin.castShadow = true; feedBin.position.set(24, 5.5, -8); barn.add(feedBin);
+
+			// ground
+			var apron = new THREE.Mesh(new THREE.CircleGeometry(33, 48), concreteMat); apron.rotation.x = -Math.PI / 2; apron.position.y = 0.01; apron.receiveShadow = true; scene.add(apron);
+			var grass = new THREE.Mesh(new THREE.PlaneGeometry(700, 700), grassMat); grass.rotation.x = -Math.PI / 2; grass.position.y = -0.02; grass.receiveShadow = true; scene.add(grass);
+
+			// soft grounding shadow under the buildings (fake ambient occlusion)
+			var csC = cv(256, 128), csx = csC.getContext("2d");
+			var csg = csx.createRadialGradient(128, 64, 0, 128, 64, 120);
+			csg.addColorStop(0, "rgba(0,0,0,0.42)"); csg.addColorStop(0.62, "rgba(0,0,0,0.2)"); csg.addColorStop(1, "rgba(0,0,0,0)");
+			csx.fillStyle = csg; csx.fillRect(0, 0, 256, 128);
+			var cs = new THREE.Mesh(new THREE.PlaneGeometry(66, 32), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(csC), transparent: true, depthWrite: false }));
+			cs.rotation.x = -Math.PI / 2; cs.position.set(3, 0.03, 0); scene.add(cs);
+
+			// tree line around the field (scale + context, like the real site)
+			var trunkMat = mat("#5b4327", { roughness: 0.95 });
+			var leafMat = mat("#4f7a3a", { roughness: 1, flatShading: true });
+			for (var ti = 0; ti < 24; ti++) {
+				var ang = (ti / 24) * Math.PI * 2 + Math.random() * 0.25, rad = 64 + Math.random() * 30, sc = 0.9 + Math.random() * 0.9;
+				var tree = new THREE.Group();
+				var trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.5 * sc, 0.75 * sc, 4 * sc, 6), trunkMat); trunk.position.y = 2 * sc; trunk.castShadow = true; tree.add(trunk);
+				var f1 = new THREE.Mesh(new THREE.IcosahedronGeometry(3.3 * sc, 0), leafMat); f1.position.y = 5.6 * sc; f1.scale.y = 1.1; f1.castShadow = true; tree.add(f1);
+				var f2 = new THREE.Mesh(new THREE.IcosahedronGeometry(2.4 * sc, 0), leafMat); f2.position.set(1.6 * sc, 4.6 * sc, 0.4 * sc); f2.castShadow = true; tree.add(f2);
+				tree.position.set(Math.cos(ang) * rad, 0, Math.sin(ang) * rad); scene.add(tree);
+			}
+
+			// lights
+			scene.add(new THREE.HemisphereLight("#dfe8f5", "#5a4a33", 0.55));
+			scene.add(new THREE.AmbientLight("#ffffff", 0.14));
+			var sun = new THREE.DirectionalLight("#fff3df", 2.3); sun.position.set(70, 95, 55); sun.castShadow = true;
+			sun.shadow.mapSize.set(2048, 2048); var scam = sun.shadow.camera; scam.left = -95; scam.right = 95; scam.top = 95; scam.bottom = -95; scam.near = 0.5; scam.far = 320; sun.shadow.bias = -0.0004; scene.add(sun);
+			// interior fill so the barns read when you step inside
+			[-15, -5, 5, 15].forEach(function (lxp) { var pl = new THREE.PointLight("#fff2d8", 0.85, 52); pl.position.set(lxp, 6, 0); scene.add(pl); });
+
+			// ---------- orbit ----------
+			var target = new THREE.Vector3(0, 4.5, 0), sph = { r: 80, theta: 0.6, phi: 1.12 };
+			function clampN(v, a, b) { return Math.max(a, Math.min(b, v)); }
+			function applyCam() { var sp = Math.sin(sph.phi); camera.position.set(target.x + sph.r * sp * Math.sin(sph.theta), target.y + sph.r * Math.cos(sph.phi), target.z + sph.r * sp * Math.cos(sph.theta)); camera.lookAt(target); }
+			function sphFromCamera() { var off = camera.position.clone().sub(target); sph.r = off.length(); sph.phi = Math.acos(clampN(off.y / sph.r, -1, 1)); sph.theta = Math.atan2(off.x, off.z); }
+
+			var playing = true, dragging = false, mode = "outside", tween = null, pillInside = false, clock = new THREE.Clock();
+			function ease(t) { return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t; }
+			function lerp(a, b, t) { return a + (b - a) * t; }
+			var OUT = { r: 80, phi: 1.12, t: new THREE.Vector3(0, 4.5, 0) };
+			// Inside = stand at one end of the central aisle looking down the corridor
+			var IN = { r: 19, theta: -Math.PI / 2, phi: Math.PI / 2 - 0.05, t: new THREE.Vector3(0, 3, 0) };
+			function startTween(to) { sphFromCamera(); tween = { t: 0, dur: 1.2, from: { r: sph.r, theta: sph.theta, phi: sph.phi }, to: to, fromT: target.clone(), toT: to.t.clone() }; }
+			function goOutside() { mode = "outside"; playing = true; startTween({ r: OUT.r, theta: sph.theta, phi: OUT.phi, t: OUT.t }); setSeg("out"); }
+			function goInside() { mode = "inside"; playing = false; startTween({ r: IN.r, theta: IN.theta, phi: IN.phi, t: IN.t }); setSeg("in"); }
+
+			var sidepill = document.getElementById("f3d-sidepill"), sidetext = document.getElementById("f3d-sidetext");
+			function updatePill() { var inside = mode === "inside" ? true : Math.cos(sph.theta) < -0.08; if (inside !== pillInside) { pillInside = inside; sidepill.classList.toggle("inside", inside); sidetext.textContent = inside ? "Inside" : "Outside"; } }
+
+			function animate() {
+				requestAnimationFrame(animate);
+				var dt = Math.min(clock.getDelta(), 0.05);
+				if (tween) { tween.t += dt / tween.dur; var k = ease(Math.min(1, tween.t)); sph.r = lerp(tween.from.r, tween.to.r, k); sph.theta = lerp(tween.from.theta, tween.to.theta, k); sph.phi = lerp(tween.from.phi, tween.to.phi, k); target.lerpVectors(tween.fromT, tween.toT, k); applyCam(); if (tween.t >= 1) tween = null; }
+				else { if (playing && !dragging && mode === "outside") sph.theta += 0.16 * dt; applyCam(); }
+				updatePill(); renderer.render(scene, camera);
+			}
+
+			var last = { x: 0, y: 0 };
+			stage.addEventListener("pointerdown", function (e) { dragging = true; stage.classList.add("drag", "touched"); last.x = e.clientX; last.y = e.clientY; stage.setPointerCapture && stage.setPointerCapture(e.pointerId); });
+			stage.addEventListener("pointermove", function (e) { if (!dragging) return; var dx = e.clientX - last.x, dy = e.clientY - last.y; last.x = e.clientX; last.y = e.clientY; sph.theta -= dx * 0.005; sph.phi = clampN(sph.phi - dy * 0.005, 0.22, 1.5); if (!tween) applyCam(); });
+			function endDrag() { dragging = false; stage.classList.remove("drag"); }
+			stage.addEventListener("pointerup", endDrag); stage.addEventListener("pointerleave", endDrag);
+			stage.addEventListener("wheel", function (e) { e.preventDefault(); stage.classList.add("touched"); sph.r = clampN(sph.r * (1 + e.deltaY * 0.0012), 8, 170); if (!tween) applyCam(); }, { passive: false });
+
+			function setSeg(which) { var o = document.getElementById("f3d-out"), n = document.getElementById("f3d-in"); o.classList.toggle("on", which === "out"); n.classList.toggle("on", which === "in"); o.setAttribute("aria-selected", which === "out"); n.setAttribute("aria-selected", which === "in"); }
+			document.getElementById("f3d-out").addEventListener("click", goOutside);
+			document.getElementById("f3d-in").addEventListener("click", goInside);
+			var toggle = document.getElementById("f3d-toggle"), togtxt = document.getElementById("f3d-togtxt");
+			toggle.addEventListener("click", function () { playing = !playing; toggle.classList.toggle("playing", playing); togtxt.textContent = playing ? "Pause" : "Play"; toggle.setAttribute("aria-label", playing ? "Pause rotation" : "Play rotation"); });
+
+			function onResize() { var w = stage.clientWidth, h = stage.clientHeight; if (!w || !h) return; renderer.setSize(w, h); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+			if (window.ResizeObserver) new ResizeObserver(onResize).observe(stage); else window.addEventListener("resize", onResize);
+
+			applyCam(); animate(); renderer.render(scene, camera);
+			if (loadEl) loadEl.classList.add("done");
+		}
+	})();
+</script>

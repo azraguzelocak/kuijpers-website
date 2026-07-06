@@ -17,3 +17,25 @@
 	--color-accent: #fab76b;
 	--color-accent-dark: #f49f3c;
 }
+
+/* Expanding ping ring for the selected marker on the innovation site map */
+@keyframes fscl-ping {
+	0% { transform: translate(-50%, -50%) scale(0.6); opacity: 0.5; }
+	70% { transform: translate(-50%, -50%) scale(2.6); opacity: 0; }
+	100% { transform: translate(-50%, -50%) scale(2.6); opacity: 0; }
+}
+.fscl-ping {
+	animation: fscl-ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* SVG-safe pulse (scales around the element's own centre) */
+@keyframes fscl-ping-svg {
+	0% { transform: scale(0.6); opacity: 0.5; }
+	70% { transform: scale(2.6); opacity: 0; }
+	100% { transform: scale(2.6); opacity: 0; }
+}
+.fscl-ping-svg {
+	transform-box: fill-box;
+	transform-origin: center;
+	animation: fscl-ping-svg 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+}

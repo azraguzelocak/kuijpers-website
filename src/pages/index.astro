@@ -88,7 +88,7 @@ const formatDate = (value?: string) =>
 			src="/images/hero.png"
 			alt=""
 			aria-hidden="true"
-			class="absolute inset-0 h-full w-full object-cover"
+			class="absolute inset-0 h-full w-full object-cover object-center"
 			loading="eager"
 		/>
 		<!-- Cinematic dark overlay for legibility (stronger on the left) -->
@@ -398,7 +398,7 @@ const formatDate = (value?: string) =>
 				<span
 					class="text-sm font-semibold uppercase tracking-wider text-brand-600"
 				>
-					Latest Publications
+					Latest Innovations
 				</span>
 				<h2
 					class="mt-4 text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl"
@@ -413,7 +413,7 @@ const formatDate = (value?: string) =>
 						{latestPublications.map((pub: any) => {
 							const meta = typeMeta(pub.publicationType);
 							const authors = authorNames(pub);
-							const href = pub.pdfUrl ?? pub.url ?? "/publications";
+							const href = pub.pdfUrl ?? pub.url ?? "/innovations";
 							const external = Boolean(pub.pdfUrl ?? pub.url);
 							return (
 								<a
@@ -448,7 +448,7 @@ const formatDate = (value?: string) =>
 										</p>
 									)}
 									<span class="mt-4 inline-flex items-center text-sm font-semibold text-brand-600">
-										{external ? "Read publication" : "View publication"}{" "}
+										{external ? "Read more" : "View innovation"}{" "}
 										&rarr;
 									</span>
 								</a>
@@ -457,17 +457,17 @@ const formatDate = (value?: string) =>
 					</div>
 				) : (
 					<p class="mt-12 text-center text-stone-500">
-						Publications are coming soon — check back shortly.
+						Innovations are coming soon — check back shortly.
 					</p>
 				)
 			}
 
 			<div class="mt-12 text-center">
 				<a
-					href="/publications"
+					href="/innovations"
 					class="inline-flex items-center text-base font-semibold text-brand-600 transition-colors hover:text-brand-700"
 				>
-					See all publications &rarr;
+					See all innovations &rarr;
 				</a>
 			</div>
 		</div>

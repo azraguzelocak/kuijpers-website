@@ -14,7 +14,7 @@ const stats = [
 	{ value: countByStatus("ongoing"), label: "Ongoing" },
 	{ value: countByStatus("completed"), label: "Completed" },
 	{ value: countByStatus("planned"), label: "In Design" },
-	{ value: publications.length, label: "Publications" },
+	{ value: publications.length, label: "Innovations" },
 ];
 
 // --- Status presentation -----------------------------------------------
@@ -60,7 +60,7 @@ const teamCount = (project: any) => (project.team?.length ?? 0);
 	<section class="relative overflow-hidden bg-stone-900">
 		<!-- Full-bleed background photograph -->
 		<img
-			src="/images/research-hero.png"
+			src="/images/research-hero.jpg"
 			alt=""
 			aria-hidden="true"
 			class="absolute inset-0 h-full w-full object-cover"
