@@ -84,6 +84,7 @@ function NetworkSphere({
 	const [rot, setRot] = useState({ rx: -0.2, ry: 0.4 });
 	const [spin, setSpin] = useState(true);
 	const [hover, setHover] = useState<string | null>(null);
+	const [phase, setPhase] = useState(0);
 	const dragging = useRef(false);
 	const moved = useRef(false);
 	const last = useRef({ x: 0, y: 0 });
@@ -101,7 +102,8 @@ function NetworkSphere({
 		const loop = (t: number) => {
 			const dt = t - prev;
 			prev = t;
-			if (spinRef.current && !dragging.current && !hoverRef.current && !selRef.current) {
+			setPhase((ph) => ph + dt);
+				if (spinRef.current && !dragging.current && !hoverRef.current && !selRef.current) {
 				setRot((r) => ({ ...r, ry: r.ry + dt * 0.00016 }));
 			}
 			raf = requestAnimationFrame(loop);
@@ -134,6 +136,25 @@ function NetworkSphere({
 		for (const n of nodes) m[n.inn.id] = { x: n.x, y: n.y, depth: n.depth };
 		return m;
 	}, [nodes]);
+
+const ctrl = (a, b) => {
+  const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+  return { x: mx + (CX - mx) * 0.16, y: my + (CY - my) * 0.16 };
+};
+const qpath = (a, b) => {
+  const k = ctrl(a, b);
+  return "M " + a.x + " " + a.y + " Q " + k.x + " " + k.y + " " + b.x + " " + b.y;
+};
+const qpoint = (a, b, tt) => {
+  const k = ctrl(a, b), u = 1 - tt;
+  return { x: u * u * a.x + 2 * u * tt * k.x + tt * tt * b.x, y: u * u * a.y + 2 * u * tt * k.y + tt * tt * b.y };
+};
+const pulses = useMemo(() => {
+  const arr = [];
+  for (let i = 0; i < 16; i++) arr.push({ rel: RELATIONS[Math.floor((i / 16) * RELATIONS.length)], off: (i * 0.137) % 1, dur: 2400 + (i % 6) * 320 });
+  return arr;
+}, []);
+
 
 	const onPointerDown = (e: React.PointerEvent) => {
 		dragging.current = true;
@@ -201,25 +222,34 @@ function NetworkSphere({
 				</defs>
 				<circle cx={CX} cy={CY} r={R + 30} fill="url(#sphere-glow)" />
 
-				{/* Connections — drawn only for the focused node */}
-				<g>
-					{activeId &&
-						RELATIONS.map((rel, idx) => {
-							if (rel.a !== activeId && rel.b !== activeId) return null;
-							const a = posById[rel.a];
-							const b = posById[rel.b];
-							if (!a || !b) return null;
-							return (
-								<line
-									key={idx}
-									x1={a.x} y1={a.y} x2={b.x} y2={b.y}
-									stroke={RELATION_META[rel.type].color}
-									strokeWidth={2.4}
-									opacity={0.9}
-								/>
-							);
-						})}
-				</g>
+				{/* Nerve fibres — a faint web of every link, brightening for the focused node */}
+<g fill="none" strokeLinecap="round">
+  {RELATIONS.map((rel, idx) => {
+    const a = posById[rel.a];
+    const b = posById[rel.b];
+    if (!a || !b) return null;
+    const connected = activeId != null && (rel.a === activeId || rel.b === activeId);
+    const depth = (a.depth + b.depth) / 2;
+    const stroke = connected ? RELATION_META[rel.type].color : "#8ea4c9";
+    const opacity = connected ? 0.92 : activeId ? 0.05 : 0.08 + depth * 0.14;
+    return <path key={idx} d={qpath(a, b)} stroke={stroke} strokeWidth={connected ? 2.2 : 1} opacity={opacity} />;
+  })}
+</g>
+
+{/* Travelling signals along the fibres */}
+<g>
+  {pulses.map((pl, i) => {
+    const a = posById[pl.rel.a];
+    const b = posById[pl.rel.b];
+    if (!a || !b) return null;
+    const tt = (((phase / pl.dur) + pl.off) % 1 + 1) % 1;
+    const pt = qpoint(a, b, tt);
+    const depth = (a.depth + b.depth) / 2;
+    const near = activeId == null || pl.rel.a === activeId || pl.rel.b === activeId;
+    const op = (0.3 + depth * 0.6) * (near ? 1 : 0.2);
+    return <circle key={"pulse" + i} cx={pt.x} cy={pt.y} r={2.4} fill="#cfe0ff" opacity={op} />;
+  })}
+</g>
 
 				{/* Nodes */}
 				<g>
@@ -240,7 +270,8 @@ function NetworkSphere({
 								onMouseLeave={() => setHover(null)}
 								opacity={dim ? 0.28 : 1}
 							>
-								{isSel && (
+								<circle cx={x} cy={y} r={r * 2.2} fill={cat} opacity={0.09 + depth * 0.05} />
+{isSel && (
 									<circle cx={x} cy={y} r={r + 6} fill="none" stroke={cat} strokeWidth={2} opacity={0.6} />
 								)}
 								<circle

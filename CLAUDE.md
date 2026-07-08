@@ -160,15 +160,25 @@ network reads clearly; selecting one dims the rest to focus it.
 
 **Farm view** ("Explore the site") — `src/components/innovations/FarmView3D.astro`, its own
 section on the innovations page ABOVE the explorer. A **built (not photographed) Three.js**
-model (r128 from cdnjs via an `is:inline` script; "3D failed to load — refresh" fallback). A red
-corrugated barn, fully enclosed (front + back walls closed); a plain grey seam roof (no roof
-clutter) and metal silos alongside. Interior (seen via the Inside view): tiered cage rows whose
-fronts face the central aisle (feed/water lines + egg belts on the aisle side, back panels to the
-walls), support columns + horizontal tie beams, glowing ridge light
-tubes, a control screen, ~200 instanced chickens and ~260 instanced eggs on slanted collection
-belts, plus two interior fill point-lights. Custom drag-orbit + scroll-zoom; auto-rotates in
-**Outside** mode with a **Pause** toggle; the **Inside** button (`IN` preset) tweens the camera to
-stand at one end of the central aisle looking **down the corridor** (like the EMBE6822 photo).
+model (r128 from cdnjs via an `is:inline` script; "3D failed to load — refresh" fallback).
+**Five identical** red corrugated barns stand parallel in a row, spaced `2*HW` apart so their
+half-hexagon bases just touch at ground level (walls lean apart above). The base `barn` group is
+`.clone()`d four times (to z = −4·HW … +2·HW) *before* the silos are added to `barn`, so the whole
+complex shares ONE silo cluster; the original silo-bearing barn is moved to the RIGHT (+Z, +4·HW)
+end of the row with its silos on the outer (+Z) side. Each barn is fully enclosed (front + back walls closed) with
+a plain grey seam roof (no roof clutter). Windows sit **only on the two END walls** (±X half-hexagon gables, via `onEnd()`) — not on the
+long front/back faces; the **+X end** also carries a big garage door + a personnel door. The metal
+**silos stand in a tight row along the back (-Z)** on support legs that reach the ground (so they
+don't hide the front facade). Interior (seen via the Inside view): tiered cage rows whose
+interior is **built in 3D**: tiered cage rows whose fronts face the central aisle (feed/water
+lines + egg belts aisle-side, back panels to the walls), roof tie beams, ridge light tubes, a
+control screen, and ~300 instanced chickens in the cages. Custom drag-orbit + scroll-zoom;
+auto-rotates in **Outside** mode with a **Pause** toggle; the **Inside** button (`IN` preset)
+tweens the camera to one end of the aisle looking **down the corridor**. A **Full screen** button
+(`.fs`, top-right of the stage) requests fullscreen on the stage via the Fullscreen API (with a
+`:fullscreen` CSS rule sizing it to 100vw/100vh). (A real corridor-photo interior was tried and
+reverted — `sharp`-mirrored `EMBE6822.jpg` on a plane — so `public/images/barn-corridor.jpg` no
+longer exists.)
 There is intentionally **no "Walk" mode** — it was buggy and removed. Side pill
 flips Outside/Inside. No hotspots. Namespaced under `.farm3d`, ids `f3d-*`; the stage has an
 explicit CSS `height: 500px` (WebGL needs a real height). GOTCHA: `Object3D.add()` returns the

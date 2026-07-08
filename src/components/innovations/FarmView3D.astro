@@ -33,6 +33,7 @@
 				<div class="post post-grain"></div>
 				<div class="post post-vig"></div>
 				<div class="load" id="f3d-load">Building model&hellip;</div>
+				<button class="fs" id="f3d-fs" type="button" aria-label="Full screen">Full screen</button>
 			</div>
 			<div class="controls">
 				<div class="seg" role="tablist" aria-label="View">
@@ -48,7 +49,7 @@
 </section>
 
 <style is:global>
-	.farm3d { --ink: #1c1917; --muted: #57534e; --line: rgba(0, 0, 0, 0.16); --red: #b5271f; --amber: #d98a2b; background: transparent; color: var(--ink); padding: 0; font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+	.farm3d { --ink: #1c1917; --muted: #57534e; --line: rgba(0, 0, 0, 0.16); --red: #c8482c; --amber: #d98a2b; background: transparent; color: var(--ink); padding: 0; font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
 	.farm3d * { box-sizing: border-box; }
 	.farm3d .head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 2px 2px 12px; }
 	.farm3d .title { font-weight: 600; font-size: 15px; }
@@ -67,6 +68,10 @@
 	.farm3d .post-grain { opacity: 0.055; mix-blend-mode: overlay; background-size: 170px 170px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='170' height='170'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
 	.farm3d .load { position: absolute; inset: 0; z-index: 6; display: flex; align-items: center; justify-content: center; color: #9ca3af; font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; background: #0b0d10; transition: opacity 0.6s; }
 	.farm3d .load.done { opacity: 0; pointer-events: none; }
+	.farm3d .fs { position: absolute; top: 12px; right: 12px; z-index: 7; cursor: pointer; font-family: inherit; font-size: 11.5px; font-weight: 600; letter-spacing: 0.06em; color: #fff; background: rgba(0, 0, 0, 0.42); border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 8px; padding: 6px 11px; backdrop-filter: blur(4px); transition: 0.18s; }
+	.farm3d .fs:hover { background: rgba(0, 0, 0, 0.62); }
+	.farm3d .stage:fullscreen { height: 100vh; width: 100vw; border-radius: 0; }
+	.farm3d .stage:-webkit-full-screen { height: 100vh; width: 100vw; border-radius: 0; }
 	.farm3d .controls { display: flex; align-items: center; gap: 12px; margin: 16px 4px 0; flex-wrap: wrap; }
 	.farm3d .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
 	.farm3d .seg button { font-family: inherit; font-size: 12.5px; font-weight: 600; color: var(--muted); background: transparent; border: 0; padding: 9px 16px; cursor: pointer; transition: 0.18s; }
@@ -148,8 +153,8 @@
 
 			var corrH = (function () { var c = cv(256, 8), x = c.getContext("2d"); for (var i = 0; i < 256; i++) { var v = Math.round(128 + 120 * Math.sin(i / 256 * Math.PI * 2)); x.fillStyle = "rgb(" + v + "," + v + "," + v + ")"; x.fillRect(i, 0, 1, 8); } return c; })();
 			var corrNormalC = normalFrom(corrH, 2.2);
-			function redAlbedo() { var c = cv(256, 256), x = c.getContext("2d"); x.fillStyle = "#b5271f"; x.fillRect(0, 0, 256, 256); var g = x.createLinearGradient(0, 150, 0, 256); g.addColorStop(0, "rgba(40,20,15,0)"); g.addColorStop(1, "rgba(40,20,15,0.28)"); x.fillStyle = g; x.fillRect(0, 150, 256, 106); for (var k = 0; k < 40; k++) { x.fillStyle = "rgba(60,30,22," + (0.05 + Math.random() * 0.08) + ")"; x.fillRect(Math.random() * 256, 180 + Math.random() * 70, 1 + Math.random() * 3, 6 + Math.random() * 20); } return c; }
-			function redPanel(reps, ry) { var m = mat("#b5271f", { roughness: 0.62, metalness: 0.16, envMapIntensity: 0.6, map: tex(redAlbedo(), 1, 1), normalMap: tex(corrNormalC, reps, ry || 1), side: THREE.DoubleSide }); m.normalScale = new THREE.Vector2(1, 1); return m; }
+			function redAlbedo() { var c = cv(256, 256), x = c.getContext("2d"); x.fillStyle = "#c8482c"; x.fillRect(0, 0, 256, 256); var g = x.createLinearGradient(0, 150, 0, 256); g.addColorStop(0, "rgba(40,20,15,0)"); g.addColorStop(1, "rgba(40,20,15,0.28)"); x.fillStyle = g; x.fillRect(0, 150, 256, 106); for (var k = 0; k < 40; k++) { x.fillStyle = "rgba(60,30,22," + (0.05 + Math.random() * 0.08) + ")"; x.fillRect(Math.random() * 256, 180 + Math.random() * 70, 1 + Math.random() * 3, 6 + Math.random() * 20); } return c; }
+			function redPanel(reps, ry) { var m = mat("#c8482c", { roughness: 0.62, metalness: 0.16, envMapIntensity: 0.6, map: tex(redAlbedo(), 1, 1), normalMap: tex(corrNormalC, reps, ry || 1), side: THREE.DoubleSide }); m.normalScale = new THREE.Vector2(1, 1); return m; }
 			var seamH = (function () { var c = cv(256, 64), x = c.getContext("2d"); x.fillStyle = "#808080"; x.fillRect(0, 0, 256, 64); for (var i = 0; i < 256; i += 32) { x.fillStyle = "#ffffff"; x.fillRect(i, 0, 3, 64); x.fillStyle = "#3a3a3a"; x.fillRect(i + 3, 0, 2, 64); } return c; })();
 
 			var roofMat = mat("#9aa0a6", { metalness: 0.55, roughness: 0.5, side: THREE.DoubleSide, map: tex(seamH, 10, 3) });
@@ -178,64 +183,102 @@
 			function tri(a, b, c, m) { var g = new THREE.BufferGeometry(); g.setAttribute("position", new THREE.Float32BufferAttribute([a[0], a[1], a[2], b[0], b[1], b[2], c[0], c[1], c[2]], 3)); g.computeVertexNormals(); var mesh = new THREE.Mesh(g, m); mesh.castShadow = true; mesh.receiveShadow = true; return mesh; }
 
 			// ---------- barn shell ----------
-			var L = 44, HW = 9, WH = 8, RID = 13, HX = L / 2, aF = Math.atan2(RID - WH, HW), slopeLen = Math.hypot(HW, RID - WH);
+			var L = 84, HW = 9, WH = 8, RID = 8.4, HX = L / 2, aF = Math.atan2(RID - WH, HW), slopeLen = Math.hypot(HW, RID - WH);
 			var barn = new THREE.Group();
-			var front = planeMesh(L, WH, redPanel(6, 1)); front.position.set(0, WH / 2, HW); barn.add(front);
-			var backWall = planeMesh(L, WH, redPanel(6, 1)); backWall.position.set(0, WH / 2, -HW); barn.add(backWall);
-			var eL = planeMesh(2 * HW, WH, redPanel(3, 1)); eL.rotation.y = Math.PI / 2; eL.position.set(-HX, WH / 2, 0); barn.add(eL);
-			var eR = planeMesh(2 * HW, WH, redPanel(3, 1)); eR.rotation.y = -Math.PI / 2; eR.position.set(HX, WH / 2, 0); barn.add(eR);
-			barn.add(tri([-HX, WH, HW], [-HX, RID, 0], [-HX, WH, -HW], redPanel(1, 1)));
-			barn.add(tri([HX, WH, HW], [HX, WH, -HW], [HX, RID, 0], redPanel(1, 1)));
-			var rF = planeMesh(L, slopeLen, roofMat); rF.rotation.x = -(Math.PI / 2 - aF); rF.position.set(0, (WH + RID) / 2, HW / 2); barn.add(rF);
-			var rB = planeMesh(L, slopeLen, roofMat); rB.rotation.x = (Math.PI / 2 - aF); rB.position.set(0, (WH + RID) / 2, -HW / 2); barn.add(rB);
-			var ridge = boxMesh(L + 0.4, 0.4, 0.6, darkMetal); ridge.position.set(0, RID + 0.1, 0); barn.add(ridge);
+			// full half-hexagon cross-section: angled sides run from the GROUND up to a flat top
+			var topZ = 4.6, topY = 9.4;
+			var sideAng = Math.atan2(HW - topZ, topY), sideLen = Math.hypot(HW - topZ, topY);
+			var frontSide = planeMesh(L, sideLen, redPanel(6, 1.6)); frontSide.rotation.x = -sideAng; frontSide.position.set(0, topY / 2, (HW + topZ) / 2); barn.add(frontSide);
+			var backSide = planeMesh(L, sideLen, redPanel(6, 1.6)); backSide.rotation.x = sideAng; backSide.position.set(0, topY / 2, -(HW + topZ) / 2); barn.add(backSide);
+			var topRoof = planeMesh(L, 2 * topZ, roofMat); topRoof.rotation.x = -Math.PI / 2; topRoof.position.set(0, topY, 0); barn.add(topRoof);
+			// half-hexagon end walls (full height, to the ground)
+			[-HX, HX].forEach(function (ex) {
+				barn.add(tri([ex, 0, HW], [ex, topY, topZ], [ex, 0, -HW], redPanel(1, 1)));
+				barn.add(tri([ex, topY, topZ], [ex, topY, -topZ], [ex, 0, -HW], redPanel(1, 1)));
+			});
 			var floor = planeMesh(L - 0.4, 2 * HW - 0.4, litterMat); floor.rotation.x = -Math.PI / 2; floor.position.set(0, 0.05, 0); barn.add(floor);
+
+			// flat, horizontal solar panels laid across the flat top of the roof
+			var solZ = [-3.7, -1.9, 1.9, 3.7];
+			for (var sxp = -HX + 2.4; sxp <= HX - 2.4; sxp += 3.05) {
+				for (var sj = 0; sj < solZ.length; sj++) {
+					var panel = boxMesh(2.85, 0.09, 1.6, solarMat);
+					panel.position.set(sxp, topY + 0.12, solZ[sj]);
+					barn.add(panel);
+				}
+			}
+			// ridge ventilation caps along the centre (as on the real barn)
+			for (var vx = -(HX - 5); vx <= HX - 5; vx += 4.2) {
+				var vent = boxMesh(1.3, 0.9, 1.4, darkMetal); vent.position.set(vx, topY + 0.35, 0); barn.add(vent);
+			}
+			// windows on the two END walls only (not the front/back long faces); doors on one end
+			var winMat = mat("#26333d", { metalness: 0.35, roughness: 0.18, envMapIntensity: 0.9 });
+			var doorMat = mat("#37302a", { roughness: 0.55, metalness: 0.25, envMapIntensity: 0.5 });
+			var onEnd = function (mesh, ex, yy, zz) { mesh.position.set(ex + (ex > 0 ? 0.12 : -0.12), yy, zz); barn.add(mesh); };
+			// an upper row of windows on both end walls
+			[-HX, HX].forEach(function (ex) {
+				[-3.5, 0, 3.5].forEach(function (zz) { onEnd(boxMesh(0.1, 1.2, 1.5, winMat), ex, 6.4, zz); });
+			});
+			// the -X end (no doors) gets a mid row of windows too
+			[-4.5, 0, 4.5].forEach(function (zz) { onEnd(boxMesh(0.1, 1.2, 1.5, winMat), -HX, 3.6, zz); });
+			// the +X end carries the doors: a big garage door + a normal personnel door
+			onEnd(boxMesh(0.16, 4.0, 5.0, doorMat), HX, 2.0, 0);
+			onEnd(boxMesh(0.16, 2.4, 1.4, doorMat), HX, 1.2, 6.4);
 
 			// ---------- interior: rows, chickens, eggs, tech ----------
 			var tiers = [1.0, 2.75, 4.5], rows = [-4.7, 4.7];
 			rows.forEach(function (zt) {
 				var frontOff = zt < 0 ? 1.3 : -1.3;
-				for (var px = -17; px <= 17; px += 3.2) { var post = boxMesh(0.16, 5.6, 0.16, frameMat); post.position.set(px, 2.8, zt + frontOff); barn.add(post); }
+				for (var px = -(HX - 7); px <= HX - 7; px += 3.2) { var post = boxMesh(0.16, 5.6, 0.16, frameMat); post.position.set(px, 2.8, zt + frontOff); barn.add(post); }
 				tiers.forEach(function (ty) {
 					var shelf = boxMesh(L - 8, 0.14, 2.7, cageMat); shelf.position.set(0, ty, zt); barn.add(shelf);
 					var back = boxMesh(L - 8, 1.5, 0.08, frameMat); back.position.set(0, ty + 0.75, zt - frontOff); barn.add(back);
 					var feed = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, L - 8, 10), pipeMat); feed.rotation.z = Math.PI / 2; feed.position.set(0, ty + 0.12, zt + frontOff); barn.add(feed);
-					// slanted egg-collection belt in front of each tier
 					var belt = boxMesh(L - 8, 0.06, 0.8, beltMat); belt.position.set(0, ty - 0.5, zt + frontOff * 1.35); belt.rotation.x = frontOff < 0 ? -0.28 : 0.28; barn.add(belt);
 				});
 				var water = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, L - 8, 8), pipeMat); water.rotation.z = Math.PI / 2; water.position.set(0, 5.4, zt); barn.add(water);
 			});
-			// (aisle columns removed — they blocked the corridor)
-			for (var tx = -18; tx <= 18; tx += 6) {
-				var tie = boxMesh(0.16, 0.16, 2 * HW - 0.4, darkMetal); tie.position.set(tx, WH + 0.5, 0); barn.add(tie);
+			for (var tx = -(HX - 6); tx <= HX - 6; tx += 6) {
+				var tie = boxMesh(0.16, 0.16, 2 * topZ, darkMetal); tie.position.set(tx, topY - 0.3, 0); barn.add(tie);
 			}
-			for (var gx = -16; gx <= 16; gx += 8) { var tube = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 5.5, 8), tubeMat); tube.rotation.z = Math.PI / 2; tube.position.set(gx, 6.7, 0); barn.add(tube); }
+			for (var gx = -(HX - 8); gx <= HX - 8; gx += 8) { var tube = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 5.5, 8), tubeMat); tube.rotation.z = Math.PI / 2; tube.position.set(gx, 6.7, 0); barn.add(tube); }
 			var screen = boxMesh(2.6, 1.5, 0.14, screenMat); screen.position.set(HX - 0.25, 3.4, 3); screen.rotation.y = -Math.PI / 2; barn.add(screen);
-
-			// chickens (instanced) in the cages — none on the floor
 			var chickGeo = new THREE.SphereGeometry(0.3, 7, 6); chickGeo.scale(1.3, 0.9, 1);
 			var CN = 300, chick = new THREE.InstancedMesh(chickGeo, chickMat, CN), dO = new THREE.Object3D();
 			for (var ci = 0; ci < CN; ci++) {
 				var side = Math.random() < 0.5 ? -4.7 : 4.7;
 				var zz = side + (Math.random() * 1.4 - 0.7);
 				var yy = tiers[ci % 3] + 0.34;
-				dO.position.set((Math.random() * 2 - 1) * 17, yy, zz); dO.rotation.set(0, Math.random() * Math.PI * 2, 0);
+				dO.position.set((Math.random() * 2 - 1) * (HX - 7), yy, zz); dO.rotation.set(0, Math.random() * Math.PI * 2, 0);
 				var sc2 = 0.8 + Math.random() * 0.55; dO.scale.set(sc2, sc2, sc2); dO.updateMatrix(); chick.setMatrixAt(ci, dO.matrix);
 			}
 			chick.instanceMatrix.needsUpdate = true; barn.add(chick);
 
 			scene.add(barn);
 
-			// ---------- silos ----------
-			[-4.5, 0, 4.5].forEach(function (z) {
-				var body = new THREE.Mesh(new THREE.CylinderGeometry(1.7, 1.7, 11, 20), metalMat); body.castShadow = true; body.position.set(28, 7, z); barn.add(body);
-				var cone = new THREE.Mesh(new THREE.CylinderGeometry(0, 1.85, 2.4, 20), metalMat); cone.castShadow = true; cone.position.set(28, 13.7, z); barn.add(cone);
-				var hop = new THREE.Mesh(new THREE.CylinderGeometry(1.7, 0.35, 2.2, 20), metalMat); hop.castShadow = true; hop.position.set(28, 2.4, z); barn.add(hop);
+			// two more identical buildings — cloned BEFORE the silos are added, so the whole
+			// row shares the single silo cluster (no new silos). Spacing = 2*HW makes their
+			// half-hexagon bases just touch at ground level (walls lean apart above). The
+			// original (silo-bearing) barn sits at the RIGHT (+Z) end of the row.
+			[-4 * HW, -2 * HW, 0, 2 * HW].forEach(function (oz) {
+				var c = barn.clone(); c.position.z = oz; scene.add(c);
 			});
-			var feedBin = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, 8, 18), tanMat); feedBin.castShadow = true; feedBin.position.set(24, 5.5, -8); barn.add(feedBin);
+			barn.position.z = 4 * HW;
+
+			// ---------- silos: on the OUTER (+Z) side of the right-hand barn ----------
+			[-8, -4, 0, 4, 8].forEach(function (xp) {
+				var sz = HW + 2.6;
+				var body = new THREE.Mesh(new THREE.CylinderGeometry(1.55, 1.55, 10, 20), metalMat); body.castShadow = true; body.position.set(xp, 6.5, sz); barn.add(body);
+				var cone = new THREE.Mesh(new THREE.CylinderGeometry(0, 1.7, 2.1, 20), metalMat); cone.castShadow = true; cone.position.set(xp, 12.5, sz); barn.add(cone);
+				var hop = new THREE.Mesh(new THREE.CylinderGeometry(1.55, 0.3, 2.0, 20), metalMat); hop.castShadow = true; hop.position.set(xp, 2.4, sz); barn.add(hop);
+				// support legs standing on the ground
+				[[1.3, 1.3], [1.3, -1.3], [-1.3, 1.3], [-1.3, -1.3]].forEach(function (o) {
+					var leg = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 3.4, 8), metalMat); leg.castShadow = true; leg.position.set(xp + o[0], 1.7, sz + o[1]); barn.add(leg);
+				});
+			});
 
 			// ground
-			var apron = new THREE.Mesh(new THREE.CircleGeometry(33, 48), concreteMat); apron.rotation.x = -Math.PI / 2; apron.position.y = 0.01; apron.receiveShadow = true; scene.add(apron);
+			var apron = new THREE.Mesh(new THREE.CircleGeometry(78, 64), concreteMat); apron.rotation.x = -Math.PI / 2; apron.position.y = 0.01; apron.receiveShadow = true; scene.add(apron);
 			var grass = new THREE.Mesh(new THREE.PlaneGeometry(700, 700), grassMat); grass.rotation.x = -Math.PI / 2; grass.position.y = -0.02; grass.receiveShadow = true; scene.add(grass);
 
 			// soft grounding shadow under the buildings (fake ambient occlusion)
@@ -245,12 +288,15 @@
 			csx.fillStyle = csg; csx.fillRect(0, 0, 256, 128);
 			var cs = new THREE.Mesh(new THREE.PlaneGeometry(66, 32), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(csC), transparent: true, depthWrite: false }));
 			cs.rotation.x = -Math.PI / 2; cs.position.set(3, 0.03, 0); scene.add(cs);
+			[-4 * HW, -2 * HW, 2 * HW, 4 * HW].forEach(function (cz) {
+				var c = cs.clone(); c.position.set(3, 0.03, cz); scene.add(c);
+			});
 
 			// tree line around the field (scale + context, like the real site)
 			var trunkMat = mat("#5b4327", { roughness: 0.95 });
 			var leafMat = mat("#4f7a3a", { roughness: 1, flatShading: true });
 			for (var ti = 0; ti < 24; ti++) {
-				var ang = (ti / 24) * Math.PI * 2 + Math.random() * 0.25, rad = 64 + Math.random() * 30, sc = 0.9 + Math.random() * 0.9;
+				var ang = (ti / 24) * Math.PI * 2 + Math.random() * 0.25, rad = 92 + Math.random() * 36, sc = 0.9 + Math.random() * 0.9;
 				var tree = new THREE.Group();
 				var trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.5 * sc, 0.75 * sc, 4 * sc, 6), trunkMat); trunk.position.y = 2 * sc; trunk.castShadow = true; tree.add(trunk);
 				var f1 = new THREE.Mesh(new THREE.IcosahedronGeometry(3.3 * sc, 0), leafMat); f1.position.y = 5.6 * sc; f1.scale.y = 1.1; f1.castShadow = true; tree.add(f1);
@@ -267,7 +313,7 @@
 			[-15, -5, 5, 15].forEach(function (lxp) { var pl = new THREE.PointLight("#fff2d8", 0.85, 52); pl.position.set(lxp, 6, 0); scene.add(pl); });
 
 			// ---------- orbit ----------
-			var target = new THREE.Vector3(0, 4.5, 0), sph = { r: 80, theta: 0.6, phi: 1.12 };
+			var target = new THREE.Vector3(0, 4.5, 0), sph = { r: 188, theta: 0.62, phi: 1.12 };
 			function clampN(v, a, b) { return Math.max(a, Math.min(b, v)); }
 			function applyCam() { var sp = Math.sin(sph.phi); camera.position.set(target.x + sph.r * sp * Math.sin(sph.theta), target.y + sph.r * Math.cos(sph.phi), target.z + sph.r * sp * Math.cos(sph.theta)); camera.lookAt(target); }
 			function sphFromCamera() { var off = camera.position.clone().sub(target); sph.r = off.length(); sph.phi = Math.acos(clampN(off.y / sph.r, -1, 1)); sph.theta = Math.atan2(off.x, off.z); }
@@ -275,7 +321,7 @@
 			var playing = true, dragging = false, mode = "outside", tween = null, pillInside = false, clock = new THREE.Clock();
 			function ease(t) { return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t; }
 			function lerp(a, b, t) { return a + (b - a) * t; }
-			var OUT = { r: 80, phi: 1.12, t: new THREE.Vector3(0, 4.5, 0) };
+			var OUT = { r: 188, phi: 1.12, t: new THREE.Vector3(0, 4.5, 0) };
 			// Inside = stand at one end of the central aisle looking down the corridor
 			var IN = { r: 19, theta: -Math.PI / 2, phi: Math.PI / 2 - 0.05, t: new THREE.Vector3(0, 3, 0) };
 			function startTween(to) { sphFromCamera(); tween = { t: 0, dur: 1.2, from: { r: sph.r, theta: sph.theta, phi: sph.phi }, to: to, fromT: target.clone(), toT: to.t.clone() }; }
@@ -308,6 +354,21 @@
 
 			function onResize() { var w = stage.clientWidth, h = stage.clientHeight; if (!w || !h) return; renderer.setSize(w, h); camera.aspect = w / h; camera.updateProjectionMatrix(); }
 			if (window.ResizeObserver) new ResizeObserver(onResize).observe(stage); else window.addEventListener("resize", onResize);
+
+			// Fullscreen the viewer so you can just see the model / corridor
+			var fsBtn = document.getElementById("f3d-fs");
+			function fsActive() { return (document.fullscreenElement || document.webkitFullscreenElement) === stage; }
+			if (fsBtn) {
+				fsBtn.addEventListener("pointerdown", function (e) { e.stopPropagation(); });
+				fsBtn.addEventListener("click", function (e) {
+					e.stopPropagation();
+					if (fsActive()) { (document.exitFullscreen || document.webkitExitFullscreen).call(document); }
+					else { (stage.requestFullscreen || stage.webkitRequestFullscreen || function () {}).call(stage); }
+				});
+				var onFs = function () { fsBtn.textContent = fsActive() ? "Exit" : "Full screen"; setTimeout(onResize, 60); };
+				document.addEventListener("fullscreenchange", onFs);
+				document.addEventListener("webkitfullscreenchange", onFs);
+			}
 
 			applyCam(); animate(); renderer.render(scene, camera);
 			if (loadEl) loadEl.classList.add("done");
