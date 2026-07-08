@@ -355,8 +355,8 @@
 				var aisle2 = zt2 < 0 ? 1 : -1;
 				// sit the birds in the aisle-front half of the cage, clear of the central feed pipe
 				var zz2 = zt2 + aisle2 * 0.8 + (Math.random() * 0.6 - 0.3);
-				dO.position.set((Math.random() * 2 - 1) * halfRun, ty2 + 0.46, zz2); dO.rotation.set(0, Math.random() * Math.PI * 2, 0);
-				var sc2 = 0.82 + Math.random() * 0.4; dO.scale.set(sc2, sc2, sc2); dO.updateMatrix(); chick.setMatrixAt(ci, dO.matrix); eyes.setMatrixAt(ci, dO.matrix);
+				dO.position.set((Math.random() * 2 - 1) * halfRun, ty2 + 0.4, zz2); dO.rotation.set(0, Math.random() * Math.PI * 2, 0);
+				var sc2 = 0.68 + Math.random() * 0.34; dO.scale.set(sc2, sc2, sc2); dO.updateMatrix(); chick.setMatrixAt(ci, dO.matrix); eyes.setMatrixAt(ci, dO.matrix);
 			}
 			chick.instanceMatrix.needsUpdate = true; inside.add(chick);
 			eyes.instanceMatrix.needsUpdate = true; inside.add(eyes);
