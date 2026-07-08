@@ -20,6 +20,14 @@ const EMPTY: FormState = {
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+// Web3Forms access key (this key is public by design — safe to ship in the browser).
+// Get a free key at https://web3forms.com by entering the recipient address
+// (jan@kuijperskip.com). Then paste it below, or set PUBLIC_WEB3FORMS_ACCESS_KEY in a
+// `.env` file before building. Submissions are emailed to whatever address the key is
+// registered to — no server needed, so the site can be hosted as static files anywhere.
+const WEB3FORMS_ACCESS_KEY =
+	import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY ?? "REPLACE_WITH_WEB3FORMS_ACCESS_KEY";
+
 const inputClass = (hasError: boolean) =>
 	`mt-1.5 block w-full rounded-lg border bg-white px-3.5 py-2.5 text-stone-900 shadow-sm outline-none transition-colors placeholder:text-stone-400 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 disabled:cursor-not-allowed disabled:bg-stone-50 ${
 		hasError ? "border-red-400" : "border-stone-300"
@@ -66,15 +74,23 @@ export default function ContactForm() {
 		setErrorMessage("");
 
 		try {
-			const res = await fetch("/api/contact", {
+			const res = await fetch("https://api.web3forms.com/submit", {
 				method: "POST",
-				headers: { "Content-Type": "application/json" },
+				headers: {
+					"Content-Type": "application/json",
+					Accept: "application/json",
+				},
 				body: JSON.stringify({
+					access_key: WEB3FORMS_ACCESS_KEY,
+					subject: `Website contact: ${values.subject.trim()}`,
+					from_name: "Kuijpers Research Field website",
+					replyto: values.email.trim(),
 					name: values.name.trim(),
 					email: values.email.trim(),
-					company: values.company.trim(),
-					subject: values.subject.trim(),
+					company: values.company.trim() || "—",
 					message: values.message.trim(),
+					// simple spam honeypot — real people leave this empty
+					botcheck: "",
 				}),
 			});
 
@@ -82,7 +98,7 @@ export default function ContactForm() {
 
 			if (!res.ok || !data.success) {
 				throw new Error(
-					data.error ?? "Something went wrong. Please try again.",
+					data.message ?? "Something went wrong. Please try again.",
 				);
 			}
 

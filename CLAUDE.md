@@ -10,11 +10,13 @@ and a Sanity CMS backend. Content (team, services, research projects, news,
 publications, site settings) is managed in Sanity; hero/banner images and the
 logo are static files in `public/`.
 
-- **Framework:** Astro `^6.4.2` (SSR-capable; `output` default, contact API is `prerender = false`)
+- **Framework:** Astro `^6.4.2` — **fully static** (`output: 'static'`, no adapter). `npm run build`
+  emits plain HTML/CSS/JS to `./dist` that can be hosted on ANY host (Bluehost/shared Apache,
+  Netlify, Vercel-static, GitHub Pages…).
 - **UI:** React `^19` islands via `@astrojs/react`
 - **Styling:** Tailwind CSS `^4.3` via `@tailwindcss/vite` (no `tailwind.config` — v4 CSS-first; see `src/styles/global.css`)
-- **CMS:** Sanity (`@sanity/client`, `@sanity/image-url`)
-- **Email:** Resend (contact form)
+- **CMS:** Sanity (`@sanity/client`, `@sanity/image-url`) — fetched at build time
+- **Contact form:** **Web3Forms** (client-side POST, no server). Key via `PUBLIC_WEB3FORMS_ACCESS_KEY`.
 - **Node:** `>=22.12.0`
 
 ## Commands
@@ -111,12 +113,15 @@ plus a dark gradient overlay for text legibility. Because heroes are wide/short:
 
 ## Contact form
 
-- `ContactForm.tsx` (React island) POSTs JSON to `src/pages/api/contact.ts`.
-- The endpoint (`prerender = false`) validates server-side and sends via **Resend**.
-- Requires env vars: `RESEND_API_KEY` and `CONTACT_EMAIL`. Without them it returns a 500
-  "not configured" response.
-- `from:` currently uses Resend's shared `onboarding@resend.dev` sender — swap for a
-  verified domain address in production.
+- `ContactForm.tsx` (React island) POSTs JSON **directly to Web3Forms**
+  (`https://api.web3forms.com/submit`) from the browser — no server route, so the site stays
+  fully static and host-agnostic. (The old Resend server route `src/pages/api/contact.ts` was
+  removed, and `resend` + `@astrojs/vercel` were uninstalled.)
+- Needs a Web3Forms **access key** (public by design): get one free at web3forms.com with the
+  recipient email (`jan@kuijperskip.com`), then set `PUBLIC_WEB3FORMS_ACCESS_KEY` in a `.env`
+  (see `.env.example`) or paste it into `ContactForm.tsx`, and rebuild. Until set, the built
+  form carries the literal `REPLACE_WITH_WEB3FORMS_ACCESS_KEY` placeholder and won't deliver.
+- Spam: a `botcheck` honeypot is sent; enable hCaptcha in the Web3Forms dashboard for more.
 
 ## Routing notes
 
@@ -222,8 +227,16 @@ indicative, sourced from the internal cross-table in `visulization/INNOVA~3.HTM.
 - Brand accent color is `brand-*` (e.g. `text-brand-300`), stone palette for neutrals.
 - Keep hero overlay gradients when swapping hero images so overlaid white text stays legible.
 
+## Deploying (static)
+
+`npm run build` → upload everything in `./dist` to the host's web root (e.g. `public_html`), or
+connect the GitHub repo to Netlify/Vercel (root dir `astro-site`, static — no adapter). `public/`
+extras that ship in the build: `.htaccess` (Apache HTTPS + the two 301 redirects; Nginx hosts
+ignore it). Set `PUBLIC_WEB3FORMS_ACCESS_KEY` before building or the contact form won't deliver.
+New Sanity content only appears after a rebuild + re-upload (static site).
+
 ## Outstanding / TODO
 
-- **Optimize large hero images:** `about-hero.jpg` (~13 MB) and `service-hero.jpg` (~17 MB)
-  are far too heavy for web. Resize to ~1920–2560px wide and compress (target a few hundred KB).
-- Contact form `from:` address should move to a verified Resend domain before production.
+- Hero images were optimized (heroes now ~240–360 KB; home hero is `hero.jpg`). `our-story-family.png`
+  (~0.9 MB) could still be trimmed if needed.
+- Set the real Web3Forms access key and confirm a test submission reaches `jan@kuijperskip.com`.

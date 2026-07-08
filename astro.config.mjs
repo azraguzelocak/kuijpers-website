@@ -5,13 +5,13 @@ import tailwindcss from '@tailwindcss/vite';
 
 import react from '@astrojs/react';
 
-import vercel from '@astrojs/vercel';
-
 // https://astro.build/config
 export default defineConfig({
-  // Deploy target: Vercel. Pages are prerendered by default; the contact API
-  // route (prerender = false) runs as a Vercel serverless function.
-  adapter: vercel(),
+  // Fully static output — `npm run build` writes plain HTML/CSS/JS to ./dist,
+  // which can be hosted on ANY web host (Bluehost/shared Apache, Netlify,
+  // Vercel-static, GitHub Pages, etc.). No server/adapter needed: the contact
+  // form posts directly to Web3Forms from the browser.
+  output: 'static',
 
   // Old standalone Advantages page is now merged into /services.
   // Publications was renamed to Innovations — keep old links working.

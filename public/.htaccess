@@ -1,0 +1,32 @@
+# .htaccess for hosting the static build on an Apache server (Bluehost and most
+# shared hosts use Apache). It is copied verbatim into the deployed site root.
+# NOTE: Apache-only. If your host uses Nginx, these rules don't apply — ask the
+# host how to force HTTPS and add the two redirects below.
+
+# --- Force HTTPS (uncomment once your SSL certificate is active) ---
+# RewriteEngine On
+# RewriteCond %{HTTPS} off
+# RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# --- Permanent redirects (mirror astro.config.mjs) ---
+Redirect 301 /advantages /services
+Redirect 301 /publications /innovations
+
+# --- Nice 404 page ---
+ErrorDocument 404 /404.html
+
+# --- Long cache for fingerprinted assets (Astro hashes these filenames) ---
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 6 months"
+  ExpiresByType image/png "access plus 6 months"
+  ExpiresByType image/svg+xml "access plus 6 months"
+  ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>
+
+# --- Gzip text assets ---
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript image/svg+xml
+</IfModule>
