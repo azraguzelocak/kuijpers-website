@@ -168,11 +168,23 @@ complex shares ONE silo cluster; the original silo-bearing barn is moved to the 
 end of the row with its silos on the outer (+Z) side. Each barn is fully enclosed (front + back walls closed) with
 a plain grey seam roof (no roof clutter). Windows sit **only on the two END walls** (±X half-hexagon gables, via `onEnd()`) — not on the
 long front/back faces; the **+X end** also carries a big garage door + a personnel door. The metal
-**silos stand in a tight row along the back (-Z)** on support legs that reach the ground (so they
-don't hide the front facade). Interior (seen via the Inside view): tiered cage rows whose
-interior is **built in 3D**: tiered cage rows whose fronts face the central aisle (feed/water
-lines + egg belts aisle-side, back panels to the walls), roof tie beams, ridge light tubes, a
-control screen, and ~300 instanced chickens in the cages. Custom drag-orbit + scroll-zoom;
+**silos stand in a tight row on the outer (+Z) side of the right-hand barn**, on support legs that
+reach the ground. Interior (seen via the Inside view) is **built once** as
+its own `inside` group at the z=0 barn (NOT cloned into all five — the one you enter is the rich
+one). Black litter floor and a light-brown inside ceiling liner (a plane just below the grey outer roof,
+so the outside roof is unchanged). Six-tier cage system both sides of a central aisle with per-tier
+equipment (**vertical green feed pipes running top-to-bottom INSIDE each cage block** + a nipple
+drinker line, manure belts under each tier, wire-mesh fronts, back panels, support frames, and a
+**yellow emissive LED bar lighting each layer**), overhead feed-conveyor tubes + roof tie-beams, two
+cool emissive LED runs, **roof-hung ceiling circulation fans** (inside only — below the roofline so
+they stay hidden from outside), and ~540
+instanced **chicken-shaped** birds (a merged body+head+beak+tail geometry via a small `mergeGeos`
+helper, brown low-reflectivity material so they read as hens — not egg-like ovoids); the +X (door) end has exhaust
+fans + feed hopper bins; the −X far end is a **full-red backdrop** you look toward; side walls have
+angled air inlets + sensor/screen boxes. Lighting is cool/tech in the aisle (cool-blue points + bright cool
+far-end) contrasted with a row of **warm yellow point lights + yellow LED bars glowing inside the
+cage layers**. The Inside camera **enters from the +X door end** (`IN.theta = +π/2`) looking down the
+corridor toward the glowing −X end (the barn has doors on the +X end only). Custom drag-orbit + scroll-zoom;
 auto-rotates in **Outside** mode with a **Pause** toggle; the **Inside** button (`IN` preset)
 tweens the camera to one end of the aisle looking **down the corridor**. A **Full screen** button
 (`.fs`, top-right of the stage) requests fullscreen on the stage via the Fullscreen API (with a

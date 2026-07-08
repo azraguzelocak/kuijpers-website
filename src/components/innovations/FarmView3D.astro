@@ -168,10 +168,10 @@
 			var grassC = cv(256, 256), grx = grassC.getContext("2d"); grx.fillStyle = "#5f8f4a"; grx.fillRect(0, 0, 256, 256);
 			for (var gi = 0; gi < 7000; gi++) { grx.fillStyle = "rgba(" + (34 + (Math.random() * 60 | 0)) + "," + (86 + (Math.random() * 70 | 0)) + "," + (34 + (Math.random() * 40 | 0)) + "," + (0.12 + Math.random() * 0.28).toFixed(2) + ")"; grx.fillRect(Math.random() * 256, Math.random() * 256, 1, 1 + Math.random() * 3); }
 			var grassMat = mat("#6a9a52", { roughness: 1, map: tex(grassC, 90, 90) });
-			var litterMat = mat("#b79a77", { roughness: 0.95, side: THREE.DoubleSide });
+			var litterMat = mat("#141414", { roughness: 0.95, side: THREE.DoubleSide });
 			var frameMat = mat("#8b9096", { metalness: 0.55, roughness: 0.5 });
 			var pipeMat = mat("#b9bdc2", { metalness: 0.7, roughness: 0.35 });
-			var chickMat = mat("#e9e2d2", { roughness: 0.9 });
+			var chickMat = mat("#b77a41", { roughness: 0.85, envMapIntensity: 0.2 });
 			var eggMat = mat("#f2ead6", { roughness: 0.45 });
 			var beltMat = mat("#3f4448", { roughness: 0.7, metalness: 0.2 });
 			var solarMat = new THREE.MeshStandardMaterial({ color: "#12294a", metalness: 0.45, roughness: 0.32, emissive: "#0a1a34", emissiveIntensity: 0.12 });
@@ -225,34 +225,7 @@
 			onEnd(boxMesh(0.16, 4.0, 5.0, doorMat), HX, 2.0, 0);
 			onEnd(boxMesh(0.16, 2.4, 1.4, doorMat), HX, 1.2, 6.4);
 
-			// ---------- interior: rows, chickens, eggs, tech ----------
-			var tiers = [1.0, 2.75, 4.5], rows = [-4.7, 4.7];
-			rows.forEach(function (zt) {
-				var frontOff = zt < 0 ? 1.3 : -1.3;
-				for (var px = -(HX - 7); px <= HX - 7; px += 3.2) { var post = boxMesh(0.16, 5.6, 0.16, frameMat); post.position.set(px, 2.8, zt + frontOff); barn.add(post); }
-				tiers.forEach(function (ty) {
-					var shelf = boxMesh(L - 8, 0.14, 2.7, cageMat); shelf.position.set(0, ty, zt); barn.add(shelf);
-					var back = boxMesh(L - 8, 1.5, 0.08, frameMat); back.position.set(0, ty + 0.75, zt - frontOff); barn.add(back);
-					var feed = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, L - 8, 10), pipeMat); feed.rotation.z = Math.PI / 2; feed.position.set(0, ty + 0.12, zt + frontOff); barn.add(feed);
-					var belt = boxMesh(L - 8, 0.06, 0.8, beltMat); belt.position.set(0, ty - 0.5, zt + frontOff * 1.35); belt.rotation.x = frontOff < 0 ? -0.28 : 0.28; barn.add(belt);
-				});
-				var water = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, L - 8, 8), pipeMat); water.rotation.z = Math.PI / 2; water.position.set(0, 5.4, zt); barn.add(water);
-			});
-			for (var tx = -(HX - 6); tx <= HX - 6; tx += 6) {
-				var tie = boxMesh(0.16, 0.16, 2 * topZ, darkMetal); tie.position.set(tx, topY - 0.3, 0); barn.add(tie);
-			}
-			for (var gx = -(HX - 8); gx <= HX - 8; gx += 8) { var tube = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 5.5, 8), tubeMat); tube.rotation.z = Math.PI / 2; tube.position.set(gx, 6.7, 0); barn.add(tube); }
-			var screen = boxMesh(2.6, 1.5, 0.14, screenMat); screen.position.set(HX - 0.25, 3.4, 3); screen.rotation.y = -Math.PI / 2; barn.add(screen);
-			var chickGeo = new THREE.SphereGeometry(0.3, 7, 6); chickGeo.scale(1.3, 0.9, 1);
-			var CN = 300, chick = new THREE.InstancedMesh(chickGeo, chickMat, CN), dO = new THREE.Object3D();
-			for (var ci = 0; ci < CN; ci++) {
-				var side = Math.random() < 0.5 ? -4.7 : 4.7;
-				var zz = side + (Math.random() * 1.4 - 0.7);
-				var yy = tiers[ci % 3] + 0.34;
-				dO.position.set((Math.random() * 2 - 1) * (HX - 7), yy, zz); dO.rotation.set(0, Math.random() * Math.PI * 2, 0);
-				var sc2 = 0.8 + Math.random() * 0.55; dO.scale.set(sc2, sc2, sc2); dO.updateMatrix(); chick.setMatrixAt(ci, dO.matrix);
-			}
-			chick.instanceMatrix.needsUpdate = true; barn.add(chick);
+			// interior is built ONCE as its own group below (not cloned into all five barns)
 
 			scene.add(barn);
 
@@ -265,6 +238,130 @@
 			});
 			barn.position.z = 4 * HW;
 
+			// ================= INTERIOR (built once, in the z=0 barn you step into) =================
+			var inside = new THREE.Group(); inside.position.z = 0; scene.add(inside);
+			var meshMat = mat("#c4cad0", { metalness: 0.5, roughness: 0.45, transparent: true, opacity: 0.2, side: THREE.DoubleSide });
+			var troughMat = mat("#cfd3d8", { metalness: 0.55, roughness: 0.4 });
+			var manureMat = mat("#2e3236", { metalness: 0.15, roughness: 0.8 });
+			var coolTubeMat = new THREE.MeshStandardMaterial({ color: "#eef4ff", emissive: "#cfe0ff", emissiveIntensity: 1.7 });
+			var glowMat = new THREE.MeshBasicMaterial({ color: "#c62a17", side: THREE.DoubleSide });
+			var greenMat = new THREE.MeshStandardMaterial({ color: "#0f7a26", roughness: 0.45, emissive: "#0a5c1b", emissiveIntensity: 0.85 });
+			var ledYellow = new THREE.MeshStandardMaterial({ color: "#fff29a", emissive: "#ffb600", emissiveIntensity: 4.6 });
+
+			var tiers = [0.8, 2.05, 3.3, 4.55, 5.8, 7.05];   // six cage levels
+			var rows = [-3.7, 3.7];                        // two cage blocks flanking the central aisle
+			var cageLen = L - 8, halfRun = HX - 7;
+			rows.forEach(function (zt) {
+				var aisle = zt < 0 ? 1 : -1, frontOff = 1.35 * aisle;
+				for (var px = -halfRun; px <= halfRun; px += 4.6) {
+					[frontOff, -frontOff].forEach(function (zo) { var post = boxMesh(0.13, 7.4, 0.13, frameMat); post.position.set(px, 3.7, zt + zo); inside.add(post); });
+				}
+				tiers.forEach(function (ty, ti) {
+					var shelf = boxMesh(cageLen, 0.1, 2.6, cageMat); shelf.position.set(0, ty, zt); shelf.rotation.x = 0.05 * aisle; inside.add(shelf);
+					var back = boxMesh(cageLen, 1.25, 0.06, frameMat); back.position.set(0, ty + 0.62, zt - frontOff); inside.add(back);
+					var wire = boxMesh(cageLen, 1.15, 0.03, meshMat); wire.position.set(0, ty + 0.55, zt + frontOff); inside.add(wire);
+					var man = boxMesh(cageLen, 0.05, 2.5, manureMat); man.position.set(0, ty - 0.26, zt); inside.add(man);
+					var eb = boxMesh(cageLen, 0.05, 0.46, beltMat); eb.position.set(0, ty - 0.05, zt + frontOff * 1.5); eb.rotation.x = 0.3 * aisle; inside.add(eb);
+					// yellow LED bar lighting this layer (aisle side)
+					var led = boxMesh(cageLen, 0.15, 0.15, ledYellow); led.position.set(0, ty + 0.98, zt + frontOff * 0.95); inside.add(led);
+					// nipple drinker line
+					var dl = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, cageLen, 8), pipeMat); dl.rotation.z = Math.PI / 2; dl.position.set(0, ty + 0.52, zt + frontOff * 0.25); inside.add(dl);
+				});
+			});
+
+			// vertical green feed pipes running top-to-bottom INSIDE each cage block (feed drops down through the layers)
+			rows.forEach(function (zt) {
+				for (var fpx = -halfRun + 3; fpx <= halfRun - 3; fpx += 7) {
+					var fp = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.26, 7.4, 12), greenMat); fp.position.set(fpx, 3.6, zt); inside.add(fp);
+				}
+			});
+
+			// warm yellow light glowing inside the cage layers
+			[-30, -18, -6, 6, 18, 30].forEach(function (lx) { var yl = new THREE.PointLight("#ffbe52", 1.0, 26); yl.position.set(lx, 4.2, 0); inside.add(yl); });
+
+			// roof tie-beams + two overhead feed-conveyor tubes running the full length
+			for (var tx = -(HX - 6); tx <= HX - 6; tx += 6) { var tie = boxMesh(0.16, 0.16, 2 * topZ, darkMetal); tie.position.set(tx, topY - 0.3, 0); inside.add(tie); }
+			[-3.7, 3.7].forEach(function (fz) { var fc = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 2 * halfRun, 10), pipeMat); fc.rotation.z = Math.PI / 2; fc.position.set(0, 8.4, fz); inside.add(fc); });
+			// cool LED tubes (two runs) — emissive so they read as lit
+			[-2.2, 2.2].forEach(function (lz) { var tube = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 2 * (HX - 5), 8), coolTubeMat); tube.rotation.z = Math.PI / 2; tube.position.set(0, 8.6, lz); inside.add(tube); });
+			// ceiling circulation fans hung under the ridge (inside only — below the roof, hidden from outside)
+			[-30, -18, -6, 6, 18, 30].forEach(function (fx) {
+				var cf = new THREE.Group();
+				var ring = new THREE.Mesh(new THREE.TorusGeometry(1.1, 0.08, 8, 20), darkMetal); ring.rotation.x = Math.PI / 2; cf.add(ring);
+				var hub = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.26, 10), darkMetal); cf.add(hub);
+				for (var b = 0; b < 4; b++) { var a = b * Math.PI / 2; var blade = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.04, 0.34), frameMat); blade.position.set(Math.cos(a) * 0.55, 0, Math.sin(a) * 0.55); blade.rotation.y = -a; cf.add(blade); }
+				var rod = boxMesh(0.06, 0.7, 0.06, darkMetal); rod.position.y = 0.45; cf.add(rod);
+				cf.position.set(fx, 8.55, 0); inside.add(cf);
+			});
+			// light-brown inside ceiling liner (below the grey outer roof — leaves the outside roof unchanged)
+			var ceilMat = mat("#b98a5f", { roughness: 0.85, side: THREE.DoubleSide });
+			var ceil = planeMesh(L - 0.5, 2 * topZ, ceilMat); ceil.rotation.x = Math.PI / 2; ceil.position.set(0, 9.3, 0); inside.add(ceil);
+
+			// ---- far (+X) end: exhaust fans, feed hoppers, egg elevator, tunnel daylight ----
+			function fan(x, y, z, r) {
+				var g = new THREE.Group();
+				var ring = new THREE.Mesh(new THREE.TorusGeometry(r, 0.13, 8, 22), darkMetal); ring.rotation.y = Math.PI / 2; g.add(ring);
+				var hub = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.34, 10), darkMetal); hub.rotation.z = Math.PI / 2; g.add(hub);
+				for (var b = 0; b < 5; b++) { var a = b * (Math.PI * 2 / 5); var blade = new THREE.Mesh(new THREE.BoxGeometry(0.05, r * 0.82, 0.4), frameMat); blade.position.set(0, Math.cos(a) * r * 0.48, Math.sin(a) * r * 0.48); blade.rotation.x = a + 0.5; g.add(blade); }
+				g.position.set(x, y, z); inside.add(g);
+			}
+			[-4.4, 0, 4.4].forEach(function (fz) { fan(HX - 0.6, 5.4, fz, 1.7); });
+			var glow = new THREE.Mesh(new THREE.PlaneGeometry(10, 7.5), glowMat); glow.position.set(-(HX - 1.2), 3.8, 0); glow.rotation.y = Math.PI / 2; inside.add(glow);
+			var endGlow = new THREE.PointLight("#ff5230", 1.15, 56); endGlow.position.set(-(HX - 4), 5, 0); inside.add(endGlow);
+			[-3.7, 3.7].forEach(function (hz) {
+				var bin = new THREE.Mesh(new THREE.CylinderGeometry(1.0, 0.5, 2.4, 12), metalMat); bin.position.set(HX - 3, 8.2, hz); inside.add(bin);
+				var drop = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 1.6, 8), pipeMat); drop.position.set(HX - 3, 6.9, hz); inside.add(drop);
+			});
+
+			// ---- climate: side air inlets, sensors, control screen ----
+			for (var ix = -(HX - 8); ix <= HX - 8; ix += 8) {
+				[-1, 1].forEach(function (sgn) { var wy = 7.6, wz = HW - (wy / topY) * (HW - topZ); var inlet = boxMesh(1.6, 0.7, 0.12, frameMat); inlet.position.set(ix, wy, sgn * (wz - 0.15)); inlet.rotation.x = sgn * 0.5; inside.add(inlet); });
+			}
+			[[-halfRun + 3, 4.2, 3.4], [6, 4.6, -3.4]].forEach(function (s) { var sensor = boxMesh(0.4, 0.5, 0.25, screenMat); sensor.position.set(s[0], s[1], s[2]); inside.add(sensor); });
+			var screen = boxMesh(2.6, 1.5, 0.14, screenMat); screen.position.set(-halfRun + 1, 3.2, 3.2); screen.rotation.y = Math.PI / 2; inside.add(screen);
+
+			// ---- birds across every tier/row (instanced, chicken-shaped: body + head + beak + tail) ----
+			function mergeGeos(parts) {
+				var pos = [], nor = [];
+				parts.forEach(function (p) {
+					var g = (p.g.index ? p.g.toNonIndexed() : p.g).clone(); g.applyMatrix4(p.m);
+					var pa = g.attributes.position.array; for (var i = 0; i < pa.length; i++) pos.push(pa[i]);
+					var na = g.attributes.normal.array; for (var j = 0; j < na.length; j++) nor.push(na[j]);
+				});
+				var mg = new THREE.BufferGeometry();
+				mg.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
+				mg.setAttribute("normal", new THREE.Float32BufferAttribute(nor, 3));
+				return mg;
+			}
+			var mT = function (x, y, z, rz) { var m = new THREE.Matrix4(); if (rz) m.makeRotationZ(rz); m.setPosition(x, y, z); return m; };
+			var mTS = function (x, y, z, sx, sy, sz) { var m = new THREE.Matrix4().makeScale(sx, sy, sz); m.setPosition(x, y, z); return m; };
+			var chickGeo = mergeGeos([
+				{ g: new THREE.SphereGeometry(0.3, 9, 7), m: mTS(0, 0, 0, 1.3, 0.98, 0.95) },   // body
+				{ g: new THREE.SphereGeometry(0.17, 8, 6), m: mT(0.34, 0.24, 0) },               // head
+				{ g: new THREE.ConeGeometry(0.055, 0.16, 6), m: mT(0.5, 0.21, 0, -Math.PI / 2) }, // beak (points +x)
+				{ g: new THREE.SphereGeometry(0.14, 6, 5), m: mTS(-0.34, 0.22, 0, 0.5, 1.25, 0.85) }, // raised tail
+				{ g: new THREE.CylinderGeometry(0.03, 0.03, 0.26, 6), m: mT(0.06, -0.4, 0.1) },   // leg
+				{ g: new THREE.CylinderGeometry(0.03, 0.03, 0.26, 6), m: mT(0.06, -0.4, -0.1) }   // leg
+			]);
+			// two black eyes on the head (its own instanced mesh so it can be a different colour)
+			var eyeGeo = mergeGeos([
+				{ g: new THREE.SphereGeometry(0.026, 6, 5), m: mT(0.45, 0.3, 0.095) },
+				{ g: new THREE.SphereGeometry(0.026, 6, 5), m: mT(0.45, 0.3, -0.095) }
+			]);
+			var eyeMat = new THREE.MeshBasicMaterial({ color: "#0a0a0a" });
+			var CN = 540, chick = new THREE.InstancedMesh(chickGeo, chickMat, CN), eyes = new THREE.InstancedMesh(eyeGeo, eyeMat, CN), dO = new THREE.Object3D();
+			for (var ci = 0; ci < CN; ci++) {
+				var zt2 = rows[ci % 2], ty2 = tiers[(ci >> 1) % tiers.length];
+				var aisle2 = zt2 < 0 ? 1 : -1;
+				// sit the birds in the aisle-front half of the cage, clear of the central feed pipe
+				var zz2 = zt2 + aisle2 * 0.8 + (Math.random() * 0.6 - 0.3);
+				dO.position.set((Math.random() * 2 - 1) * halfRun, ty2 + 0.46, zz2); dO.rotation.set(0, Math.random() * Math.PI * 2, 0);
+				var sc2 = 0.82 + Math.random() * 0.4; dO.scale.set(sc2, sc2, sc2); dO.updateMatrix(); chick.setMatrixAt(ci, dO.matrix); eyes.setMatrixAt(ci, dO.matrix);
+			}
+			chick.instanceMatrix.needsUpdate = true; inside.add(chick);
+			eyes.instanceMatrix.needsUpdate = true; inside.add(eyes);
+			// ================= end interior =================
+
 			// ---------- silos: on the OUTER (+Z) side of the right-hand barn ----------
 			[-8, -4, 0, 4, 8].forEach(function (xp) {
 				var sz = HW + 2.6;
@@ -276,6 +373,15 @@
 					var leg = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 3.4, 8), metalMat); leg.castShadow = true; leg.position.set(xp + o[0], 1.7, sz + o[1]); barn.add(leg);
 				});
 			});
+
+			// ---- "lekker eten voor iedereen" logo: on the silo barn + a sign beside the silos ----
+			var logoTex = new THREE.TextureLoader().load("/images/lekker-eten-logo.png");
+			logoTex.encoding = THREE.sRGBEncoding; logoTex.anisotropy = 4;
+			var logoMat = new THREE.MeshBasicMaterial({ map: logoTex, transparent: true, side: THREE.DoubleSide });
+			// (a) on the building: flat on the front (+Z) wall of the right-hand silo barn (barn is at z = 4*HW)
+			var wlY = 5.4, wlZ = 4 * HW + (HW - (wlY / topY) * (HW - topZ));
+			var wallLogo = new THREE.Mesh(new THREE.PlaneGeometry(6.4, 6.1), logoMat);
+			wallLogo.position.set(-22, wlY, wlZ + 0.18); wallLogo.rotation.x = -sideAng; scene.add(wallLogo);
 
 			// ground
 			var apron = new THREE.Mesh(new THREE.CircleGeometry(78, 64), concreteMat); apron.rotation.x = -Math.PI / 2; apron.position.y = 0.01; apron.receiveShadow = true; scene.add(apron);
@@ -310,7 +416,9 @@
 			var sun = new THREE.DirectionalLight("#fff3df", 2.3); sun.position.set(70, 95, 55); sun.castShadow = true;
 			sun.shadow.mapSize.set(2048, 2048); var scam = sun.shadow.camera; scam.left = -95; scam.right = 95; scam.top = 95; scam.bottom = -95; scam.near = 0.5; scam.far = 320; sun.shadow.bias = -0.0004; scene.add(sun);
 			// interior fill so the barns read when you step inside
-			[-15, -5, 5, 15].forEach(function (lxp) { var pl = new THREE.PointLight("#fff2d8", 0.85, 52); pl.position.set(lxp, 6, 0); scene.add(pl); });
+			[-34, -20, -7, 7, 20, 34].forEach(function (lxp) { var pl = new THREE.PointLight("#cfe0ff", 0.26, 42); pl.position.set(lxp, 6.9, 0); scene.add(pl); });
+			// a couple of low warm accents near the entrance for depth (mostly-cool, hint of warmth)
+			[-30, -12].forEach(function (lxp) { var wp = new THREE.PointLight("#ffcf9a", 0.32, 26); wp.position.set(lxp, 2.2, 0); scene.add(wp); });
 
 			// ---------- orbit ----------
 			var target = new THREE.Vector3(0, 4.5, 0), sph = { r: 188, theta: 0.62, phi: 1.12 };
@@ -323,7 +431,7 @@
 			function lerp(a, b, t) { return a + (b - a) * t; }
 			var OUT = { r: 188, phi: 1.12, t: new THREE.Vector3(0, 4.5, 0) };
 			// Inside = stand at one end of the central aisle looking down the corridor
-			var IN = { r: 19, theta: -Math.PI / 2, phi: Math.PI / 2 - 0.05, t: new THREE.Vector3(0, 3, 0) };
+			var IN = { r: 37, theta: Math.PI / 2, phi: Math.PI / 2 - 0.03, t: new THREE.Vector3(0, 2.8, 0) };
 			function startTween(to) { sphFromCamera(); tween = { t: 0, dur: 1.2, from: { r: sph.r, theta: sph.theta, phi: sph.phi }, to: to, fromT: target.clone(), toT: to.t.clone() }; }
 			function goOutside() { mode = "outside"; playing = true; startTween({ r: OUT.r, theta: sph.theta, phi: OUT.phi, t: OUT.t }); setSeg("out"); }
 			function goInside() { mode = "inside"; playing = false; startTween({ r: IN.r, theta: IN.theta, phi: IN.phi, t: IN.t }); setSeg("in"); }
