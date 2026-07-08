@@ -129,9 +129,13 @@ plus a dark gradient overlay for text legibility. Because heroes are wide/short:
   page was merged into Services).
 - `astro.config.mjs` redirects `/publications` → `/innovations` (the page was renamed to
   "Innovations"). The Innovations page no longer renders the Sanity publications list — it is
-  now the hero + the Innovation Explorer (data from `src/data/innovations.ts`). The Sanity
-  `getAllPublications()` helper and `publicationType` enum still exist and are used by the
-  home page's "Latest" section.
+  now the hero + the Innovation Explorer (data from `src/data/innovations.ts`). The home page's
+  "Latest Innovations" teaser also now shows 3 innovations from `src/data/innovations.ts`
+  (`INNOVATIONS.slice(0,3)`, linking to their detail pages) — NOT Sanity publications, so it no
+  longer shows "coming soon". (`getAllPublications()` still exists but is now unused by pages.)
+- Research **detail** pages (`research/[slug].astro`) are Overview-only — the old
+  Team / Innovations / Data tabs (and their client tab script) were removed; the research index
+  no longer shows the "Innovations" stat.
 
 ## Innovation Explorer (Innovations page centrepiece)
 

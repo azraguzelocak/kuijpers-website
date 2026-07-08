@@ -109,21 +109,6 @@ const fmtDate = (d?: string) =>
 const dateRange = [fmtDate(project.startDate), fmtDate(project.endDate)]
 	.filter(Boolean)
 	.join(" – ");
-
-// --- Tab configuration --------------------------------------------------
-// Single source of truth for the tabbed section. Each entry renders a tab
-// button + a matching panel below. To add the Phase 2 "Tokens" tab, append
-// one object here (e.g. { id: "tokens", label: "Tokens" }) and add a
-// <div data-tab-panel="tokens"> block in the panels section — no JS changes
-// and no page rebuild required.
-const tabs = [
-	{ id: "overview", label: "Overview" },
-	{ id: "team", label: "Team" },
-	{ id: "publications", label: "Innovations" },
-	{ id: "data", label: "Data" },
-	// Phase 2: { id: "tokens", label: "Tokens" },
-];
-const defaultTab = "overview";
 ---
 
 <BaseLayout
@@ -204,218 +189,43 @@ const defaultTab = "overview";
 		</div>
 	</section>
 
-	<!-- 2. Tabbed content -->
+	<!-- 2. Overview -->
 	<section class="bg-white">
 		<div class="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
-			<!-- Tab bar -->
-			<div class="border-b border-stone-200">
-				<div
-					id="tab-bar"
-					class="-mb-px flex flex-wrap gap-x-6 gap-y-2"
-					role="tablist"
-					aria-label="Project details"
-				>
-					{
-						tabs.map((tab) => (
-							<button
-								type="button"
-								class="tab-btn border-b-2 border-transparent px-1 py-3 text-sm font-semibold text-stone-500 transition-colors hover:text-stone-800 aria-selected:border-brand-600 aria-selected:text-brand-700"
-								data-tab={tab.id}
-								role="tab"
-								id={`tab-${tab.id}`}
-								aria-controls={`panel-${tab.id}`}
-								aria-selected={tab.id === defaultTab}
-							>
-								{tab.label}
-							</button>
-						))
-					}
-				</div>
-			</div>
+			{
+				bodyHtml ? (
+					<div class="max-w-3xl" set:html={bodyHtml} />
+				) : project.summary ? (
+					<p class="max-w-3xl text-base leading-relaxed text-stone-600">
+						{project.summary}
+					</p>
+				) : (
+					<p class="text-stone-500">
+						An overview for this project is coming soon.
+					</p>
+				)
+			}
 
-			<!-- Panels -->
-			<div class="mt-10">
-				<!-- Overview -->
-				<div
-					class="tab-panel"
-					data-tab-panel="overview"
-					id="panel-overview"
-					role="tabpanel"
-					aria-labelledby="tab-overview"
-				>
-					{
-						bodyHtml ? (
-							<div class="max-w-3xl" set:html={bodyHtml} />
-						) : project.summary ? (
-							<p class="max-w-3xl text-base leading-relaxed text-stone-600">
-								{project.summary}
-							</p>
-						) : (
-							<p class="text-stone-500">
-								An overview for this project is coming soon.
-							</p>
-						)
-					}
-
-					{
-						Array.isArray(project.tags) && project.tags.length > 0 && (
-							<div class="mt-8 flex flex-wrap gap-2">
-								{project.tags.map((tag: string) => (
-									<span class="inline-flex items-center rounded-full bg-stone-100 px-3 py-1 text-xs font-medium text-stone-600">
-										{tag}
-									</span>
-								))}
-							</div>
-						)
-					}
-
-					{
-						project.fundingSource && (
-							<p class="mt-8 text-sm text-stone-500">
-								<span class="font-semibold text-stone-700">
-									Funding:
-								</span>{" "}
-								{project.fundingSource}
-							</p>
-						)
-					}
-				</div>
-
-				<!-- Team -->
-				<div
-					class="tab-panel hidden"
-					data-tab-panel="team"
-					id="panel-team"
-					role="tabpanel"
-					aria-labelledby="tab-team"
-				>
-					{
-						lead || team.length > 0 ? (
-							<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-								{lead && (
-									<TeamCard member={lead} isLead={true} />
-								)}
-								{team
-									.filter(
-										(m: any) => !lead || m._id !== lead._id,
-									)
-									.map((member: any) => (
-										<TeamCard member={member} />
-									))}
-							</div>
-						) : (
-							<p class="text-stone-500">
-								Team members will be announced soon.
-							</p>
-						)
-					}
-				</div>
-
-				<!-- Publications -->
-				<div
-					class="tab-panel hidden"
-					data-tab-panel="publications"
-					id="panel-publications"
-					role="tabpanel"
-					aria-labelledby="tab-publications"
-				>
-					{
-						publications.length > 0 ? (
-							<ul class="divide-y divide-stone-100">
-								{publications.map((pub: any) => {
-									const href = pub.url ?? null;
-									const inner = (
-										<>
-											<p class="text-base font-semibold text-stone-900 group-hover:text-brand-700">
-												{pub.title}
-											</p>
-											{pub.publicationDate && (
-												<p class="mt-1 text-sm text-stone-500">
-													{fmtDate(
-														pub.publicationDate,
-													)}
-												</p>
-											)}
-										</>
-									);
-									return (
-										<li class="py-4">
-											{href ? (
-												<a
-													href={href}
-													target="_blank"
-													rel="noopener noreferrer"
-													class="group flex items-start justify-between gap-4"
-												>
-													<span>{inner}</span>
-													<svg
-														class="mt-1 h-4 w-4 flex-shrink-0 text-stone-400 group-hover:text-brand-600"
-														viewBox="0 0 24 24"
-														fill="none"
-														stroke="currentColor"
-														stroke-width="2"
-														stroke-linecap="round"
-														stroke-linejoin="round"
-														aria-hidden="true"
-													>
-														<path d="M15 3h6v6" />
-														<path d="M10 14 21 3" />
-														<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-													</svg>
-												</a>
-											) : (
-												<div>{inner}</div>
-											)}
-										</li>
-									);
-								})}
-							</ul>
-						) : (
-							<p class="text-stone-500">
-								No innovations have been linked to this project
-								yet.
-							</p>
-						)
-					}
-				</div>
-
-				<!-- Data (placeholder for now) -->
-				<div
-					class="tab-panel hidden"
-					data-tab-panel="data"
-					id="panel-data"
-					role="tabpanel"
-					aria-labelledby="tab-data"
-				>
-					<div
-						class="flex flex-col items-center justify-center rounded-xl border border-dashed border-stone-300 bg-stone-50 px-6 py-16 text-center"
-					>
-						<svg
-							class="h-10 w-10 text-stone-400"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="1.75"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							aria-hidden="true"
-						>
-							<ellipse cx="12" cy="5" rx="9" ry="3" />
-							<path d="M3 5v14a9 3 0 0 0 18 0V5" />
-							<path d="M3 12a9 3 0 0 0 18 0" />
-						</svg>
-						<h3 class="mt-4 text-lg font-semibold text-stone-900">
-							Data coming soon
-						</h3>
-						<p class="mt-2 max-w-md text-sm leading-relaxed text-stone-500">
-							Live datasets, dashboards and downloadable results
-							from this project will appear here.
-						</p>
+			{
+				Array.isArray(project.tags) && project.tags.length > 0 && (
+					<div class="mt-8 flex flex-wrap gap-2">
+						{project.tags.map((tag: string) => (
+							<span class="inline-flex items-center rounded-full bg-stone-100 px-3 py-1 text-xs font-medium text-stone-600">
+								{tag}
+							</span>
+						))}
 					</div>
-				</div>
+				)
+			}
 
-				<!-- Phase 2: add a <div class="tab-panel hidden" data-tab-panel="tokens" ...> here -->
-			</div>
+			{
+				project.fundingSource && (
+					<p class="mt-8 text-sm text-stone-500">
+						<span class="font-semibold text-stone-700">Funding:</span>{" "}
+						{project.fundingSource}
+					</p>
+				)
+			}
 		</div>
 	</section>
 
@@ -493,42 +303,3 @@ const defaultTab = "overview";
 		)
 	}
 </BaseLayout>
-
-<script>
-	// --- Tab switching ---------------------------------------------------
-	// Driven entirely by data attributes so the tab set is whatever the
-	// template renders — adding a Phase 2 "Tokens" tab needs no change here.
-	const tabBar = document.getElementById("tab-bar");
-	const buttons = Array.from(
-		document.querySelectorAll<HTMLButtonElement>(".tab-btn"),
-	);
-	const panels = Array.from(
-		document.querySelectorAll<HTMLElement>(".tab-panel"),
-	);
-
-	function activate(id: string) {
-		for (const btn of buttons) {
-			btn.setAttribute("aria-selected", String(btn.dataset.tab === id));
-		}
-		for (const panel of panels) {
-			panel.classList.toggle("hidden", panel.dataset.tabPanel !== id);
-		}
-		// Reflect the tab in the URL hash so it is linkable/back-friendly.
-		if (history.replaceState) {
-			history.replaceState(null, "", `#${id}`);
-		}
-	}
-
-	tabBar?.addEventListener("click", (e) => {
-		const btn = (e.target as HTMLElement).closest<HTMLButtonElement>(
-			".tab-btn",
-		);
-		if (btn?.dataset.tab) activate(btn.dataset.tab);
-	});
-
-	// Honour a deep link like /research/slug#team on load.
-	const fromHash = window.location.hash.replace("#", "");
-	if (fromHash && buttons.some((b) => b.dataset.tab === fromHash)) {
-		activate(fromHash);
-	}
-</script>
