@@ -26,7 +26,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // `.env` file before building. Submissions are emailed to whatever address the key is
 // registered to — no server needed, so the site can be hosted as static files anywhere.
 const WEB3FORMS_ACCESS_KEY =
-	import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY ?? "REPLACE_WITH_WEB3FORMS_ACCESS_KEY";
+	import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY ?? "4e8ff9b3-28ad-49cf-a7fc-307c13328080";
 
 const inputClass = (hasError: boolean) =>
 	`mt-1.5 block w-full rounded-lg border bg-white px-3.5 py-2.5 text-stone-900 shadow-sm outline-none transition-colors placeholder:text-stone-400 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 disabled:cursor-not-allowed disabled:bg-stone-50 ${
