@@ -113,6 +113,46 @@ export const ui = {
 			"Your message has been sent. We'll get back to you as soon as we can.",
 		"form.success.again": "Send another message",
 		"form.error.generic": "Something went wrong. Please try again.",
+
+		// about page
+		"about.meta.title": "About — Kuijpers Research Field",
+		"about.meta.desc":
+			"Learn about Kuijpers Research Field: our mission, vision, values, story and the team behind digital twin technology for poultry production.",
+		"about.pillar.mission.title": "Our Mission",
+		"about.pillar.mission.tagline": "Turning data into decisions the whole chain can trust.",
+		"about.pillar.mission.body":
+			"We advance animal welfare, production efficiency, and environmental sustainability by transforming real-time data from the poultry chain into validated, actionable insight — insight that producers, suppliers, and policymakers can act on with confidence.",
+		"about.pillar.vision.title": "Our Vision",
+		"about.pillar.vision.tagline": "Every intervention proven before it reaches the barn.",
+		"about.pillar.vision.body":
+			"A food system where decisions are no longer made on assumption. Where every new feed, technology, or practice is tested in a controlled, data-rich environment first — making innovation faster, safer, and grounded in evidence the entire sector can rely on.",
+		"about.pillar.values.title": "Our Values",
+		"about.pillar.values.tagline": "Rigour. Transparency. Partnership.",
+		"about.pillar.values.body":
+			"We hold ourselves to the standards of independent science: we publish what we learn, validate our findings openly, and protect the integrity of our methods. We work shoulder to shoulder with researchers, suppliers, and producers — because real progress in poultry production is built on trust, not promises.",
+		"about.hero.hl": "Science moves carefully. Industry moves fast.",
+		"about.hero.p1":
+			"The space between them is where most progress in poultry production gets lost.",
+		"about.hero.p2":
+			"Kuijpers Research Field exists in that space. We build digital twins of the broiler value chain — virtual replicas grounded in real-time data — that give researchers, suppliers, and producers a shared environment where evidence is generated quickly, rigorously, and at commercial scale.",
+		"about.story.eyebrow": "Our Story",
+		"about.story.title": "From the family farm to a research field",
+		"about.story.p1":
+			"Kuijpers Research Field grew out of generations of hands-on poultry expertise. Working day to day with producers, we kept running into the same question: how do you know whether a new feed, climate setting, or housing approach will actually work — before committing an entire flock to it?",
+		"about.story.p2":
+			"Trial and error in a live barn is slow, costly, and difficult to measure. So we built a different kind of barn.",
+		"about.story.p3":
+			"Today, our facility is a fully instrumented, sensor-rich research environment paired with a digital twin that mirrors it in real time. We partner with universities, suppliers, and producers to validate interventions independently, publish what we learn, and help the sector make decisions that improve welfare, reduce environmental impact, and strengthen the entire broiler value chain.",
+		"about.story.fact1": "Founded by the Kuijpers family",
+		"about.story.fact2": "Based in the Netherlands",
+		"about.story.fact3": "Independent research partner",
+		"about.team.eyebrow": "Our People",
+		"about.team.title": "Meet the team",
+		"about.team.empty": "Team profiles are coming soon — check back shortly.",
+		"about.partners.eyebrow": "Our Partners",
+		"about.partners.title": "Stronger together",
+		"about.partners.body":
+			"No single organisation can move poultry production forward alone. We work hand in hand with breeders, feed and equipment suppliers, animal-health companies, universities, and public partners — combining their expertise with our research field and digital twin so every innovation is tested and ready for the real world.",
 	},
 
 	nl: {
@@ -205,6 +245,45 @@ export const ui = {
 			"Uw bericht is verzonden. We nemen zo snel mogelijk contact met u op.",
 		"form.success.again": "Nog een bericht versturen",
 		"form.error.generic": "Er is iets misgegaan. Probeer het opnieuw.",
+
+		"about.meta.title": "Over ons — Kuijpers Research Field",
+		"about.meta.desc":
+			"Maak kennis met Kuijpers Research Field: onze missie, visie, waarden, verhaal en het team achter digital-twin-technologie voor de pluimveehouderij.",
+		"about.pillar.mission.title": "Onze missie",
+		"about.pillar.mission.tagline": "Data omzetten in beslissingen die de hele keten kan vertrouwen.",
+		"about.pillar.mission.body":
+			"We bevorderen dierenwelzijn, productie-efficiëntie en milieuduurzaamheid door realtime data uit de pluimveeketen om te zetten in gevalideerde, bruikbare inzichten — inzichten waar producenten, leveranciers en beleidsmakers met vertrouwen naar kunnen handelen.",
+		"about.pillar.vision.title": "Onze visie",
+		"about.pillar.vision.tagline": "Elke ingreep bewezen voordat hij de stal bereikt.",
+		"about.pillar.vision.body":
+			"Een voedselsysteem waarin beslissingen niet langer op aannames worden gebaseerd. Waarin elk nieuw voer, elke technologie of werkwijze eerst wordt getest in een gecontroleerde, datarijke omgeving — waardoor innovatie sneller, veiliger en onderbouwd is met bewijs waarop de hele sector kan bouwen.",
+		"about.pillar.values.title": "Onze waarden",
+		"about.pillar.values.tagline": "Nauwkeurigheid. Transparantie. Partnerschap.",
+		"about.pillar.values.body":
+			"We houden ons aan de normen van onafhankelijke wetenschap: we publiceren wat we leren, valideren onze bevindingen openlijk en waarborgen de integriteit van onze methoden. We werken schouder aan schouder met onderzoekers, leveranciers en producenten — want echte vooruitgang in de pluimveehouderij is gebouwd op vertrouwen, niet op beloften.",
+		"about.hero.hl": "Wetenschap gaat zorgvuldig. De industrie gaat snel.",
+		"about.hero.p1":
+			"In de ruimte daartussen gaat de meeste vooruitgang in de pluimveehouderij verloren.",
+		"about.hero.p2":
+			"Kuijpers Research Field bestaat in die ruimte. We bouwen digital twins van de vleeskuikenketen — virtuele replica's op basis van realtime data — die onderzoekers, leveranciers en producenten een gedeelde omgeving bieden waar bewijs snel, nauwkeurig en op commerciële schaal wordt gegenereerd.",
+		"about.story.eyebrow": "Ons verhaal",
+		"about.story.title": "Van het familiebedrijf naar een onderzoeksveld",
+		"about.story.p1":
+			"Kuijpers Research Field is voortgekomen uit generaties praktische pluimvee-expertise. In het dagelijkse werk met producenten liepen we steeds tegen dezelfde vraag aan: hoe weet je of een nieuw voer, klimaatinstelling of huisvestingsaanpak echt werkt — voordat je er een hele koppel aan verbindt?",
+		"about.story.p2":
+			"Trial-and-error in een echte stal is traag, kostbaar en moeilijk te meten. Daarom bouwden we een ander soort stal.",
+		"about.story.p3":
+			"Vandaag is onze faciliteit een volledig uitgeruste, sensorrijke onderzoeksomgeving, gekoppeld aan een digital twin die deze in realtime weerspiegelt. We werken samen met universiteiten, leveranciers en producenten om ingrepen onafhankelijk te valideren, publiceren wat we leren en helpen de sector beslissingen te nemen die het welzijn verbeteren, de milieu-impact verminderen en de hele vleeskuikenketen versterken.",
+		"about.story.fact1": "Opgericht door de familie Kuijpers",
+		"about.story.fact2": "Gevestigd in Nederland",
+		"about.story.fact3": "Onafhankelijke onderzoekspartner",
+		"about.team.eyebrow": "Onze mensen",
+		"about.team.title": "Maak kennis met het team",
+		"about.team.empty": "Teamprofielen volgen binnenkort — kom snel terug.",
+		"about.partners.eyebrow": "Onze partners",
+		"about.partners.title": "Samen sterker",
+		"about.partners.body":
+			"Geen enkele organisatie kan de pluimveehouderij alleen vooruithelpen. We werken hand in hand met fokkerijen, voer- en apparatuurleveranciers, diergezondheidsbedrijven, universiteiten en publieke partners — en combineren hun expertise met ons onderzoeksveld en digital twin, zodat elke innovatie getest en klaar is voor de praktijk.",
 	},
 
 	de: {
@@ -297,5 +376,44 @@ export const ui = {
 			"Ihre Nachricht wurde gesendet. Wir melden uns so schnell wie möglich bei Ihnen.",
 		"form.success.again": "Weitere Nachricht senden",
 		"form.error.generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
+
+		"about.meta.title": "Über uns — Kuijpers Research Field",
+		"about.meta.desc":
+			"Lernen Sie Kuijpers Research Field kennen: unsere Mission, Vision, Werte, Geschichte und das Team hinter der Digital-Twin-Technologie für die Geflügelproduktion.",
+		"about.pillar.mission.title": "Unsere Mission",
+		"about.pillar.mission.tagline": "Daten in Entscheidungen verwandeln, denen die gesamte Kette vertrauen kann.",
+		"about.pillar.mission.body":
+			"Wir fördern Tierwohl, Produktionseffizienz und ökologische Nachhaltigkeit, indem wir Echtzeitdaten aus der Geflügelkette in validierte, umsetzbare Erkenntnisse verwandeln — Erkenntnisse, auf die Produzenten, Lieferanten und Entscheidungsträger mit Zuversicht bauen können.",
+		"about.pillar.vision.title": "Unsere Vision",
+		"about.pillar.vision.tagline": "Jede Maßnahme bewiesen, bevor sie den Stall erreicht.",
+		"about.pillar.vision.body":
+			"Ein Lebensmittelsystem, in dem Entscheidungen nicht länger auf Annahmen beruhen. In dem jedes neue Futter, jede Technologie und jede Praxis zuerst in einer kontrollierten, datenreichen Umgebung getestet wird — damit Innovation schneller, sicherer und auf Belege gestützt ist, auf die sich die gesamte Branche verlassen kann.",
+		"about.pillar.values.title": "Unsere Werte",
+		"about.pillar.values.tagline": "Sorgfalt. Transparenz. Partnerschaft.",
+		"about.pillar.values.body":
+			"Wir halten uns an die Standards unabhängiger Wissenschaft: Wir veröffentlichen, was wir lernen, validieren unsere Ergebnisse offen und wahren die Integrität unserer Methoden. Wir arbeiten Schulter an Schulter mit Forschern, Lieferanten und Produzenten — denn echter Fortschritt in der Geflügelproduktion beruht auf Vertrauen, nicht auf Versprechen.",
+		"about.hero.hl": "Wissenschaft geht sorgfältig vor. Die Industrie geht schnell.",
+		"about.hero.p1":
+			"Im Raum dazwischen geht der meiste Fortschritt in der Geflügelproduktion verloren.",
+		"about.hero.p2":
+			"Kuijpers Research Field existiert in diesem Raum. Wir bauen digitale Zwillinge der Broiler-Wertschöpfungskette — virtuelle Abbilder auf Basis von Echtzeitdaten — die Forschern, Lieferanten und Produzenten eine gemeinsame Umgebung bieten, in der Belege schnell, rigoros und in kommerziellem Maßstab entstehen.",
+		"about.story.eyebrow": "Unsere Geschichte",
+		"about.story.title": "Vom Familienbetrieb zum Forschungsfeld",
+		"about.story.p1":
+			"Kuijpers Research Field ist aus Generationen praktischer Geflügelexpertise entstanden. In der täglichen Arbeit mit Produzenten stießen wir immer wieder auf dieselbe Frage: Woher weiß man, ob ein neues Futter, eine Klimaeinstellung oder ein Haltungskonzept wirklich funktioniert — bevor man eine ganze Herde darauf festlegt?",
+		"about.story.p2":
+			"Versuch und Irrtum in einem echten Stall ist langsam, teuer und schwer messbar. Also bauten wir einen anderen Stall.",
+		"about.story.p3":
+			"Heute ist unsere Anlage eine vollständig instrumentierte, sensorreiche Forschungsumgebung, gekoppelt mit einem digitalen Zwilling, der sie in Echtzeit abbildet. Wir arbeiten mit Universitäten, Lieferanten und Produzenten zusammen, um Maßnahmen unabhängig zu validieren, veröffentlichen, was wir lernen, und helfen der Branche, Entscheidungen zu treffen, die das Tierwohl verbessern, die Umweltbelastung verringern und die gesamte Broiler-Wertschöpfungskette stärken.",
+		"about.story.fact1": "Gegründet von der Familie Kuijpers",
+		"about.story.fact2": "Ansässig in den Niederlanden",
+		"about.story.fact3": "Unabhängiger Forschungspartner",
+		"about.team.eyebrow": "Unsere Menschen",
+		"about.team.title": "Lernen Sie das Team kennen",
+		"about.team.empty": "Teamprofile folgen in Kürze — schauen Sie bald wieder vorbei.",
+		"about.partners.eyebrow": "Unsere Partner",
+		"about.partners.title": "Gemeinsam stärker",
+		"about.partners.body":
+			"Keine einzelne Organisation kann die Geflügelproduktion allein voranbringen. Wir arbeiten Hand in Hand mit Züchtern, Futter- und Ausrüstungslieferanten, Tiergesundheitsunternehmen, Universitäten und öffentlichen Partnern — und verbinden ihr Fachwissen mit unserem Forschungsfeld und digitalen Zwilling, sodass jede Innovation getestet und praxisreif ist.",
 	},
 } as const;
