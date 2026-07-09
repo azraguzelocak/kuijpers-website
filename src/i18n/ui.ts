@@ -260,6 +260,11 @@ export const ui = {
 		"res.cta.body":
 			"Tell us what you want to learn or validate, and we'll show you how our research field and digital twin can get you there.",
 		"res.cta.button": "Get in Touch",
+		"res.detail.crumb": "Research",
+		"res.detail.overviewSoon": "An overview for this project is coming soon.",
+		"res.detail.funding": "Funding:",
+		"res.detail.related": "Related projects",
+		"res.detail.viewAll": "View all",
 	},
 
 	nl: {
@@ -496,6 +501,11 @@ export const ui = {
 		"res.cta.body":
 			"Vertel ons wat u wilt leren of valideren, en we laten u zien hoe ons onderzoeksveld en digital twin u daar kunnen brengen.",
 		"res.cta.button": "Neem contact op",
+		"res.detail.crumb": "Onderzoek",
+		"res.detail.overviewSoon": "Een overzicht van dit project volgt binnenkort.",
+		"res.detail.funding": "Financiering:",
+		"res.detail.related": "Gerelateerde projecten",
+		"res.detail.viewAll": "Bekijk alle",
 	},
 
 	de: {
@@ -732,5 +742,10 @@ export const ui = {
 		"res.cta.body":
 			"Sagen Sie uns, was Sie lernen oder validieren möchten, und wir zeigen Ihnen, wie unser Forschungsfeld und der digitale Zwilling Sie dorthin bringen.",
 		"res.cta.button": "Kontakt aufnehmen",
+		"res.detail.crumb": "Forschung",
+		"res.detail.overviewSoon": "Eine Übersicht zu diesem Projekt folgt in Kürze.",
+		"res.detail.funding": "Förderung:",
+		"res.detail.related": "Verwandte Projekte",
+		"res.detail.viewAll": "Alle ansehen",
 	},
 } as const;

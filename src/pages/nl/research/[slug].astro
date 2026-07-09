@@ -1,6 +1,6 @@
 ---
-import { getAllResearchProjects } from "../../lib/sanity";
-import ResearchDetailPage from "../../components/pages/ResearchDetailPage.astro";
+import { getAllResearchProjects } from "../../../lib/sanity";
+import ResearchDetailPage from "../../../components/pages/ResearchDetailPage.astro";
 
 export async function getStaticPaths() {
 	const projects = (await getAllResearchProjects()) ?? [];

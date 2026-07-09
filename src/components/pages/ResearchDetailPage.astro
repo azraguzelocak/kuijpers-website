@@ -1,0 +1,289 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import TeamCard from "../TeamCard.astro";
+import { getAllResearchProjects } from "../../lib/sanity";
+import { urlFor } from "../../lib/image";
+import { getLangFromUrl, useTranslations } from "../../i18n/utils";
+import { translateCms } from "../../i18n/cms";
+
+const { project, related } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+// --- Status presentation -----------------------------------------------
+const STATUS_META: Record<string, { label: string; badge: string }> = {
+	ongoing: {
+		label: t("res.status.ongoing"),
+		badge: "bg-emerald-100 text-emerald-800 ring-emerald-600/20",
+	},
+	completed: {
+		label: t("res.status.completed"),
+		badge: "bg-brand-100 text-brand-800 ring-brand-600/20",
+	},
+	planned: {
+		label: t("res.status.planned"),
+		badge: "bg-amber-100 text-amber-800 ring-amber-600/20",
+	},
+};
+const statusMeta = (status: string) =>
+	STATUS_META[status] ?? {
+		label: status ?? "Unknown",
+		badge: "bg-stone-100 text-stone-700 ring-stone-500/20",
+	};
+const meta = statusMeta(project.status);
+
+// --- Portable Text -> HTML ---------------------------------------------
+// Minimal, dependency-free serializer for the `body` (blockContent) field —
+// same approach used on /services. Handles paragraphs, headings and lists.
+const esc = (s: string) =>
+	s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const blockText = (block: any) =>
+	(block.children ?? []).map((c: any) => esc(c.text ?? "")).join("");
+
+function blocksToHtml(blocks: any): string {
+	if (!Array.isArray(blocks)) return "";
+	let html = "";
+	let listTag: "ul" | "ol" | null = null;
+	const closeList = () => {
+		if (listTag) {
+			html += `</${listTag}>`;
+			listTag = null;
+		}
+	};
+	for (const block of blocks) {
+		if (block?._type !== "block") continue;
+		const text = esc(translateCms((block.children ?? []).map((c: any) => c.text ?? "").join(""), lang));
+		if (!text.trim()) continue;
+		if (block.listItem) {
+			const tag = block.listItem === "number" ? "ol" : "ul";
+			if (listTag !== tag) {
+				closeList();
+				html += `<${tag} class="mt-4 space-y-2 ${
+					tag === "ol" ? "list-decimal" : "list-disc"
+				} pl-5 text-base leading-relaxed text-stone-600">`;
+				listTag = tag;
+			}
+			html += `<li>${text}</li>`;
+			continue;
+		}
+		closeList();
+		if (typeof block.style === "string" && /^h[1-6]$/.test(block.style)) {
+			html += `<h3 class="mt-6 text-xl font-semibold text-stone-900">${text}</h3>`;
+		} else {
+			html += `<p class="mt-4 text-base leading-relaxed text-stone-600">${text}</p>`;
+		}
+	}
+	closeList();
+	return html;
+}
+
+const bodyHtml = blocksToHtml(project.body);
+const team = project.team ?? [];
+const lead = project.lead ?? null;
+const publications = project.relatedPublications ?? [];
+
+// --- Date helpers -------------------------------------------------------
+const fmtDate = (d?: string) =>
+	d
+		? new Date(d).toLocaleDateString("en-GB", {
+				year: "numeric",
+				month: "short",
+			})
+		: null;
+const dateRange = [fmtDate(project.startDate), fmtDate(project.endDate)]
+	.filter(Boolean)
+	.join(" – ");
+---
+
+<BaseLayout
+	title={`${translateCms(project.title, lang)} — ${t("res.detail.crumb")} — Kuijpers Research Field`}
+	description={project.summary
+		? translateCms(project.summary, lang)
+		: `Research project: ${translateCms(project.title, lang)} at Kuijpers Research Field.`}
+>
+	<!-- 1. Hero -->
+	<section class="relative bg-stone-900 text-white">
+		{
+			project.coverImage && (
+				<div class="absolute inset-0">
+					<img
+						src={urlFor(project.coverImage)
+							.width(1920)
+							.height(720)
+							.fit("crop")
+							.url()}
+						alt={project.coverImage.alt ?? translateCms(project.title, lang)}
+						class="h-full w-full object-cover opacity-50"
+						loading="eager"
+					/>
+					<div class="absolute inset-0 bg-gradient-to-t from-stone-900/90 via-stone-900/50 to-stone-900/20" />
+				</div>
+			)
+		}
+		<div class="relative mx-auto max-w-5xl px-4 py-24 sm:px-6 lg:px-8">
+			<nav class="mb-6 text-sm text-stone-300">
+				<a href="/research" class="transition-colors hover:text-white">
+					{t("res.detail.crumb")}
+				</a>
+				<span class="mx-2 text-stone-500">/</span>
+				<span class="text-stone-100">{translateCms(project.title, lang)}</span>
+			</nav>
+
+			<span
+				class={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ring-1 ring-inset ${meta.badge}`}
+			>
+				{meta.label}
+			</span>
+
+			<h1
+				class="mt-5 text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl"
+			>
+				{translateCms(project.title, lang)}
+			</h1>
+
+			{
+				project.summary && (
+					<p class="mt-6 max-w-3xl text-lg leading-relaxed text-stone-200 sm:text-xl">
+						{translateCms(project.summary, lang)}
+					</p>
+				)
+			}
+
+			{
+				dateRange && (
+					<p class="mt-6 inline-flex items-center gap-2 text-sm text-stone-300">
+						<svg
+							class="h-4 w-4"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							aria-hidden="true"
+						>
+							<path d="M8 2v4" />
+							<path d="M16 2v4" />
+							<rect width="18" height="18" x="3" y="4" rx="2" />
+							<path d="M3 10h18" />
+						</svg>
+						{dateRange}
+					</p>
+				)
+			}
+		</div>
+	</section>
+
+	<!-- 2. Overview -->
+	<section class="bg-white">
+		<div class="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
+			{
+				bodyHtml ? (
+					<div class="max-w-3xl" set:html={bodyHtml} />
+				) : project.summary ? (
+					<p class="max-w-3xl text-base leading-relaxed text-stone-600">
+						{translateCms(project.summary, lang)}
+					</p>
+				) : (
+					<p class="text-stone-500">
+						{t("res.detail.overviewSoon")}
+					</p>
+				)
+			}
+
+			{
+				Array.isArray(project.tags) && project.tags.length > 0 && (
+					<div class="mt-8 flex flex-wrap gap-2">
+						{project.tags.map((tag: string) => (
+							<span class="inline-flex items-center rounded-full bg-stone-100 px-3 py-1 text-xs font-medium text-stone-600">
+								{tag}
+							</span>
+						))}
+					</div>
+				)
+			}
+
+			{
+				project.fundingSource && (
+					<p class="mt-8 text-sm text-stone-500">
+						<span class="font-semibold text-stone-700">{t("res.detail.funding")}</span>{" "}
+						{project.fundingSource}
+					</p>
+				)
+			}
+		</div>
+	</section>
+
+	<!-- 3. {t("res.detail.related")} -->
+	{
+		related.length > 0 && (
+			<section class="bg-stone-50">
+				<div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+					<div class="flex items-end justify-between">
+						<h2 class="text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl">
+							{t("res.detail.related")}
+						</h2>
+						<a
+							href="/research"
+							class="hidden text-sm font-semibold text-brand-600 hover:text-brand-700 sm:inline"
+						>
+							{t("res.detail.viewAll")} →
+						</a>
+					</div>
+
+					<div class="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+						{related.map((rel: any) => {
+							const relMeta = statusMeta(rel.status);
+							return (
+								<a
+									href={`/research/${rel.slug}`}
+									class="group flex flex-col overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm transition-shadow hover:shadow-md"
+								>
+									<div class="relative aspect-[16/9] w-full overflow-hidden bg-gradient-to-br from-brand-100 to-brand-50">
+										{rel.coverImage ? (
+											<img
+												src={urlFor(rel.coverImage)
+													.width(700)
+													.height(394)
+													.fit("crop")
+													.url()}
+												alt={
+													rel.coverImage.alt ?? translateCms(rel.title, lang)
+												}
+												width="700"
+												height="394"
+												class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+												loading="lazy"
+											/>
+										) : (
+											<div class="flex h-full w-full items-center justify-center">
+												<span class="text-sm font-medium text-brand-400">
+													Kuijpers Research Field
+												</span>
+											</div>
+										)}
+										<span
+											class={`absolute left-4 top-4 inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ring-1 ring-inset ${relMeta.badge}`}
+										>
+											{relMeta.label}
+										</span>
+									</div>
+									<div class="flex flex-1 flex-col p-6">
+										<h3 class="text-lg font-semibold text-stone-900 group-hover:text-brand-700">
+											{translateCms(rel.title, lang)}
+										</h3>
+										{rel.summary && (
+											<p class="mt-2 line-clamp-2 text-sm leading-relaxed text-stone-600">
+												{translateCms(rel.summary, lang)}
+											</p>
+										)}
+									</div>
+								</a>
+							);
+						})}
+					</div>
+				</div>
+			</section>
+		)
+	}
+</BaseLayout>
