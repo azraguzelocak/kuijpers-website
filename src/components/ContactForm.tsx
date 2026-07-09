@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ui, type Lang } from "../i18n/ui";
 
 interface FormState {
 	name: string;
@@ -33,7 +34,8 @@ const inputClass = (hasError: boolean) =>
 		hasError ? "border-red-400" : "border-stone-300"
 	}`;
 
-export default function ContactForm() {
+export default function ContactForm({ lang = "en" }: { lang?: Lang }) {
+	const t = (key: keyof (typeof ui)["en"]) => ui[lang][key] ?? ui.en[key];
 	const [values, setValues] = useState<FormState>(EMPTY);
 	const [errors, setErrors] = useState<
 		Partial<Record<keyof FormState, string>>
@@ -43,12 +45,12 @@ export default function ContactForm() {
 
 	function validate(v: FormState) {
 		const next: Partial<Record<keyof FormState, string>> = {};
-		if (!v.name.trim()) next.name = "Please enter your name.";
-		if (!v.email.trim()) next.email = "Please enter your email.";
+		if (!v.name.trim()) next.name = t("form.err.name");
+		if (!v.email.trim()) next.email = t("form.err.email");
 		else if (!EMAIL_RE.test(v.email.trim()))
-			next.email = "Please enter a valid email address.";
-		if (!v.subject.trim()) next.subject = "Please enter a subject.";
-		if (!v.message.trim()) next.message = "Please enter a message.";
+			next.email = t("form.err.emailValid");
+		if (!v.subject.trim()) next.subject = t("form.err.subject");
+		if (!v.message.trim()) next.message = t("form.err.message");
 		return next;
 	}
 
@@ -98,7 +100,7 @@ export default function ContactForm() {
 
 			if (!res.ok || !data.success) {
 				throw new Error(
-					data.message ?? "Something went wrong. Please try again.",
+					data.message ?? t("form.error.generic"),
 				);
 			}
 
@@ -109,7 +111,7 @@ export default function ContactForm() {
 			setErrorMessage(
 				err instanceof Error
 					? err.message
-					: "Something went wrong. Please try again.",
+					: t("form.error.generic"),
 			);
 		}
 	}
@@ -135,18 +137,17 @@ export default function ContactForm() {
 					</svg>
 				</div>
 				<h3 className="mt-5 text-xl font-semibold text-stone-900">
-					Thanks for reaching out!
+					{t("form.success.title")}
 				</h3>
 				<p className="mt-2 max-w-sm text-base leading-relaxed text-stone-600">
-					Your message has been sent. We'll get back to you as soon as we
-					can.
+					{t("form.success.text")}
 				</p>
 				<button
 					type="button"
 					onClick={() => setStatus("idle")}
 					className="mt-6 text-sm font-semibold text-brand-600 underline-offset-4 hover:underline"
 				>
-					Send another message
+					{t("form.success.again")}
 				</button>
 			</div>
 		);
@@ -167,7 +168,7 @@ export default function ContactForm() {
 
 			<div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
 				<Field
-					label="Name"
+					label={t("form.name")}
 					name="name"
 					required
 					value={values.name}
@@ -176,7 +177,7 @@ export default function ContactForm() {
 					disabled={submitting}
 				/>
 				<Field
-					label="Email"
+					label={t("form.email")}
 					name="email"
 					type="email"
 					required
@@ -188,7 +189,7 @@ export default function ContactForm() {
 			</div>
 
 			<Field
-				label="Company"
+				label={t("form.company")}
 				name="company"
 				value={values.company}
 				error={errors.company}
@@ -198,7 +199,7 @@ export default function ContactForm() {
 			/>
 
 			<Field
-				label="Subject"
+				label={t("form.subject")}
 				name="subject"
 				required
 				value={values.subject}
@@ -212,7 +213,7 @@ export default function ContactForm() {
 					htmlFor="message"
 					className="block text-sm font-medium text-stone-700"
 				>
-					Message <span className="text-brand-600">*</span>
+					{t("form.message")} <span className="text-brand-600">*</span>
 				</label>
 				<textarea
 					id="message"
@@ -223,7 +224,7 @@ export default function ContactForm() {
 					disabled={submitting}
 					aria-invalid={errors.message ? "true" : undefined}
 					className={inputClass(Boolean(errors.message))}
-					placeholder="How can we help?"
+					placeholder={t("form.placeholder")}
 				/>
 				{errors.message && (
 					<p className="mt-1.5 text-sm text-red-600">{errors.message}</p>
@@ -257,10 +258,10 @@ export default function ContactForm() {
 								d="M4 12a8 8 0 0 1 8-8V0C5.37 0 0 5.37 0 12h4z"
 							/>
 						</svg>
-						Sending…
+						{t("form.sending")}
 					</>
 				) : (
-					"Send message"
+					t("form.send")
 				)}
 			</button>
 		</form>
