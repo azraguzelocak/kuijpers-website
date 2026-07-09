@@ -3,7 +3,7 @@ import { ui, defaultLang, type Lang } from "./ui";
 // Which top-level routes have a translated version (so the language switcher
 // doesn't link to a page that doesn't exist yet). Add routes here as pages get
 // translated. "" = the home page.
-export const TRANSLATED_ROUTES = new Set<string>(["", "about", "services", "research", "contact"]);
+export const TRANSLATED_ROUTES = new Set<string>(["", "about", "services", "research", "innovations", "contact"]);
 
 export function getLangFromUrl(url: URL): Lang {
 	const [, seg] = url.pathname.split("/");

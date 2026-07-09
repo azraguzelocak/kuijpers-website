@@ -265,6 +265,19 @@ export const ui = {
 		"res.detail.funding": "Funding:",
 		"res.detail.related": "Related projects",
 		"res.detail.viewAll": "View all",
+
+		// innovations page
+		"inn.meta.title": "Innovations — Kuijpers Research Field",
+		"inn.meta.desc": "From research to real-world impact — 21 interconnected innovations across emissions, production, health and safety, and the measurable impact of each.",
+		"inn.hero.titleA": "From research to ",
+		"inn.hero.titleHl": "real-world impact",
+		"inn.hero.subtitle": "The breakthroughs coming out of the Kuijpers Research Field — and the connected system that turns careful science into measurable results on the farm.",
+		"inn.explore.eyebrow": "Explore the site",
+		"inn.explore.title": "From outside to inside",
+		"inn.explore.subtitle": "The model turns on its own — switch to the inside to see the barns, the birds and the egg rows, and how far the farm has been taken.",
+		"inn.section.eyebrow": "Interconnected",
+		"inn.section.title": "One vision, not a list",
+		"inn.section.subtitle": "Our innovations don't work in isolation — each one supports and strengthens the others. Rotate the network to see how they link up, then open any one for its full story and its real impact on CO₂, ammonia, energy, water and nutrients.",
 	},
 
 	nl: {
@@ -506,6 +519,18 @@ export const ui = {
 		"res.detail.funding": "Financiering:",
 		"res.detail.related": "Gerelateerde projecten",
 		"res.detail.viewAll": "Bekijk alle",
+
+		"inn.meta.title": "Innovaties — Kuijpers Research Field",
+		"inn.meta.desc": "Van onderzoek naar impact in de praktijk — 21 met elkaar verbonden innovaties op het gebied van emissies, productie, gezondheid en veiligheid, en de meetbare impact van elk.",
+		"inn.hero.titleA": "Van onderzoek naar ",
+		"inn.hero.titleHl": "impact in de praktijk",
+		"inn.hero.subtitle": "De doorbraken uit het Kuijpers Research Field — en het verbonden systeem dat zorgvuldige wetenschap omzet in meetbare resultaten op het bedrijf.",
+		"inn.explore.eyebrow": "Ontdek de locatie",
+		"inn.explore.title": "Van buiten naar binnen",
+		"inn.explore.subtitle": "Het model draait vanzelf — schakel naar binnen om de stallen, de dieren en de eierrijen te zien, en hoe ver het bedrijf is doorontwikkeld.",
+		"inn.section.eyebrow": "Verbonden",
+		"inn.section.title": "Eén visie, geen lijst",
+		"inn.section.subtitle": "Onze innovaties werken niet los van elkaar — elke innovatie ondersteunt en versterkt de andere. Draai het netwerk om te zien hoe ze samenhangen, en open er een voor het volledige verhaal en de echte impact op CO₂, ammoniak, energie, water en nutriënten.",
 	},
 
 	de: {
@@ -747,5 +772,17 @@ export const ui = {
 		"res.detail.funding": "Förderung:",
 		"res.detail.related": "Verwandte Projekte",
 		"res.detail.viewAll": "Alle ansehen",
+
+		"inn.meta.title": "Innovationen — Kuijpers Research Field",
+		"inn.meta.desc": "Von der Forschung zur Wirkung in der Praxis — 21 miteinander verbundene Innovationen in den Bereichen Emissionen, Produktion, Gesundheit und Sicherheit, samt der messbaren Wirkung jeder einzelnen.",
+		"inn.hero.titleA": "Von der Forschung zur ",
+		"inn.hero.titleHl": "Wirkung in der Praxis",
+		"inn.hero.subtitle": "Die Durchbrüche aus dem Kuijpers Research Field — und das vernetzte System, das sorgfältige Wissenschaft in messbare Ergebnisse auf dem Betrieb verwandelt.",
+		"inn.explore.eyebrow": "Entdecken Sie den Standort",
+		"inn.explore.title": "Von außen nach innen",
+		"inn.explore.subtitle": "Das Modell dreht sich von selbst — wechseln Sie nach innen, um die Ställe, die Tiere und die Eierreihen zu sehen und wie weit der Betrieb entwickelt ist.",
+		"inn.section.eyebrow": "Vernetzt",
+		"inn.section.title": "Eine Vision, keine Liste",
+		"inn.section.subtitle": "Unsere Innovationen wirken nicht isoliert — jede unterstützt und verstärkt die anderen. Drehen Sie das Netzwerk, um zu sehen, wie sie zusammenhängen, und öffnen Sie eine für ihre ganze Geschichte und ihre tatsächliche Wirkung auf CO₂, Ammoniak, Energie, Wasser und Nährstoffe.",
 	},
 } as const;
