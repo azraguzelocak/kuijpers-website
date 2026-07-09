@@ -229,6 +229,37 @@ export const ui = {
 		"svc.cta.text":
 			"Tell us what you want to learn or validate, and we'll show you how digital twin technology can get you there.",
 		"svc.cta.button": "Get in Touch",
+
+		// research index page
+		"res.meta.title": "Research Projects — Kuijpers Research Field",
+		"res.meta.desc":
+			"Explore our research projects in poultry production — from emission monitoring to efficiency measurement — across ongoing, completed and planned work.",
+		"res.hero.title": "Research Projects",
+		"res.hero.bodyA":
+			"From real-time emission monitoring to efficiency measurement, our research turns data from a controlled, sensor-rich environment into ",
+		"res.hero.bodyHl": "validated insight",
+		"res.hero.bodyB":
+			" the whole value chain can trust. Browse our ongoing, completed and planned projects below.",
+		"res.intro.eyebrow": "Our Work",
+		"res.intro.titleA": "The projects behind the ",
+		"res.intro.titleHl": "proof",
+		"res.intro.titleB": ".",
+		"res.intro.body":
+			"Every claim we make about poultry production is backed by a live research project — ongoing, completed, or in design. Browse the work shaping welfare standards, emission targets, and efficiency benchmarks across the sector.",
+		"res.status.ongoing": "Ongoing",
+		"res.status.completed": "Completed",
+		"res.status.planned": "Planned",
+		"res.stat.inDesign": "In Design",
+		"res.filter.all": "All",
+		"res.card.teamOne": "team member",
+		"res.card.teamMany": "team members",
+		"res.card.view": "View project",
+		"res.filter.empty": "No projects match this filter yet — check back soon.",
+		"res.empty": "Research projects are coming soon — check back shortly.",
+		"res.cta.title": "Have a research question?",
+		"res.cta.body":
+			"Tell us what you want to learn or validate, and we'll show you how our research field and digital twin can get you there.",
+		"res.cta.button": "Get in Touch",
 	},
 
 	nl: {
@@ -435,6 +466,36 @@ export const ui = {
 		"svc.cta.text":
 			"Vertel ons wat u wilt leren of valideren, en we laten u zien hoe digital-twin-technologie u daar kan brengen.",
 		"svc.cta.button": "Neem contact op",
+
+		"res.meta.title": "Onderzoeksprojecten — Kuijpers Research Field",
+		"res.meta.desc":
+			"Ontdek onze onderzoeksprojecten in de pluimveehouderij — van emissiemonitoring tot efficiëntiemeting — voor lopend, afgerond en gepland werk.",
+		"res.hero.title": "Onderzoeksprojecten",
+		"res.hero.bodyA":
+			"Van realtime emissiemonitoring tot efficiëntiemeting: ons onderzoek zet data uit een gecontroleerde, sensorrijke omgeving om in ",
+		"res.hero.bodyHl": "gevalideerd inzicht",
+		"res.hero.bodyB":
+			" dat de hele keten kan vertrouwen. Bekijk hieronder onze lopende, afgeronde en geplande projecten.",
+		"res.intro.eyebrow": "Ons werk",
+		"res.intro.titleA": "De projecten achter het ",
+		"res.intro.titleHl": "bewijs",
+		"res.intro.titleB": ".",
+		"res.intro.body":
+			"Elke claim die we over pluimveeproductie maken, wordt onderbouwd door een lopend onderzoeksproject — lopend, afgerond of in ontwerp. Bekijk het werk dat welzijnsnormen, emissiedoelen en efficiëntiebenchmarks in de sector vormgeeft.",
+		"res.status.ongoing": "Lopend",
+		"res.status.completed": "Afgerond",
+		"res.status.planned": "Gepland",
+		"res.stat.inDesign": "In ontwerp",
+		"res.filter.all": "Alle",
+		"res.card.teamOne": "teamlid",
+		"res.card.teamMany": "teamleden",
+		"res.card.view": "Bekijk project",
+		"res.filter.empty": "Geen projecten voldoen aan dit filter — kom binnenkort terug.",
+		"res.empty": "Onderzoeksprojecten volgen binnenkort — kom snel terug.",
+		"res.cta.title": "Heeft u een onderzoeksvraag?",
+		"res.cta.body":
+			"Vertel ons wat u wilt leren of valideren, en we laten u zien hoe ons onderzoeksveld en digital twin u daar kunnen brengen.",
+		"res.cta.button": "Neem contact op",
 	},
 
 	de: {
@@ -641,5 +702,35 @@ export const ui = {
 		"svc.cta.text":
 			"Sagen Sie uns, was Sie lernen oder validieren möchten, und wir zeigen Ihnen, wie die Digital-Twin-Technologie Sie dorthin bringt.",
 		"svc.cta.button": "Kontakt aufnehmen",
+
+		"res.meta.title": "Forschungsprojekte — Kuijpers Research Field",
+		"res.meta.desc":
+			"Entdecken Sie unsere Forschungsprojekte in der Geflügelproduktion — von der Emissionsüberwachung bis zur Effizienzmessung — für laufende, abgeschlossene und geplante Arbeiten.",
+		"res.hero.title": "Forschungsprojekte",
+		"res.hero.bodyA":
+			"Vom Echtzeit-Emissionsmonitoring bis zur Effizienzmessung: Unsere Forschung verwandelt Daten aus einer kontrollierten, sensorreichen Umgebung in ",
+		"res.hero.bodyHl": "validierte Erkenntnisse",
+		"res.hero.bodyB":
+			", denen die gesamte Kette vertrauen kann. Durchsuchen Sie unten unsere laufenden, abgeschlossenen und geplanten Projekte.",
+		"res.intro.eyebrow": "Unsere Arbeit",
+		"res.intro.titleA": "Die Projekte hinter dem ",
+		"res.intro.titleHl": "Nachweis",
+		"res.intro.titleB": ".",
+		"res.intro.body":
+			"Jede Aussage, die wir über die Geflügelproduktion treffen, wird durch ein laufendes Forschungsprojekt gestützt — laufend, abgeschlossen oder in Planung. Entdecken Sie die Arbeit, die Tierwohlstandards, Emissionsziele und Effizienz-Benchmarks in der Branche prägt.",
+		"res.status.ongoing": "Laufend",
+		"res.status.completed": "Abgeschlossen",
+		"res.status.planned": "Geplant",
+		"res.stat.inDesign": "In Planung",
+		"res.filter.all": "Alle",
+		"res.card.teamOne": "Teammitglied",
+		"res.card.teamMany": "Teammitglieder",
+		"res.card.view": "Projekt ansehen",
+		"res.filter.empty": "Keine Projekte entsprechen diesem Filter — schauen Sie bald wieder vorbei.",
+		"res.empty": "Forschungsprojekte folgen in Kürze — schauen Sie bald wieder vorbei.",
+		"res.cta.title": "Haben Sie eine Forschungsfrage?",
+		"res.cta.body":
+			"Sagen Sie uns, was Sie lernen oder validieren möchten, und wir zeigen Ihnen, wie unser Forschungsfeld und der digitale Zwilling Sie dorthin bringen.",
+		"res.cta.button": "Kontakt aufnehmen",
 	},
 } as const;

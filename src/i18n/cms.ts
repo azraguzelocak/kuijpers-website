@@ -109,6 +109,40 @@ export const cmsTranslations: Record<string, { nl: string; de: string }> = {
 		nl: "Realtime data-analyse",
 		de: "Echtzeit-Datenanalyse",
 	},
+	// --- research project titles ---
+	"Controlled Intervention Trials for Feed Additives, Housing Technologies, and Management Practices": {
+		nl: "Gecontroleerde interventieproeven voor voeradditieven, huisvestingstechnologieën en managementpraktijken",
+		de: "Kontrollierte Interventionsversuche für Futterzusatzstoffe, Haltungstechnologien und Managementpraktiken",
+	},
+	"Full-Chain Efficiency Benchmarking in Commercial Broiler Production": {
+		nl: "Efficiëntiebenchmarking van de hele keten in de commerciële vleeskuikenproductie",
+		de: "Effizienz-Benchmarking der gesamten Kette in der kommerziellen Broilerproduktion",
+	},
+	"Carbon Footprint Measurement Across the Broiler Production Chain": {
+		nl: "Meting van de CO₂-voetafdruk in de vleeskuikenproductieketen",
+		de: "Messung des CO₂-Fußabdrucks entlang der Broiler-Produktionskette",
+	},
+	"NH3 Emission Quantification and Mitigation in Broiler Housing Systems": {
+		nl: "Kwantificering en reductie van NH₃-emissies in vleeskuikenstalsystemen",
+		de: "Quantifizierung und Minderung von NH₃-Emissionen in Broiler-Haltungssystemen",
+	},
+	// --- research project summaries ---
+	"A structured trial environment for evaluating the performance, welfare, and environmental impact of new feed additives, housing technologies, and management practices under commercial-scale production conditions.": {
+		nl: "Een gestructureerde proefomgeving voor het evalueren van de prestaties, het welzijn en de milieu-impact van nieuwe voeradditieven, huisvestingstechnologieën en managementpraktijken onder productieomstandigheden op commerciële schaal.",
+		de: "Eine strukturierte Versuchsumgebung zur Bewertung von Leistung, Tierwohl und Umweltwirkung neuer Futterzusatzstoffe, Haltungstechnologien und Managementpraktiken unter Produktionsbedingungen in kommerziellem Maßstab.",
+	},
+	"A comprehensive analysis of feed conversion ratios, growth performance, mortality, and operational efficiency across all stages of commercial broiler production, establishing validated benchmarks for the European poultry sector.": {
+		nl: "Een uitgebreide analyse van voederconversies, groeiprestaties, uitval en operationele efficiëntie in alle fasen van de commerciële vleeskuikenproductie, met gevalideerde benchmarks voor de Europese pluimveesector.",
+		de: "Eine umfassende Analyse von Futterverwertung, Wachstumsleistung, Mortalität und betrieblicher Effizienz über alle Stufen der kommerziellen Broilerproduktion, die validierte Benchmarks für den europäischen Geflügelsektor schafft.",
+	},
+	"Precise, continuous measurement of carbon emissions from breeding through processing, combined with impact assessment of targeted interventions on the total chain footprint.": {
+		nl: "Nauwkeurige, continue meting van koolstofemissies van broederij tot verwerking, gecombineerd met een impactbeoordeling van gerichte ingrepen op de totale voetafdruk van de keten.",
+		de: "Präzise, kontinuierliche Messung der Kohlenstoffemissionen von der Brüterei bis zur Verarbeitung, kombiniert mit einer Wirkungsbewertung gezielter Maßnahmen auf den Gesamt-Fußabdruck der Kette.",
+	},
+	"Advanced measurement of ammonia emissions across housing systems and management practices, supporting intervention effectiveness evaluation and compliance with NEC Directive and BBT/BAT requirements.": {
+		nl: "Geavanceerde meting van ammoniakemissies over huisvestingssystemen en managementpraktijken, ter ondersteuning van de evaluatie van de effectiviteit van ingrepen en naleving van de NEC-richtlijn en BBT/BAT-eisen.",
+		de: "Fortschrittliche Messung von Ammoniakemissionen über Haltungssysteme und Managementpraktiken hinweg, zur Bewertung der Wirksamkeit von Maßnahmen und zur Einhaltung der NEC-Richtlinie und der BVT/BAT-Anforderungen.",
+	},
 };
 
 /** Translate a CMS string via the overlay; returns the original if untranslated. */
