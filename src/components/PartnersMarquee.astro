@@ -1,0 +1,72 @@
+---
+import { PARTNERS } from "../data/partners";
+
+interface Props {
+	// Colour of the soft fade at the left/right edges — match the section background.
+	fade?: string;
+	// Full scroll cycle duration (longer = slower).
+	duration?: string;
+}
+const { fade = "#ffffff", duration = "50s" } = Astro.props;
+
+// Duplicate the list so the track can loop seamlessly (translateX -50%).
+const loop = [...PARTNERS, ...PARTNERS];
+---
+
+<div
+	class="partner-marquee group relative overflow-hidden"
+	style={`--fade:${fade};--dur:${duration};`}
+>
+	<div
+		class="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 sm:w-20"
+		style="background:linear-gradient(to right, var(--fade), transparent)"
+	>
+	</div>
+	<div
+		class="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 sm:w-20"
+		style="background:linear-gradient(to left, var(--fade), transparent)"
+	>
+	</div>
+
+	<ul class="marquee-track flex w-max items-center gap-12 py-3 sm:gap-16">
+		{
+			loop.map((p, i) => (
+				<li
+					class="flex h-20 w-40 shrink-0 items-center justify-center sm:w-48"
+					aria-hidden={i >= PARTNERS.length ? "true" : undefined}
+				>
+					<img
+						src={p.src}
+						alt={p.name}
+						title={p.name}
+						loading="lazy"
+						class="max-h-16 w-auto max-w-[160px] object-contain opacity-85 transition duration-300 hover:opacity-100 sm:max-h-20"
+					/>
+				</li>
+			))
+		}
+	</ul>
+</div>
+
+<style>
+	.marquee-track {
+		animation: partner-scroll var(--dur, 50s) linear infinite;
+	}
+	/* Pause when hovered so people can read a logo */
+	.partner-marquee:hover .marquee-track {
+		animation-play-state: paused;
+	}
+	@keyframes partner-scroll {
+		from {
+			transform: translateX(0);
+		}
+		to {
+			transform: translateX(-50%);
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.marquee-track {
+			animation: none;
+		}
+	}
+</style>

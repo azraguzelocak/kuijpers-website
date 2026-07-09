@@ -2,6 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { getAllTeamMembers } from "../lib/sanity";
 import { urlFor } from "../lib/image";
+import PartnersMarquee from "../components/PartnersMarquee.astro";
 
 // --- Data fetching ------------------------------------------------------
 const team = (await getAllTeamMembers()) ?? [];
@@ -251,23 +252,27 @@ const pillars = [
 	<!-- 5. Partners -->
 	<section class="bg-stone-50">
 		<div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-			<p
-				class="text-center text-sm font-semibold uppercase tracking-wider text-stone-500"
-			>
-				Our Partners
-			</p>
-			<div
-				class="mt-8 grid grid-cols-2 items-center gap-6 sm:grid-cols-3 lg:grid-cols-5"
-			>
-				{
-					Array.from({ length: 5 }).map(() => (
-						<div class="flex h-16 items-center justify-center rounded-lg bg-white shadow-sm">
-							<span class="text-xs font-medium uppercase tracking-wider text-stone-400">
-								Logo
-							</span>
-						</div>
-					))
-				}
+			<div class="mx-auto max-w-3xl text-center">
+				<p
+					class="text-sm font-semibold uppercase tracking-wider text-brand-600"
+				>
+					Our Partners
+				</p>
+				<h2
+					class="mt-4 text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl"
+				>
+					Stronger together
+				</h2>
+				<p class="mt-5 text-lg leading-relaxed text-stone-600">
+					No single organisation can move poultry production forward alone. We
+					work hand in hand with breeders, feed and equipment suppliers,
+					animal-health companies, universities, and public partners — combining
+					their expertise with our research field and digital twin so every
+					innovation is tested and ready for the real world.
+				</p>
+			</div>
+			<div class="mt-12">
+				<PartnersMarquee fade="#fafaf9" />
 			</div>
 		</div>
 	</section>

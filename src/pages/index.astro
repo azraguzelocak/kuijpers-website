@@ -8,6 +8,7 @@ import {
 } from "../lib/sanity";
 import { urlFor } from "../lib/image";
 import { INNOVATIONS, CATEGORY_META } from "../data/innovations";
+import PartnersMarquee from "../components/PartnersMarquee.astro";
 
 // --- Data fetching ------------------------------------------------------
 const services = (await getAllServices()) ?? [];
@@ -134,7 +135,9 @@ const formatDate = (value?: string) =>
 				<h1
 					class="text-4xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl"
 				>
-					Two barns. One real. One digital. Both telling the truth.
+					Two barns. One real. One digital. Both telling <span
+						class="text-brand-300">the truth</span
+					>.
 				</h1>
 				<p
 					class="mt-6 max-w-[640px] text-lg leading-[1.65] text-stone-200 sm:text-xl"
@@ -378,18 +381,8 @@ const formatDate = (value?: string) =>
 			>
 				Trusted by
 			</p>
-			<div
-				class="mt-8 grid grid-cols-2 items-center gap-6 sm:grid-cols-3 lg:grid-cols-5"
-			>
-				{
-					Array.from({ length: 5 }).map(() => (
-						<div class="flex h-16 items-center justify-center rounded-lg bg-stone-100">
-							<span class="text-xs font-medium uppercase tracking-wider text-stone-400">
-								Logo
-							</span>
-						</div>
-					))
-				}
+			<div class="mt-10">
+				<PartnersMarquee fade="#ffffff" />
 			</div>
 		</div>
 	</section>

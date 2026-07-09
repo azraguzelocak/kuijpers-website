@@ -28,3 +28,4 @@ pnpm-debug.log*
 # raw source photos (originals kept on disk, not in git history)
 photo/real/
 photo/example/
+photo/partners/
