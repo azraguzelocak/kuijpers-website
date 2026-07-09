@@ -222,6 +222,9 @@ export const ui = {
 		"svc.diff.kuijpers": "The Kuijpers approach",
 		"svc.ref.eyebrow": "Referrals",
 		"svc.ref.title": "What our partners say",
+		"svc.ref.quote1":
+			"Working with Kuijpers Kip Research Field helped us to gain the necessary insights to move to emission-free poultry production.",
+		"svc.ref.quote2": "Vision and implementation power makes all the difference.",
 		"svc.cta.title": "Discuss your project",
 		"svc.cta.text":
 			"Tell us what you want to learn or validate, and we'll show you how digital twin technology can get you there.",
@@ -425,6 +428,9 @@ export const ui = {
 		"svc.diff.kuijpers": "De Kuijpers-aanpak",
 		"svc.ref.eyebrow": "Referenties",
 		"svc.ref.title": "Wat onze partners zeggen",
+		"svc.ref.quote1":
+			"De samenwerking met Kuijpers Kip Research Field hielp ons de nodige inzichten te verkrijgen om over te stappen op emissievrije pluimveeproductie.",
+		"svc.ref.quote2": "Visie en uitvoeringskracht maken het verschil.",
 		"svc.cta.title": "Bespreek uw project",
 		"svc.cta.text":
 			"Vertel ons wat u wilt leren of valideren, en we laten u zien hoe digital-twin-technologie u daar kan brengen.",
@@ -628,6 +634,9 @@ export const ui = {
 		"svc.diff.kuijpers": "Der Kuijpers-Ansatz",
 		"svc.ref.eyebrow": "Referenzen",
 		"svc.ref.title": "Was unsere Partner sagen",
+		"svc.ref.quote1":
+			"Die Zusammenarbeit mit Kuijpers Kip Research Field half uns, die nötigen Erkenntnisse zu gewinnen, um auf eine emissionsfreie Geflügelproduktion umzustellen.",
+		"svc.ref.quote2": "Vision und Umsetzungskraft machen den Unterschied.",
 		"svc.cta.title": "Besprechen Sie Ihr Projekt",
 		"svc.cta.text":
 			"Sagen Sie uns, was Sie lernen oder validieren möchten, und wir zeigen Ihnen, wie die Digital-Twin-Technologie Sie dorthin bringt.",

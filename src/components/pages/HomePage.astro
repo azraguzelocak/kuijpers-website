@@ -10,6 +10,7 @@ import { urlFor } from "../../lib/image";
 import { INNOVATIONS, CATEGORY_META } from "../../data/innovations";
 import PartnersMarquee from "../PartnersMarquee.astro";
 import { getLangFromUrl, useTranslations } from "../../i18n/utils";
+import { translateCms } from "../../i18n/cms";
 
 // --- Data fetching ------------------------------------------------------
 const services = (await getAllServices()) ?? [];
@@ -228,7 +229,7 @@ const formatDate = (value?: string) =>
 										.height(360)
 										.fit("crop")
 										.url()}
-									alt={service.image.alt ?? service.title}
+									alt={service.image.alt ?? translateCms(service.title, lang)}
 									width="600"
 									height="360"
 									class="aspect-[5/3] w-full object-cover"
@@ -243,10 +244,10 @@ const formatDate = (value?: string) =>
 							)}
 							<div class="flex flex-1 flex-col p-6">
 								<h3 class="text-lg font-semibold text-stone-900">
-									{service.title}
+									{translateCms(service.title, lang)}
 								</h3>
 								<p class="mt-2 flex-1 text-sm leading-relaxed text-stone-600">
-									{service.shortDescription}
+									{translateCms(service.shortDescription, lang)}
 								</p>
 								<a
 									href="/services"
