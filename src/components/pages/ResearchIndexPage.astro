@@ -2,7 +2,7 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getAllResearchProjects, getAllPublications } from "../../lib/sanity";
 import { urlFor } from "../../lib/image";
-import { getLangFromUrl, useTranslations } from "../../i18n/utils";
+import { getLangFromUrl, useTranslations, localizePath, localizedHref } from "../../i18n/utils";
 import { translateCms } from "../../i18n/cms";
 
 const lang = getLangFromUrl(Astro.url);
@@ -174,7 +174,7 @@ const teamCount = (project: any) => (project.team?.length ?? 0);
 										data-status={project.status ?? "unknown"}
 									>
 										<a
-											href={`/research/${project.slug}`}
+											href={localizePath(`/research/${project.slug}`, lang)}
 											class="flex flex-1 flex-col"
 										>
 											{/* Cover image */}
@@ -295,7 +295,7 @@ const teamCount = (project: any) => (project.team?.length ?? 0);
 			</p>
 			<div class="mt-10">
 				<a
-					href="/contact"
+					href={localizedHref("/contact", lang)}
 					class="inline-block rounded-lg bg-white px-8 py-3 text-base font-semibold text-brand-800 shadow-sm transition-colors hover:bg-stone-100"
 				>
 					{t("res.cta.button")}

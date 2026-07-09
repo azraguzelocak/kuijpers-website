@@ -3,7 +3,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import TeamCard from "../TeamCard.astro";
 import { getAllResearchProjects } from "../../lib/sanity";
 import { urlFor } from "../../lib/image";
-import { getLangFromUrl, useTranslations } from "../../i18n/utils";
+import { getLangFromUrl, useTranslations, localizePath } from "../../i18n/utils";
 import { translateCms } from "../../i18n/cms";
 
 const { project, related } = Astro.props;
@@ -122,7 +122,7 @@ const dateRange = [fmtDate(project.startDate), fmtDate(project.endDate)]
 		}
 		<div class="relative mx-auto max-w-5xl px-4 py-24 sm:px-6 lg:px-8">
 			<nav class="mb-6 text-sm text-stone-300">
-				<a href="/research" class="transition-colors hover:text-white">
+				<a href={localizePath("/research", lang)} class="transition-colors hover:text-white">
 					{t("res.detail.crumb")}
 				</a>
 				<span class="mx-2 text-stone-500">/</span>
@@ -224,7 +224,7 @@ const dateRange = [fmtDate(project.startDate), fmtDate(project.endDate)]
 							{t("res.detail.related")}
 						</h2>
 						<a
-							href="/research"
+							href={localizePath("/research", lang)}
 							class="hidden text-sm font-semibold text-brand-600 hover:text-brand-700 sm:inline"
 						>
 							{t("res.detail.viewAll")} →
@@ -236,7 +236,7 @@ const dateRange = [fmtDate(project.startDate), fmtDate(project.endDate)]
 							const relMeta = statusMeta(rel.status);
 							return (
 								<a
-									href={`/research/${rel.slug}`}
+									href={localizePath(`/research/${rel.slug}`, lang)}
 									class="group flex flex-col overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm transition-shadow hover:shadow-md"
 								>
 									<div class="relative aspect-[16/9] w-full overflow-hidden bg-gradient-to-br from-brand-100 to-brand-50">
