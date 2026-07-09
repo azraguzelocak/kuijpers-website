@@ -22,28 +22,37 @@ const t = useTranslations(lang);
 			</p>
 		</div>
 
-		<div class="farm3d">
+		<div
+			class="farm3d"
+			data-t-inside={t("f3d.inside")}
+			data-t-outside={t("f3d.outside")}
+			data-t-pause={t("f3d.pause")}
+			data-t-play={t("f3d.play")}
+			data-t-fullscreen={t("f3d.fullscreen")}
+			data-t-exit={t("f3d.exit")}
+			data-t-failed={t("f3d.failed")}
+			data-t-aria-pause={t("f3d.aria.pause")}
+			data-t-aria-play={t("f3d.aria.play")}
+		>
 			<div class="head">
-				<div class="title">
-					Kuijpers farm &middot; 3D model
-				</div>
-				<div class="sidepill" id="f3d-sidepill"><i></i><span id="f3d-sidetext">Outside</span></div>
+				<div class="title" set:html={t("f3d.title")} />
+				<div class="sidepill" id="f3d-sidepill"><i></i><span id="f3d-sidetext">{t("f3d.outside")}</span></div>
 			</div>
-			<div class="stage" id="f3d-stage" tabindex="0" aria-label="3D farm. Drag to orbit, scroll to zoom. Use Inside to enter the barn.">
-				<div class="hint" id="f3d-hint">Drag to orbit &middot; scroll to zoom</div>
+			<div class="stage" id="f3d-stage" tabindex="0" aria-label={t("f3d.aria.stage")}>
+				<div class="hint" id="f3d-hint" set:html={t("f3d.hint")} />
 				<div class="post post-warm"></div>
 				<div class="post post-grain"></div>
 				<div class="post post-vig"></div>
-				<div class="load" id="f3d-load">Building model&hellip;</div>
-				<button class="fs" id="f3d-fs" type="button" aria-label="Full screen">Full screen</button>
+				<div class="load" id="f3d-load" set:html={t("f3d.loading")} />
+				<button class="fs" id="f3d-fs" type="button" aria-label={t("f3d.fullscreen")}>{t("f3d.fullscreen")}</button>
 			</div>
 			<div class="controls">
 				<div class="seg" role="tablist" aria-label="View">
-					<button id="f3d-out" class="on" role="tab" aria-selected="true">Outside</button>
-					<button id="f3d-in" role="tab" aria-selected="false">Inside</button>
+					<button id="f3d-out" class="on" role="tab" aria-selected="true">{t("f3d.outside")}</button>
+					<button id="f3d-in" role="tab" aria-selected="false">{t("f3d.inside")}</button>
 				</div>
-				<button class="btn playing" id="f3d-toggle" aria-label="Pause rotation">
-					<span class="ico"></span><span id="f3d-togtxt">Pause</span>
+				<button class="btn playing" id="f3d-toggle" aria-label={t("f3d.aria.pause")}>
+					<span class="ico"></span><span id="f3d-togtxt">{t("f3d.pause")}</span>
 				</button>
 			</div>
 		</div>
@@ -92,7 +101,9 @@ const t = useTranslations(lang);
 		var stage = document.getElementById("f3d-stage");
 		var loadEl = document.getElementById("f3d-load");
 		if (!stage) return;
-		function fail() { if (loadEl) { loadEl.textContent = "3D failed to load — refresh the page"; loadEl.classList.remove("done"); } }
+		var root = stage.closest(".farm3d");
+		var T = (root && root.dataset) || {};
+		function fail() { if (loadEl) { loadEl.textContent = T.tFailed || "3D failed to load — refresh the page"; loadEl.classList.remove("done"); } }
 
 		var s = document.createElement("script");
 		s.src = "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js";
@@ -439,7 +450,7 @@ const t = useTranslations(lang);
 			function goInside() { mode = "inside"; playing = false; startTween({ r: IN.r, theta: IN.theta, phi: IN.phi, t: IN.t }); setSeg("in"); }
 
 			var sidepill = document.getElementById("f3d-sidepill"), sidetext = document.getElementById("f3d-sidetext");
-			function updatePill() { var inside = mode === "inside" ? true : Math.cos(sph.theta) < -0.08; if (inside !== pillInside) { pillInside = inside; sidepill.classList.toggle("inside", inside); sidetext.textContent = inside ? "Inside" : "Outside"; } }
+			function updatePill() { var inside = mode === "inside" ? true : Math.cos(sph.theta) < -0.08; if (inside !== pillInside) { pillInside = inside; sidepill.classList.toggle("inside", inside); sidetext.textContent = inside ? (T.tInside || "Inside") : (T.tOutside || "Outside"); } }
 
 			function animate() {
 				requestAnimationFrame(animate);
@@ -460,7 +471,7 @@ const t = useTranslations(lang);
 			document.getElementById("f3d-out").addEventListener("click", goOutside);
 			document.getElementById("f3d-in").addEventListener("click", goInside);
 			var toggle = document.getElementById("f3d-toggle"), togtxt = document.getElementById("f3d-togtxt");
-			toggle.addEventListener("click", function () { playing = !playing; toggle.classList.toggle("playing", playing); togtxt.textContent = playing ? "Pause" : "Play"; toggle.setAttribute("aria-label", playing ? "Pause rotation" : "Play rotation"); });
+			toggle.addEventListener("click", function () { playing = !playing; toggle.classList.toggle("playing", playing); togtxt.textContent = playing ? (T.tPause || "Pause") : (T.tPlay || "Play"); toggle.setAttribute("aria-label", playing ? (T.tAriaPause || "Pause rotation") : (T.tAriaPlay || "Play rotation")); });
 
 			function onResize() { var w = stage.clientWidth, h = stage.clientHeight; if (!w || !h) return; renderer.setSize(w, h); camera.aspect = w / h; camera.updateProjectionMatrix(); }
 			if (window.ResizeObserver) new ResizeObserver(onResize).observe(stage); else window.addEventListener("resize", onResize);
@@ -475,7 +486,7 @@ const t = useTranslations(lang);
 					if (fsActive()) { (document.exitFullscreen || document.webkitExitFullscreen).call(document); }
 					else { (stage.requestFullscreen || stage.webkitRequestFullscreen || function () {}).call(stage); }
 				});
-				var onFs = function () { fsBtn.textContent = fsActive() ? "Exit" : "Full screen"; setTimeout(onResize, 60); };
+				var onFs = function () { fsBtn.textContent = fsActive() ? (T.tExit || "Exit") : (T.tFullscreen || "Full screen"); setTimeout(onResize, 60); };
 				document.addEventListener("fullscreenchange", onFs);
 				document.addEventListener("webkitfullscreenchange", onFs);
 			}

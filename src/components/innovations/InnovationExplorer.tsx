@@ -10,6 +10,18 @@ import {
 	type Innovation,
 	type Category,
 } from "../../data/innovations";
+import { ui, type Lang } from "../../i18n/ui";
+import { translateCms } from "../../i18n/cms";
+
+// UI-string translator (falls back to English). Data strings (innovation names,
+// descriptions, category/metric/relation labels) go through translateCms().
+const makeT =
+	(lang: Lang) =>
+	(key: string): string =>
+		(ui[lang] as Record<string, string>)[key] ?? (ui.en as Record<string, string>)[key] ?? key;
+const tc = (text: string, lang: Lang) => translateCms(text, lang);
+const innHref = (id: string, lang: Lang) =>
+	lang === "en" ? `/innovations/${id}` : `/${lang}/innovations/${id}`;
 
 // -----------------------------------------------------------------------------
 // Shared helpers
@@ -75,11 +87,14 @@ function NetworkSphere({
 	selectedId,
 	onSelect,
 	onDeselect,
+	lang,
 }: {
 	selectedId: string | null;
 	onSelect: (id: string) => void;
 	onDeselect: () => void;
+	lang: Lang;
 }) {
+	const t = makeT(lang);
 	const base = useMemo(() => fibonacciSphere(INNOVATIONS.length), []);
 	const [rot, setRot] = useState({ rx: -0.2, ry: 0.4 });
 	const [spin, setSpin] = useState(true);
@@ -181,7 +196,8 @@ const pulses = useMemo(() => {
 			.map((n) => {
 				const direct = isDirect(n.inn);
 				const rr = (direct ? 9 : 6.5) * (0.65 + n.depth * 0.5) * (n.inn.id === selectedId ? 1.35 : 1);
-				return { id: n.inn.id, short: n.inn.short, isSel: n.inn.id === selectedId, nx: n.x, ny: n.y, rr, w: n.inn.short.length * 6.3 + 16, px: 0, py: 0 };
+				const short = tc(n.inn.short, lang);
+				return { id: n.inn.id, short, isSel: n.inn.id === selectedId, nx: n.x, ny: n.y, rr, w: short.length * 6.3 + 16, px: 0, py: 0 };
 			});
 		for (const it of items) {
 			let px = it.nx + it.rr + 5;
@@ -289,7 +305,7 @@ const pulses = useMemo(() => {
 										fill="#1f2937"
 										style={{ paintOrder: "stroke", stroke: "#eef2f8", strokeWidth: 3, strokeLinejoin: "round" }}
 									>
-										{inn.short}
+										{tc(inn.short, lang)}
 									</text>
 								)}
 							</g>
@@ -310,7 +326,7 @@ const pulses = useMemo(() => {
 			</svg>
 
 			<span className="pointer-events-none absolute left-3 top-3 max-w-[75%] rounded-full bg-white/80 px-3 py-1 text-xs font-medium text-stone-500 backdrop-blur">
-				{selectedId ? "Its connected innovations" : "Drag to rotate · click a node to see its links"}
+				{selectedId ? t("exp.pill.selected") : t("exp.pill.hint")}
 			</span>
 
 			<div className="absolute inset-x-0 bottom-2 flex items-center justify-center px-3">
@@ -319,7 +335,7 @@ const pulses = useMemo(() => {
 					onClick={() => setSpin((s) => !s)}
 					className="rounded-full bg-white/85 px-3 py-1 text-xs font-semibold text-stone-600 backdrop-blur transition-colors hover:bg-white"
 				>
-					{spin ? "❚❚ Pause" : "▶ Spin"}
+					{spin ? `❚❚ ${t("exp.pause")}` : `▶ ${t("exp.spin")}`}
 				</button>
 			</div>
 		</div>
@@ -330,7 +346,7 @@ const pulses = useMemo(() => {
 // Impact bars (shared)
 // -----------------------------------------------------------------------------
 
-function ImpactBars({ inn }: { inn: Innovation }) {
+function ImpactBars({ inn, lang }: { inn: Innovation; lang: Lang }) {
 	return (
 		<div className="space-y-2">
 			{METRICS.map((m) => {
@@ -342,7 +358,7 @@ function ImpactBars({ inn }: { inn: Innovation }) {
 				const yearText = raw === 0 ? "" : `${fmt(raw, 1)} ${m.yearUnit}`;
 				return (
 					<div key={m.key} className="grid grid-cols-[92px_1fr_128px] items-center gap-2 text-xs">
-						<span className="text-stone-500">{m.label}</span>
+						<span className="text-stone-500">{tc(m.label, lang)}</span>
 						<span className="relative h-3 overflow-hidden rounded bg-stone-100">
 							<span className="absolute left-0 top-0 h-full rounded" style={{ width: `${width}%`, background: color }} />
 						</span>
@@ -357,12 +373,13 @@ function ImpactBars({ inn }: { inn: Innovation }) {
 	);
 }
 
-function RelationTags({ id }: { id: string }) {
+function RelationTags({ id, lang }: { id: string; lang: Lang }) {
+	const t = makeT(lang);
 	const rels = relationsFor(id);
 	if (!rels.length) return null;
 	return (
 		<div className="mt-4 text-xs text-stone-500">
-			<span className="font-semibold text-stone-700">Connected to:</span>
+			<span className="font-semibold text-stone-700">{t("exp.connectedto")}</span>
 			<div className="mt-2 flex flex-wrap gap-1.5">
 				{rels.map((r, i) => {
 					const meta = RELATION_META[r.type];
@@ -373,7 +390,7 @@ function RelationTags({ id }: { id: string }) {
 							className="inline-block rounded-full px-2 py-0.5 text-[11px]"
 							style={{ background: `${meta.color}22`, color: meta.color }}
 						>
-							{other?.short} · {meta.label}
+							{other ? tc(other.short, lang) : ""} · {tc(meta.label, lang)}
 						</span>
 					);
 				})}
@@ -386,15 +403,15 @@ function RelationTags({ id }: { id: string }) {
 // Detail panel (inline quick view)
 // -----------------------------------------------------------------------------
 
-function DetailPanel({ selectedId }: { selectedId: string | null }) {
+function DetailPanel({ selectedId, lang }: { selectedId: string | null; lang: Lang }) {
+	const t = makeT(lang);
 	const inn = selectedId ? BY_ID[selectedId] : null;
 	if (!inn) {
 		return (
 			<div className="flex h-full min-h-[320px] flex-col items-center justify-center rounded-2xl border border-dashed border-stone-300 bg-stone-50 p-8 text-center">
-				<p className="text-lg font-semibold text-stone-700">Explore the web</p>
+				<p className="text-lg font-semibold text-stone-700">{t("exp.empty.title")}</p>
 				<p className="mt-2 max-w-xs text-sm text-stone-500">
-					Rotate the network below, or click a marker on the map above, to see what an
-					innovation does, how it connects, and its impact.
+					{t("exp.empty.body")}
 				</p>
 			</div>
 		);
@@ -408,24 +425,22 @@ function DetailPanel({ selectedId }: { selectedId: string | null }) {
 				style={{ background: `${cat.color}1a`, color: cat.color }}
 			>
 				<span className="h-2 w-2 rounded-full" style={{ background: cat.color }} />
-				{cat.label}
+				{tc(cat.label, lang)}
 			</span>
-			<h3 className="mt-3 text-xl font-bold text-stone-900">{inn.name}</h3>
-			<p className="mt-2 text-sm leading-relaxed text-stone-600">{inn.description}</p>
+			<h3 className="mt-3 text-xl font-bold text-stone-900">{tc(inn.name, lang)}</h3>
+			<p className="mt-2 text-sm leading-relaxed text-stone-600">{tc(inn.description, lang)}</p>
 			<div className="mt-5 border-t border-stone-100 pt-4">
 				<p className="mb-3 text-xs font-semibold uppercase tracking-wide text-stone-500">
-					{direct
-						? "Estimated impact — green = saving, blue = extra use/discharge"
-						: "Indirect innovation — its value flows through the innovations it connects to"}
+					{direct ? t("exp.impact.direct") : t("exp.impact.indirect")}
 				</p>
-				<ImpactBars inn={inn} />
+				<ImpactBars inn={inn} lang={lang} />
 			</div>
-			<RelationTags id={inn.id} />
+			<RelationTags id={inn.id} lang={lang} />
 			<a
-				href={`/innovations/${inn.id}`}
+				href={innHref(inn.id, lang)}
 				className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-brand-600 transition-colors hover:text-brand-700"
 			>
-				Read the full story →
+				{t("exp.readmore")}
 			</a>
 		</div>
 	);
@@ -438,10 +453,13 @@ function DetailPanel({ selectedId }: { selectedId: string | null }) {
 function CardsGrid({
 	selectedId,
 	filter,
+	lang,
 }: {
 	selectedId: string | null;
 	filter: Category | "all";
+	lang: Lang;
 }) {
+	const t = makeT(lang);
 	const list = INNOVATIONS.filter((i) => filter === "all" || i.category === filter);
 
 	return (
@@ -453,7 +471,7 @@ function CardsGrid({
 				return (
 					<a
 						key={inn.id}
-						href={`/innovations/${inn.id}`}
+						href={innHref(inn.id, lang)}
 						className={`flex flex-col rounded-xl border bg-white p-5 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md ${
 							isSel ? "" : "border-stone-200"
 						}`}
@@ -465,16 +483,16 @@ function CardsGrid({
 								style={{ background: `${cat.color}1a`, color: cat.color }}
 							>
 								<span className="h-1.5 w-1.5 rounded-full" style={{ background: cat.color }} />
-								{cat.label}
+								{tc(cat.label, lang)}
 							</span>
 							<span className="text-[10px] font-medium uppercase tracking-wide text-stone-400">
-								{direct ? "Direct impact" : "Indirect"}
+								{direct ? t("exp.direct") : t("exp.indirect")}
 							</span>
 						</div>
-						<h4 className="mt-3 text-base font-semibold text-stone-900">{inn.name}</h4>
-						<p className="mt-1.5 flex-1 text-sm leading-relaxed text-stone-600">{inn.description}</p>
+						<h4 className="mt-3 text-base font-semibold text-stone-900">{tc(inn.name, lang)}</h4>
+						<p className="mt-1.5 flex-1 text-sm leading-relaxed text-stone-600">{tc(inn.description, lang)}</p>
 						<span className="mt-3 text-xs font-semibold" style={{ color: cat.color }}>
-							Read the full story →
+							{t("exp.readmore")}
 						</span>
 					</a>
 				);
@@ -487,22 +505,22 @@ function CardsGrid({
 // Legend
 // -----------------------------------------------------------------------------
 
-function Legend() {
+function Legend({ lang }: { lang: Lang }) {
 	return (
 		<div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-stone-500">
 			{(Object.keys(CATEGORY_META) as Category[]).map((c) => (
 				<span key={c} className="inline-flex items-center gap-1.5">
 					<span className="h-2.5 w-2.5 rounded-full" style={{ background: CATEGORY_META[c].color }} />
-					{CATEGORY_META[c].label}
+					{tc(CATEGORY_META[c].label, lang)}
 				</span>
 			))}
 			<span className="ml-1 inline-flex items-center gap-1.5">
 				<span className="inline-block h-0 w-4 border-t-2" style={{ borderColor: RELATION_META[1].color }} />
-				required
+				{tc(RELATION_META[1].label, lang)}
 			</span>
 			<span className="inline-flex items-center gap-1.5">
 				<span className="inline-block h-0 w-4 border-t-2" style={{ borderColor: RELATION_META[2].color }} />
-				enhancing
+				{tc(RELATION_META[2].label, lang)}
 			</span>
 		</div>
 	);
@@ -512,7 +530,8 @@ function Legend() {
 // Main export
 // -----------------------------------------------------------------------------
 
-export default function InnovationExplorer() {
+export default function InnovationExplorer({ lang = "en" }: { lang?: Lang }) {
+	const t = makeT(lang);
 	const [selectedId, setSelectedId] = useState<string | null>(null);
 	const [filter, setFilter] = useState<Category | "all">("all");
 	const vizRef = useRef<HTMLDivElement>(null);
@@ -526,18 +545,18 @@ export default function InnovationExplorer() {
 	}, [selectedId]);
 
 	const filters: { value: Category | "all"; label: string }[] = [
-		{ value: "all", label: "All" },
-		{ value: "emissions", label: "Emissions" },
-		{ value: "production", label: "Production" },
-		{ value: "health", label: "Health & Welfare" },
-		{ value: "safety", label: "Safety" },
+		{ value: "all", label: t("exp.filter.all") },
+		{ value: "emissions", label: tc("Emissions", lang) },
+		{ value: "production", label: tc("Production", lang) },
+		{ value: "health", label: tc("Health & Welfare", lang) },
+		{ value: "safety", label: tc("Safety", lang) },
 	];
 
 	return (
 		<div>
 			{/* Legend */}
 			<div className="mb-6">
-				<Legend />
+				<Legend lang={lang} />
 			</div>
 
 			{/* Network + impact detail */}
@@ -545,7 +564,7 @@ export default function InnovationExplorer() {
 				<div className="rounded-2xl border border-stone-200 bg-gradient-to-b from-stone-50 to-white p-2 shadow-sm">
 					<div className="flex items-center justify-between px-3 pt-2">
 						<span className="text-sm font-semibold uppercase tracking-wide text-stone-500">
-							How they connect
+							{t("exp.howconnect")}
 						</span>
 						{selectedId && (
 							<button
@@ -553,19 +572,19 @@ export default function InnovationExplorer() {
 								onClick={() => setSelectedId(null)}
 								className="rounded-full px-2 py-0.5 text-xs font-medium text-stone-400 transition-colors hover:text-stone-600"
 							>
-								Reset ✕
+								{t("exp.reset")} ✕
 							</button>
 						)}
 					</div>
-					<NetworkSphere selectedId={selectedId} onSelect={setSelectedId} onDeselect={() => setSelectedId(null)} />
+					<NetworkSphere selectedId={selectedId} onSelect={setSelectedId} onDeselect={() => setSelectedId(null)} lang={lang} />
 				</div>
-				<DetailPanel selectedId={selectedId} />
+				<DetailPanel selectedId={selectedId} lang={lang} />
 			</div>
 
 			{/* 3. Cards */}
 			<div className="mt-14">
 				<div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-					<h3 className="text-2xl font-bold tracking-tight text-stone-900">Every innovation</h3>
+					<h3 className="text-2xl font-bold tracking-tight text-stone-900">{t("exp.every")}</h3>
 					<div className="flex flex-wrap gap-2">
 						{filters.map((f) => (
 							<button
@@ -583,7 +602,7 @@ export default function InnovationExplorer() {
 						))}
 					</div>
 				</div>
-				<CardsGrid selectedId={selectedId} filter={filter} />
+				<CardsGrid selectedId={selectedId} filter={filter} lang={lang} />
 			</div>
 
 		</div>

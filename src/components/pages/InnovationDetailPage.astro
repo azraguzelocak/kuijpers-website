@@ -1,0 +1,220 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import {
+	INNOVATIONS,
+	CATEGORY_META,
+	RELATION_META,
+	METRICS,
+	SLAUGHTER_KG,
+	isDirect,
+	relationsFor,
+	type Innovation,
+} from "../../data/innovations";
+import { getLangFromUrl, useTranslations, localizePath } from "../../i18n/utils";
+import { translateCms } from "../../i18n/cms";
+
+interface Props {
+	id: string;
+}
+const { id } = Astro.props;
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const tc = (text: string) => translateCms(text, lang);
+const locale = lang === "nl" ? "nl-NL" : lang === "de" ? "de-DE" : "en-GB";
+
+const inn = INNOVATIONS.find((i) => i.id === id) as Innovation;
+const byId = Object.fromEntries(INNOVATIONS.map((i) => [i.id, i]));
+
+const cat = CATEGORY_META[inn.category];
+const direct = isDirect(inn);
+
+const POS = "#1D9E75";
+const NEG = "#054c9c";
+const ZERO = "#b4b2a9";
+
+// Per-metric max |per-kg| for bar scaling.
+const metricMax: Record<string, number> = {};
+for (const m of METRICS) {
+	let mx = 0;
+	for (const x of INNOVATIONS) mx = Math.max(mx, Math.abs(m.perKg(x.impact[m.key])));
+	metricMax[m.key] = mx || 1;
+}
+
+const fmt = (v: number, d: number) =>
+	Math.abs(v) >= 1000 ? Math.round(v).toLocaleString(locale) : v.toFixed(d);
+
+const bars = METRICS.map((m) => {
+	const raw = inn.impact[m.key];
+	const perKg = m.perKg(raw);
+	return {
+		label: tc(m.label),
+		width: Math.min(100, (Math.abs(perKg) / metricMax[m.key]) * 100),
+		color: perKg === 0 ? ZERO : perKg > 0 ? POS : NEG,
+		perKgText: perKg === 0 ? "—" : `${fmt(perKg, m.decimals)} ${m.perKgUnit}`,
+		yearText: raw === 0 ? "" : `${fmt(raw, 1)} ${m.yearUnit}`,
+	};
+});
+
+const required = relationsFor(inn.id)
+	.filter((r) => r.type === 1)
+	.map((r) => byId[r.other])
+	.filter(Boolean);
+const enhancing = relationsFor(inn.id)
+	.filter((r) => r.type === 2)
+	.map((r) => byId[r.other])
+	.filter(Boolean);
+
+const innHref = (innId: string) => localizePath(`/innovations/${innId}`, lang);
+const allHref = localizePath("/innovations", lang);
+---
+
+<BaseLayout
+	title={`${tc(inn.name)} — Innovations — Kuijpers Research Field`}
+	description={tc(inn.description)}
+>
+	<!-- Hero -->
+	<section class="border-b border-stone-200 bg-stone-50">
+		<div class="mx-auto max-w-4xl px-4 py-14 sm:px-6 lg:px-8 lg:py-16">
+			<a
+				href={allHref}
+				class="inline-flex items-center gap-1 text-sm font-medium text-stone-500 transition-colors hover:text-brand-600"
+			>
+				{t("innd.back")}
+			</a>
+			<div class="mt-6">
+				<span
+					class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold"
+					style={`background:${cat.color}1a;color:${cat.color}`}
+				>
+					<span class="h-2 w-2 rounded-full" style={`background:${cat.color}`}></span>
+					{tc(cat.label)}
+					<span class="text-stone-400">·</span>
+					{direct ? t("innd.direct") : t("innd.indirectinn")}
+				</span>
+				<h1
+					class="mt-4 text-3xl font-extrabold tracking-tight text-stone-900 sm:text-4xl lg:text-5xl"
+				>
+					{tc(inn.name)}
+				</h1>
+				<p class="mt-4 max-w-2xl text-lg leading-relaxed text-stone-600">
+					{tc(inn.description)}
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- Body -->
+	<section class="bg-white">
+		<div class="mx-auto max-w-4xl px-4 py-14 sm:px-6 lg:px-8">
+			<div class="grid grid-cols-1 gap-12 lg:grid-cols-[1.4fr_1fr]">
+				<!-- Explanation -->
+				<div>
+					<h2 class="text-xl font-bold text-stone-900">{t("innd.whatitis")}</h2>
+					<p class="mt-4 text-base leading-relaxed text-stone-700">
+						{tc(inn.details)}
+					</p>
+
+					<!-- Connections -->
+					<h2 class="mt-12 text-xl font-bold text-stone-900">
+						{t("innd.howconnects")}
+					</h2>
+					<p class="mt-2 text-sm text-stone-500">
+						{t("innd.links").replace("{n}", String(required.length + enhancing.length))}
+					</p>
+
+					{required.length > 0 && (
+						<div class="mt-6">
+							<h3
+								class="text-xs font-semibold uppercase tracking-wide"
+								style={`color:${RELATION_META[1].color}`}
+							>
+								{t("innd.requires")}
+							</h3>
+							<div class="mt-3 flex flex-wrap gap-2">
+								{required.map((o) => (
+									<a
+										href={innHref(o.id)}
+										class="inline-flex items-center gap-2 rounded-lg border border-stone-200 px-3 py-1.5 text-sm font-medium text-stone-700 transition-colors hover:border-stone-300 hover:bg-stone-50"
+									>
+										<span
+											class="h-2 w-2 rounded-full"
+											style={`background:${CATEGORY_META[o.category].color}`}
+										></span>
+										{tc(o.short)}
+									</a>
+								))}
+							</div>
+						</div>
+					)}
+
+					{enhancing.length > 0 && (
+						<div class="mt-6">
+							<h3
+								class="text-xs font-semibold uppercase tracking-wide"
+								style={`color:${RELATION_META[2].color}`}
+							>
+								{t("innd.strengthenedby")}
+							</h3>
+							<div class="mt-3 flex flex-wrap gap-2">
+								{enhancing.map((o) => (
+									<a
+										href={innHref(o.id)}
+										class="inline-flex items-center gap-2 rounded-lg border border-stone-200 px-3 py-1.5 text-sm font-medium text-stone-700 transition-colors hover:border-stone-300 hover:bg-stone-50"
+									>
+										<span
+											class="h-2 w-2 rounded-full"
+											style={`background:${CATEGORY_META[o.category].color}`}
+										></span>
+										{tc(o.short)}
+									</a>
+								))}
+							</div>
+						</div>
+					)}
+				</div>
+
+				<!-- Impact card -->
+				<div>
+					<div class="rounded-2xl border border-stone-200 bg-stone-50 p-6">
+						<h2 class="text-lg font-bold text-stone-900">{t("innd.impact")}</h2>
+						<p class="mt-1 text-xs text-stone-500">
+							{direct ? t("innd.impact.direct") : t("innd.impact.indirect")}
+						</p>
+						<div class="mt-5 space-y-3">
+							{bars.map((b) => (
+								<div class="grid grid-cols-[88px_1fr] items-center gap-2">
+									<span class="text-xs text-stone-500">{b.label}</span>
+									<div>
+										<div class="h-2.5 overflow-hidden rounded bg-stone-200">
+											<div
+												class="h-full rounded"
+												style={`width:${b.width}%;background:${b.color}`}
+											>
+											</div>
+										</div>
+										<div class="mt-1 flex justify-between text-[11px] tabular-nums text-stone-500">
+											<span>{b.perKgText}</span>
+											<span class="text-stone-400">{b.yearText}</span>
+										</div>
+									</div>
+								</div>
+							))}
+						</div>
+					</div>
+
+					<a
+						href={allHref}
+						class="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-700"
+					>
+						{t("innd.exploremap")}
+					</a>
+				</div>
+			</div>
+
+			<p class="mt-12 border-t border-stone-100 pt-6 text-xs leading-relaxed text-stone-400">
+				{t("innd.footer").replace("{kg}", SLAUGHTER_KG.toLocaleString(locale))}
+			</p>
+		</div>
+	</section>
+</BaseLayout>

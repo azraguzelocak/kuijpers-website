@@ -50,6 +50,7 @@ export function stripLocale(pathname: string): string {
 export function switchLangPath(url: URL, target: Lang): string {
 	const base = stripLocale(url.pathname);
 	const key = base.replace(/^\/|\/$/g, ""); // "" for home, "about" for /about
-	if (TRANSLATED_ROUTES.has(key)) return localizePath(base, target);
+	// Innovation detail pages exist in every language, so keep the same page.
+	if (TRANSLATED_ROUTES.has(key) || /^innovations\/.+/.test(key)) return localizePath(base, target);
 	return localizePath("/", target);
 }
