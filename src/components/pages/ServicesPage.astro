@@ -1,0 +1,491 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getAllServices, getAllAdvantages } from "../../lib/sanity";
+import { getLangFromUrl, useTranslations } from "../../i18n/utils";
+import { urlFor } from "../../lib/image";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+// --- Data fetching ------------------------------------------------------
+const services = (await getAllServices()) ?? [];
+const advantages = (await getAllAdvantages()) ?? [];
+
+// `target audience` has no dedicated CMS field yet — derive it from the
+// service title via keyword match, with a sensible default. Promote to a
+// Sanity field when content needs richer per-service audiences.
+const defaultAudience =
+	t("svc.audience.default");
+
+const audienceFor = (title: string = "") => {
+	const lc = title.toLowerCase();
+	if (lc.includes("integrated")) return t("svc.audience.suppliers");
+	if (lc.includes("optimization") || lc.includes("optimisation"))
+		return t("svc.audience.processors");
+	if (lc.includes("digital twin")) return t("svc.audience.academia");
+	return defaultAudience;
+};
+
+// --- Process steps ------------------------------------------------------
+const steps = [
+	{
+		title: t("svc.step.discovery.title"),
+		body: t("svc.step.discovery.body"),
+	},
+	{
+		title: t("svc.step.design.title"),
+		body: t("svc.step.design.body"),
+	},
+	{
+		title: t("svc.step.impl.title"),
+		body: t("svc.step.impl.body"),
+	},
+	{
+		title: t("svc.step.monitor.title"),
+		body: t("svc.step.monitor.body"),
+	},
+];
+
+// --- "Why us" stat blocks ----------------------------------------------
+// The advantage schema has no numeric `stat` field, so we supply positional
+// fallbacks to keep the stat grid visually balanced (same approach as the
+// homepage advantages strip). Promote `stat` to a Sanity field to make these
+// CMS-driven.
+const statFallbacks = [
+	{ stat: "20%", description: t("svc.stat.1") },
+	{ stat: "24/7", description: t("svc.stat.2") },
+	{ stat: "100%", description: t("svc.stat.3") },
+	{ stat: "3×", description: t("svc.stat.4") },
+];
+const statBlocks = Array.from({ length: 4 }).map((_, i) => {
+	const a = advantages[i];
+	return {
+		stat: a?.stat ?? statFallbacks[i].stat,
+		title: a?.title ?? statFallbacks[i].description,
+		description: a?.description ?? statFallbacks[i].description,
+	};
+});
+
+// --- Comparison rows ----------------------------------------------------
+const comparison = [
+	{
+		aspect: t("svc.cmp.evidence.aspect"),
+		traditional: t("svc.cmp.evidence.trad"),
+		kuijpers: t("svc.cmp.evidence.kui"),
+	},
+	{
+		aspect: t("svc.cmp.validation.aspect"),
+		traditional: t("svc.cmp.validation.trad"),
+		kuijpers: t("svc.cmp.validation.kui"),
+	},
+	{
+		aspect: t("svc.cmp.risk.aspect"),
+		traditional: t("svc.cmp.risk.trad"),
+		kuijpers: t("svc.cmp.risk.kui"),
+	},
+	{
+		aspect: t("svc.cmp.monitoring.aspect"),
+		traditional: t("svc.cmp.monitoring.trad"),
+		kuijpers: t("svc.cmp.monitoring.kui"),
+	},
+	{
+		aspect: t("svc.cmp.transparency.aspect"),
+		traditional: t("svc.cmp.transparency.trad"),
+		kuijpers: t("svc.cmp.transparency.kui"),
+	},
+	{
+		aspect: t("svc.cmp.speed.aspect"),
+		traditional: t("svc.cmp.speed.trad"),
+		kuijpers: t("svc.cmp.speed.kui"),
+	},
+];
+---
+
+<BaseLayout
+	title={t("svc.meta.title")}
+	description={t("svc.meta.desc")}
+>
+	<!-- 1. Hero -->
+	<section class="relative overflow-hidden bg-stone-900">
+		<!-- Full-bleed background photograph -->
+		<img
+			src="/images/service-hero.jpg"
+			alt=""
+			aria-hidden="true"
+			class="absolute inset-0 h-full w-full object-cover"
+			loading="eager"
+		/>
+		<!-- Cinematic dark overlay for legibility -->
+		<div
+			class="absolute inset-0 bg-gradient-to-b from-stone-950/70 via-stone-950/55 to-stone-950/75"
+		>
+		</div>
+		<div
+			class="relative mx-auto max-w-7xl px-4 py-28 sm:px-6 sm:py-32 lg:px-8"
+		>
+			<div class="mx-auto max-w-3xl text-center">
+				<h1
+					class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl"
+				>
+					{t("svc.hero.title")}
+				</h1>
+				<p
+					class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-stone-200 sm:text-xl"
+				>
+					{t("svc.hero.subA")}<span class="text-brand-300">{t("svc.hero.subHl")}</span>{t("svc.hero.subB")}
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- 1b. Intro block -->
+	<section class="bg-stone-50">
+		<div class="mx-auto max-w-3xl px-4 py-24 text-center sm:px-6 lg:px-8 lg:py-28">
+			<span
+				class="text-sm font-semibold uppercase tracking-[0.15em] text-brand-600"
+			>
+				{t("svc.intro.eyebrow")}
+			</span>
+			<h2
+				class="mt-5 text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl lg:text-[3.25rem] lg:leading-[1.1]"
+			>
+				{t("svc.intro.titleA")}<span class="text-brand-600">{t("svc.intro.titleHl")}</span>{t("svc.intro.titleB")}
+			</h2>
+			<p
+				class="mx-auto mt-6 max-w-[680px] text-lg leading-[1.65] text-stone-600"
+			>
+				{t("svc.intro.subtitle")}
+			</p>
+		</div>
+	</section>
+
+	<!-- 2. Service cards (grid layout) -->
+	<section class="bg-white">
+		<div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+			{
+				services.length > 0 ? (
+					<div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+						{services.map((service: any) => (
+							<div class="flex flex-col overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm transition-shadow hover:shadow-md">
+								{/* Image */}
+								{service.image ? (
+									<img
+										src={urlFor(service.image)
+											.width(720)
+											.height(432)
+											.fit("crop")
+											.url()}
+										alt={service.image.alt ?? service.title}
+										width="720"
+										height="432"
+										class="aspect-[5/3] w-full object-cover"
+										loading="lazy"
+									/>
+								) : (
+									<div class="flex aspect-[5/3] w-full items-center justify-center bg-gradient-to-br from-brand-100 to-brand-50">
+										<span class="text-sm font-medium text-brand-400">
+											Kuijpers Research Field
+										</span>
+									</div>
+								)}
+
+								{/* Body */}
+								<div class="flex flex-1 flex-col p-6">
+									<h2 class="text-xl font-semibold text-stone-900">
+										{service.title}
+									</h2>
+
+									{service.shortDescription && (
+										<p class="mt-3 text-base leading-relaxed text-stone-600">
+											{service.shortDescription}
+										</p>
+									)}
+
+									{/* Key features */}
+									{Array.isArray(service.features) &&
+										service.features.length > 0 && (
+											<ul class="mt-5 space-y-2">
+												{service.features.map(
+													(feature: string) => (
+														<li class="flex items-start gap-2 text-sm leading-relaxed text-stone-700">
+															<svg
+																class="mt-0.5 h-4 w-4 flex-shrink-0 text-brand-600"
+																viewBox="0 0 24 24"
+																fill="none"
+																stroke="currentColor"
+																stroke-width="2"
+																stroke-linecap="round"
+																stroke-linejoin="round"
+																aria-hidden="true"
+															>
+																<path d="M20 6 9 17l-5-5" />
+															</svg>
+															<span>{feature}</span>
+														</li>
+													),
+												)}
+											</ul>
+										)}
+
+									{/* {t("svc.cards.who")} */}
+									<div class="mt-auto pt-6">
+										<p class="text-xs font-semibold uppercase tracking-wider text-brand-600">
+											Who it's for
+										</p>
+										<p class="mt-1 text-sm leading-relaxed text-stone-500">
+											{audienceFor(service.title)}
+										</p>
+									</div>
+								</div>
+							</div>
+						))}
+					</div>
+				) : (
+					<p class="text-center text-stone-500">
+						{t("svc.cards.empty")}
+					</p>
+				)
+			}
+		</div>
+	</section>
+
+	<!-- 3. Process -->
+	<section class="bg-brand-950 text-white">
+		<div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+			<div class="mx-auto max-w-2xl text-center">
+				<span
+					class="text-sm font-semibold uppercase tracking-wider text-brand-300"
+				>
+					{t("svc.process.eyebrow")}
+				</span>
+				<h2
+					class="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl"
+				>
+					{t("svc.process.title")}
+				</h2>
+			</div>
+
+			<div class="mt-16 grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4">
+				{
+					steps.map((step, i) => (
+						<div class="flex flex-col items-center text-center sm:items-start sm:text-left">
+							<div class="flex h-14 w-14 items-center justify-center rounded-full bg-brand-600 text-xl font-bold text-white">
+								{i + 1}
+							</div>
+							<h3 class="mt-5 text-lg font-semibold text-white">
+								{step.title}
+							</h3>
+							<p class="mt-2 text-sm leading-relaxed text-brand-200">
+								{step.body}
+							</p>
+						</div>
+					))
+				}
+			</div>
+		</div>
+	</section>
+
+	<!-- 4. Why us — stat blocks -->
+	<section class="bg-white">
+		<div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+			<div class="mx-auto max-w-2xl text-center">
+				<span
+					class="text-sm font-semibold uppercase tracking-wider text-brand-600"
+				>
+					{t("svc.why.eyebrow")}
+				</span>
+				<h2
+					class="mt-4 text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl"
+				>
+					{t("svc.why.title")}
+				</h2>
+			</div>
+
+			<div
+				class="mt-12 grid grid-cols-1 gap-10 text-center sm:grid-cols-2 lg:grid-cols-4"
+			>
+				{
+					statBlocks.map((block) => (
+						<div class="flex flex-col items-center">
+							<p class="text-5xl font-extrabold tracking-tight text-brand-600">
+								{block.stat}
+							</p>
+							<p class="mt-3 text-lg font-semibold text-stone-900">
+								{block.title}
+							</p>
+							<p class="mt-2 text-sm leading-relaxed text-stone-600">
+								{block.description}
+							</p>
+						</div>
+					))
+				}
+			</div>
+		</div>
+	</section>
+
+	<!-- 5. {t("svc.diff.eyebrow")} (side-by-side comparison) -->
+	<section class="bg-stone-50">
+		<div class="mx-auto max-w-5xl px-4 py-20 sm:px-6 lg:px-8">
+			<div class="mx-auto max-w-2xl text-center">
+				<span
+					class="text-sm font-semibold uppercase tracking-wider text-brand-600"
+				>
+					{t("svc.diff.eyebrow")}
+				</span>
+				<h2
+					class="mt-4 text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl"
+				>
+					{t("svc.diff.title")}
+				</h2>
+			</div>
+
+			<div class="mt-12 grid items-stretch gap-6 lg:grid-cols-2 lg:gap-8">
+				<!-- {t("svc.diff.trad")} -->
+				<div
+					class="flex flex-col rounded-2xl border border-stone-200 bg-white p-8 shadow-sm"
+				>
+					<h3 class="text-lg font-semibold text-stone-500">
+						{t("svc.diff.trad")}
+					</h3>
+					<ul class="mt-6 space-y-5">
+						{comparison.map((row) => (
+							<li class="flex items-start gap-3">
+								<svg
+									class="mt-0.5 h-5 w-5 flex-shrink-0 text-stone-300"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2.5"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									aria-hidden="true"
+								>
+									<path d="M18 6 6 18" />
+									<path d="m6 6 12 12" />
+								</svg>
+								<div>
+									<p class="text-xs font-semibold uppercase tracking-wider text-stone-400">
+										{row.aspect}
+									</p>
+									<p class="mt-0.5 text-base leading-relaxed text-stone-500">
+										{row.traditional}
+									</p>
+								</div>
+							</li>
+						))}
+					</ul>
+				</div>
+
+				<!-- {t("svc.diff.kuijpers")} (elevated) -->
+				<div
+					class="relative flex flex-col rounded-2xl bg-brand-700 p-8 text-white shadow-xl ring-1 ring-brand-600 lg:-translate-y-2"
+				>
+					<span
+						class="absolute right-6 top-6 inline-flex items-center rounded-full bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white"
+					>
+						{t("svc.diff.ourApproach")}
+					</span>
+					<h3 class="text-lg font-bold text-white">
+						{t("svc.diff.kuijpers")}
+					</h3>
+					<ul class="mt-6 space-y-5">
+						{comparison.map((row) => (
+							<li class="flex items-start gap-3">
+								<svg
+									class="mt-0.5 h-5 w-5 flex-shrink-0 text-white"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2.5"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									aria-hidden="true"
+								>
+									<path d="M20 6 9 17l-5-5" />
+								</svg>
+								<div>
+									<p class="text-xs font-semibold uppercase tracking-wider text-brand-200">
+										{row.aspect}
+									</p>
+									<p class="mt-0.5 text-base font-medium leading-relaxed text-white">
+										{row.kuijpers}
+									</p>
+								</div>
+							</li>
+						))}
+					</ul>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- 6. {t("svc.ref.eyebrow")} -->
+	<section class="bg-white">
+		<div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:px-8">
+			<div class="mx-auto max-w-2xl text-center">
+				<span class="text-sm font-semibold uppercase tracking-wider text-brand-600">
+					{t("svc.ref.eyebrow")}
+				</span>
+				<h2 class="mt-4 text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl">
+					{t("svc.ref.title")}
+				</h2>
+			</div>
+			<div class="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2">
+				{[
+					{
+						quote:
+							"Working with Kuijpers Kip Research Field helped us to gain the necessary insights to move to emission-free poultry production.",
+						name: "Maurice Ortmans",
+						company: "Inno+",
+					},
+					{
+						quote:
+							"Vision and implementation power makes all the difference.",
+						name: "Cor van de Ven",
+						company: "Vencomatic",
+					},
+				].map((ref) => (
+					<figure class="flex h-full flex-col rounded-2xl border border-stone-200 bg-stone-50 p-8 shadow-sm">
+						<svg
+							class="h-9 w-9 text-brand-300"
+							viewBox="0 0 24 24"
+							fill="currentColor"
+							aria-hidden="true"
+						>
+							<path d="M9.13 8.5C7.4 9.6 6.5 11.2 6.5 13.2c0 .3 0 .6.1.9.4-.2.8-.3 1.3-.3 1.5 0 2.7 1.2 2.7 2.8 0 1.6-1.3 2.9-2.9 2.9-2 0-3.6-1.7-3.6-4.3 0-3.5 2-6.3 5.2-7.9l.83 1.2zm8 0c-1.73 1.1-2.63 2.7-2.63 4.7 0 .3 0 .6.1.9.4-.2.8-.3 1.3-.3 1.5 0 2.7 1.2 2.7 2.8 0 1.6-1.3 2.9-2.9 2.9-2 0-3.6-1.7-3.6-4.3 0-3.5 2-6.3 5.2-7.9l.83 1.2z" />
+						</svg>
+						<blockquote class="mt-5 flex-1 text-xl font-medium leading-relaxed text-stone-800">
+							{ref.quote}
+						</blockquote>
+						<figcaption class="mt-6 border-t border-stone-100 pt-5">
+							<p class="text-base font-semibold text-stone-900">{ref.name}</p>
+							<p class="text-sm text-stone-500">{ref.company}</p>
+						</figcaption>
+					</figure>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<!-- 7. CTA -->
+	<section class="bg-brand-800">
+		<div class="mx-auto max-w-7xl px-4 py-20 text-center sm:px-6 lg:px-8">
+			<h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+				{t("svc.cta.title")}
+			</h2>
+			<p
+				class="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-brand-100"
+			>
+				{t("svc.cta.text")}
+			</p>
+			<div class="mt-10">
+				<a
+					href="/contact"
+					class="inline-block rounded-lg bg-white px-8 py-3 text-base font-semibold text-brand-800 shadow-sm transition-colors hover:bg-stone-100"
+				>
+					{t("svc.cta.button")}
+				</a>
+			</div>
+		</div>
+	</section>
+</BaseLayout>
