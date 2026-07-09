@@ -94,7 +94,7 @@ const formatDate = (value?: string) =>
 	description={t("home.meta.desc")}
 >
 	<!-- 1. Hero -->
-	<section class="relative overflow-hidden bg-stone-900">
+	<section class="relative flex min-h-[calc(100svh-6rem)] items-center overflow-hidden bg-stone-900 sm:min-h-[calc(100svh-7rem)]">
 		<!-- Full-bleed background photograph -->
 		<img
 			src="/images/hero.jpg"
@@ -137,7 +137,7 @@ const formatDate = (value?: string) =>
 		</svg>
 
 		<div
-			class="relative mx-auto max-w-7xl px-4 py-28 sm:px-6 sm:py-32 lg:px-8 lg:py-40"
+			class="relative mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-8"
 		>
 			<div class="max-w-3xl">
 				<h1
@@ -163,23 +163,6 @@ const formatDate = (value?: string) =>
 					>
 						{t("home.hero.cta2")}
 					</a>
-				</div>
-
-				<!-- Live indicator -->
-				<div
-					class="mt-8 flex items-center gap-2.5 text-sm text-stone-300"
-				>
-					<span class="relative flex h-2.5 w-2.5">
-						<span
-							class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"
-						></span>
-						<span
-							class="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400"
-						></span>
-					</span>
-					<span>
-						<span class="font-semibold text-stone-100">{t("home.hero.liveLabel")}</span>{" "}{t("home.hero.liveText")}
-					</span>
 				</div>
 			</div>
 		</div>

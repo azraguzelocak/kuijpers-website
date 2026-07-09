@@ -1,0 +1,231 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getSiteSettings } from "../../lib/sanity";
+import { getLangFromUrl, localizePath } from "../../i18n/utils";
+import type { Lang } from "../../i18n/ui";
+
+// --- Data fetching ------------------------------------------------------
+const settings = (await getSiteSettings()) ?? {};
+const company: string = settings.siteTitle ?? "Kuijpers Research Field";
+const email: string = settings.email ?? "jan@kuijperskip.com";
+
+const lang = getLangFromUrl(Astro.url);
+const privacyHref = localizePath("/privacy", lang);
+
+const meta = {
+	en: {
+		eyebrow: "Legal",
+		title: "Cookie Policy",
+		updatedLabel: "Last updated:",
+		date: "29 May 2026",
+		metaTitle: `Cookie Policy — ${company}`,
+		metaDesc: `How ${company} uses cookies. Our website uses privacy-friendly Plausible Analytics (no cookies) and does not use third-party tracking.`,
+	},
+	nl: {
+		eyebrow: "Juridisch",
+		title: "Cookiebeleid",
+		updatedLabel: "Laatst bijgewerkt:",
+		date: "29 mei 2026",
+		metaTitle: `Cookiebeleid — ${company}`,
+		metaDesc: `Hoe ${company} cookies gebruikt. Onze website gebruikt privacyvriendelijke Plausible Analytics (geen cookies) en geen tracking van derden.`,
+	},
+	de: {
+		eyebrow: "Rechtliches",
+		title: "Cookie-Richtlinie",
+		updatedLabel: "Zuletzt aktualisiert:",
+		date: "29. Mai 2026",
+		metaTitle: `Cookie-Richtlinie — ${company}`,
+		metaDesc: `Wie ${company} Cookies verwendet. Unsere Website nutzt datenschutzfreundliches Plausible Analytics (keine Cookies) und kein Tracking von Drittanbietern.`,
+	},
+} satisfies Record<Lang, unknown>;
+
+const CHECK = `<svg class="mt-0.5 h-6 w-6 shrink-0 text-brand-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12l2 2 4-4" /><circle cx="12" cy="12" r="10" /></svg>`;
+
+const bodies: Record<Lang, string> = {
+	en: `
+<div>
+	<p class="mt-0">This cookie policy explains how {COMPANY} ("we", "us", "our") uses cookies and similar technologies on our website. We have deliberately built this website to be privacy-friendly, which means we use <strong>no tracking or advertising cookies</strong>.</p>
+</div>
+<div class="rounded-xl border border-brand-100 bg-brand-50 p-6 text-stone-700">
+	<div class="flex items-start gap-3">${CHECK}<p class="mt-0"><strong class="text-stone-900">This website does not use tracking cookies.</strong> You do not need to make any cookie choices to browse our site, and we do not show a cookie consent banner because none is legally required for the technologies we use.</p></div>
+</div>
+<div>
+	<h2>1. What are cookies?</h2>
+	<p>Cookies are small text files that a website can place on your device to store information, for example to remember your preferences or to track your activity. Cookies that are strictly necessary for a website to function do not require consent, but tracking and analytics cookies generally do.</p>
+</div>
+<div>
+	<h2>2. Cookies we use</h2>
+	<p>We do not place any tracking, advertising or profiling cookies. The technologies we use are described below.</p>
+	<h3 class="mt-6">Analytics — Plausible (no cookies)</h3>
+	<p>We use <a href="https://plausible.io" target="_blank" rel="noopener noreferrer">Plausible Analytics</a> to understand how our website is used — for example, which pages are most visited. Plausible is a privacy-first analytics tool that:</p>
+	<ul>
+		<li>does <strong>not</strong> use cookies;</li>
+		<li>does <strong>not</strong> collect any personal or personally identifiable information;</li>
+		<li>does <strong>not</strong> track you across websites or devices;</li>
+		<li>measures traffic using only aggregated, anonymous data, and is fully compliant with the GDPR and the ePrivacy Directive.</li>
+	</ul>
+	<p>Because Plausible does not use cookies and does not process personal data, no consent is required for it.</p>
+	<h3 class="mt-6">Content management — Sanity (no tracking)</h3>
+	<p>The content on this website is managed and delivered through <a href="https://www.sanity.io" target="_blank" rel="noopener noreferrer">Sanity</a>. Sanity serves our content and does not place third-party tracking cookies or profile visitors of this website.</p>
+</div>
+<div>
+	<h2>3. Third-party cookies</h2>
+	<p>We do not embed third-party advertising, social media tracking pixels or similar technologies that would set cookies on your device. If we add any feature in the future that requires cookies or consent, we will update this policy and request your consent where the law requires it.</p>
+</div>
+<div>
+	<h2>4. Managing cookies in your browser</h2>
+	<p>Even though our website does not set tracking cookies, you can control and delete cookies through your browser settings at any time. Most browsers let you block or remove cookies and notify you when a site tries to set one. Refer to your browser's help pages for instructions:</p>
+	<ul>
+		<li><a href="https://support.google.com/chrome/answer/95647" target="_blank" rel="noopener noreferrer">Google Chrome</a></li>
+		<li><a href="https://support.mozilla.org/en-US/kb/cookies-information-websites-store-on-your-computer" target="_blank" rel="noopener noreferrer">Mozilla Firefox</a></li>
+		<li><a href="https://support.apple.com/guide/safari/manage-cookies-sfri11471/mac" target="_blank" rel="noopener noreferrer">Apple Safari</a></li>
+		<li><a href="https://support.microsoft.com/en-us/microsoft-edge/delete-cookies-in-microsoft-edge-63947406-40ac-c3b8-57b9-2a946a29ae09" target="_blank" rel="noopener noreferrer">Microsoft Edge</a></li>
+	</ul>
+</div>
+<div>
+	<h2>5. Changes to this policy</h2>
+	<p>We may update this cookie policy from time to time to reflect changes in the technologies we use or in the law. When we do, we will revise the "last updated" date at the top of this page.</p>
+</div>
+<div>
+	<h2>6. Questions?</h2>
+	<p>If you have any questions about our use of cookies, or about how we handle data more generally, please see our <a href="{PRIVACY}">Privacy Policy</a> or contact us:</p>
+	<p>Email: <a href="mailto:{EMAIL}">{EMAIL}</a></p>
+</div>`,
+	nl: `
+<div>
+	<p class="mt-0">Dit cookiebeleid legt uit hoe {COMPANY} ("wij", "ons", "onze") cookies en soortgelijke technologieën op onze website gebruikt. Wij hebben deze website bewust privacyvriendelijk gebouwd, wat betekent dat wij <strong>geen tracking- of advertentiecookies</strong> gebruiken.</p>
+</div>
+<div class="rounded-xl border border-brand-100 bg-brand-50 p-6 text-stone-700">
+	<div class="flex items-start gap-3">${CHECK}<p class="mt-0"><strong class="text-stone-900">Deze website gebruikt geen trackingcookies.</strong> U hoeft geen cookiekeuzes te maken om onze site te bezoeken, en wij tonen geen cookiebanner omdat die voor de door ons gebruikte technologieën wettelijk niet vereist is.</p></div>
+</div>
+<div>
+	<h2>1. Wat zijn cookies?</h2>
+	<p>Cookies zijn kleine tekstbestanden die een website op uw apparaat kan plaatsen om informatie op te slaan, bijvoorbeeld om uw voorkeuren te onthouden of uw activiteit te volgen. Cookies die strikt noodzakelijk zijn voor het functioneren van een website vereisen geen toestemming, maar tracking- en analysecookies over het algemeen wel.</p>
+</div>
+<div>
+	<h2>2. Cookies die wij gebruiken</h2>
+	<p>Wij plaatsen geen tracking-, advertentie- of profileringscookies. De technologieën die wij gebruiken, worden hieronder beschreven.</p>
+	<h3 class="mt-6">Analyse — Plausible (geen cookies)</h3>
+	<p>Wij gebruiken <a href="https://plausible.io" target="_blank" rel="noopener noreferrer">Plausible Analytics</a> om te begrijpen hoe onze website wordt gebruikt — bijvoorbeeld welke pagina's het meest worden bezocht. Plausible is een privacy-first analysehulpmiddel dat:</p>
+	<ul>
+		<li><strong>geen</strong> cookies gebruikt;</li>
+		<li><strong>geen</strong> persoonlijke of persoonlijk identificeerbare informatie verzamelt;</li>
+		<li>u <strong>niet</strong> volgt over websites of apparaten heen;</li>
+		<li>verkeer meet met uitsluitend geaggregeerde, anonieme gegevens en volledig voldoet aan de AVG en de e-Privacyrichtlijn.</li>
+	</ul>
+	<p>Omdat Plausible geen cookies gebruikt en geen persoonsgegevens verwerkt, is hiervoor geen toestemming vereist.</p>
+	<h3 class="mt-6">Contentbeheer — Sanity (geen tracking)</h3>
+	<p>De inhoud van deze website wordt beheerd en geleverd via <a href="https://www.sanity.io" target="_blank" rel="noopener noreferrer">Sanity</a>. Sanity levert onze inhoud en plaatst geen trackingcookies van derden en profileert geen bezoekers van deze website.</p>
+</div>
+<div>
+	<h2>3. Cookies van derden</h2>
+	<p>Wij integreren geen advertenties van derden, tracking pixels van sociale media of soortgelijke technologieën die cookies op uw apparaat zouden plaatsen. Als wij in de toekomst een functie toevoegen die cookies of toestemming vereist, werken wij dit beleid bij en vragen wij uw toestemming waar de wet dat vereist.</p>
+</div>
+<div>
+	<h2>4. Cookies beheren in uw browser</h2>
+	<p>Ook al plaatst onze website geen trackingcookies, u kunt cookies op elk moment beheren en verwijderen via uw browserinstellingen. In de meeste browsers kunt u cookies blokkeren of verwijderen en u laten waarschuwen wanneer een site er een probeert te plaatsen. Raadpleeg de helppagina's van uw browser voor instructies:</p>
+	<ul>
+		<li><a href="https://support.google.com/chrome/answer/95647" target="_blank" rel="noopener noreferrer">Google Chrome</a></li>
+		<li><a href="https://support.mozilla.org/nl/kb/cookies-informatie-websites-op-uw-computer-opslaan" target="_blank" rel="noopener noreferrer">Mozilla Firefox</a></li>
+		<li><a href="https://support.apple.com/nl-nl/guide/safari/manage-cookies-sfri11471/mac" target="_blank" rel="noopener noreferrer">Apple Safari</a></li>
+		<li><a href="https://support.microsoft.com/nl-nl/microsoft-edge/cookies-verwijderen-in-microsoft-edge-63947406-40ac-c3b8-57b9-2a946a29ae09" target="_blank" rel="noopener noreferrer">Microsoft Edge</a></li>
+	</ul>
+</div>
+<div>
+	<h2>5. Wijzigingen in dit beleid</h2>
+	<p>Wij kunnen dit cookiebeleid van tijd tot tijd bijwerken om veranderingen in de door ons gebruikte technologieën of in de wet weer te geven. Wanneer wij dat doen, passen wij de datum "laatst bijgewerkt" bovenaan deze pagina aan.</p>
+</div>
+<div>
+	<h2>6. Vragen?</h2>
+	<p>Als u vragen heeft over ons gebruik van cookies, of over hoe wij in het algemeen met gegevens omgaan, raadpleeg dan ons <a href="{PRIVACY}">Privacybeleid</a> of neem contact met ons op:</p>
+	<p>E-mail: <a href="mailto:{EMAIL}">{EMAIL}</a></p>
+</div>`,
+	de: `
+<div>
+	<p class="mt-0">Diese Cookie-Richtlinie erläutert, wie {COMPANY} ("wir", "uns", "unser") Cookies und ähnliche Technologien auf unserer Website verwendet. Wir haben diese Website bewusst datenschutzfreundlich gestaltet, was bedeutet, dass wir <strong>keine Tracking- oder Werbe-Cookies</strong> verwenden.</p>
+</div>
+<div class="rounded-xl border border-brand-100 bg-brand-50 p-6 text-stone-700">
+	<div class="flex items-start gap-3">${CHECK}<p class="mt-0"><strong class="text-stone-900">Diese Website verwendet keine Tracking-Cookies.</strong> Sie müssen keine Cookie-Auswahl treffen, um unsere Website zu besuchen, und wir zeigen kein Cookie-Consent-Banner an, da für die von uns eingesetzten Technologien keines gesetzlich erforderlich ist.</p></div>
+</div>
+<div>
+	<h2>1. Was sind Cookies?</h2>
+	<p>Cookies sind kleine Textdateien, die eine Website auf Ihrem Gerät ablegen kann, um Informationen zu speichern, etwa um Ihre Einstellungen zu merken oder Ihre Aktivität zu verfolgen. Cookies, die für das Funktionieren einer Website unbedingt erforderlich sind, bedürfen keiner Einwilligung, Tracking- und Analyse-Cookies hingegen in der Regel schon.</p>
+</div>
+<div>
+	<h2>2. Cookies, die wir verwenden</h2>
+	<p>Wir setzen keine Tracking-, Werbe- oder Profiling-Cookies. Die von uns verwendeten Technologien werden im Folgenden beschrieben.</p>
+	<h3 class="mt-6">Analyse — Plausible (keine Cookies)</h3>
+	<p>Wir verwenden <a href="https://plausible.io" target="_blank" rel="noopener noreferrer">Plausible Analytics</a>, um zu verstehen, wie unsere Website genutzt wird — zum Beispiel, welche Seiten am häufigsten besucht werden. Plausible ist ein datenschutzorientiertes Analyse-Tool, das:</p>
+	<ul>
+		<li><strong>keine</strong> Cookies verwendet;</li>
+		<li><strong>keine</strong> personenbezogenen oder personenbeziehbaren Informationen erhebt;</li>
+		<li>Sie <strong>nicht</strong> über Websites oder Geräte hinweg verfolgt;</li>
+		<li>den Datenverkehr ausschließlich anhand aggregierter, anonymer Daten misst und vollständig mit der DSGVO und der ePrivacy-Richtlinie konform ist.</li>
+	</ul>
+	<p>Da Plausible keine Cookies verwendet und keine personenbezogenen Daten verarbeitet, ist hierfür keine Einwilligung erforderlich.</p>
+	<h3 class="mt-6">Content-Management — Sanity (kein Tracking)</h3>
+	<p>Die Inhalte dieser Website werden über <a href="https://www.sanity.io" target="_blank" rel="noopener noreferrer">Sanity</a> verwaltet und bereitgestellt. Sanity liefert unsere Inhalte und setzt keine Tracking-Cookies von Drittanbietern und erstellt keine Profile der Besucher dieser Website.</p>
+</div>
+<div>
+	<h2>3. Cookies von Drittanbietern</h2>
+	<p>Wir binden keine Werbung von Drittanbietern, Social-Media-Tracking-Pixel oder ähnliche Technologien ein, die Cookies auf Ihrem Gerät setzen würden. Sollten wir künftig eine Funktion hinzufügen, die Cookies oder eine Einwilligung erfordert, aktualisieren wir diese Richtlinie und holen Ihre Einwilligung ein, wo das Gesetz es verlangt.</p>
+</div>
+<div>
+	<h2>4. Cookies in Ihrem Browser verwalten</h2>
+	<p>Auch wenn unsere Website keine Tracking-Cookies setzt, können Sie Cookies jederzeit über Ihre Browsereinstellungen steuern und löschen. Die meisten Browser erlauben es, Cookies zu blockieren oder zu entfernen und Sie zu benachrichtigen, wenn eine Website versucht, eines zu setzen. Anleitungen finden Sie auf den Hilfeseiten Ihres Browsers:</p>
+	<ul>
+		<li><a href="https://support.google.com/chrome/answer/95647" target="_blank" rel="noopener noreferrer">Google Chrome</a></li>
+		<li><a href="https://support.mozilla.org/de/kb/cookies-informationen-websites-auf-ihrem-computer-speichern" target="_blank" rel="noopener noreferrer">Mozilla Firefox</a></li>
+		<li><a href="https://support.apple.com/de-de/guide/safari/manage-cookies-sfri11471/mac" target="_blank" rel="noopener noreferrer">Apple Safari</a></li>
+		<li><a href="https://support.microsoft.com/de-de/microsoft-edge/cookies-in-microsoft-edge-l%C3%B6schen-63947406-40ac-c3b8-57b9-2a946a29ae09" target="_blank" rel="noopener noreferrer">Microsoft Edge</a></li>
+	</ul>
+</div>
+<div>
+	<h2>5. Änderungen dieser Richtlinie</h2>
+	<p>Wir können diese Cookie-Richtlinie von Zeit zu Zeit aktualisieren, um Änderungen der von uns verwendeten Technologien oder der Rechtslage abzubilden. Wenn wir das tun, aktualisieren wir das Datum "zuletzt aktualisiert" oben auf dieser Seite.</p>
+</div>
+<div>
+	<h2>6. Fragen?</h2>
+	<p>Wenn Sie Fragen zu unserer Verwendung von Cookies oder allgemein zum Umgang mit Daten haben, lesen Sie bitte unsere <a href="{PRIVACY}">Datenschutzerklärung</a> oder kontaktieren Sie uns:</p>
+	<p>E-Mail: <a href="mailto:{EMAIL}">{EMAIL}</a></p>
+</div>`,
+};
+
+const m = meta[lang];
+const body = bodies[lang]
+	.replaceAll("{COMPANY}", company)
+	.replaceAll("{EMAIL}", email)
+	.replaceAll("{PRIVACY}", privacyHref);
+---
+
+<BaseLayout title={m.metaTitle} description={m.metaDesc}>
+	<!-- Hero -->
+	<section class="bg-stone-50">
+		<div class="mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8">
+			<p class="text-sm font-semibold uppercase tracking-wider text-brand-600">
+				{m.eyebrow}
+			</p>
+			<h1 class="mt-3 text-4xl font-extrabold tracking-tight text-stone-900 sm:text-5xl">
+				{m.title}
+			</h1>
+			<p class="mt-4 text-base text-stone-500">
+				{m.updatedLabel} {m.date}
+			</p>
+		</div>
+	</section>
+
+	<!-- Body -->
+	<section class="bg-white">
+		<div class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+			<article
+				class="space-y-10 text-base leading-relaxed text-stone-700
+					[&_h2]:mt-2 [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:tracking-tight [&_h2]:text-stone-900
+					[&_h3]:text-lg [&_h3]:font-semibold [&_h3]:text-stone-900
+					[&_p]:mt-3
+					[&_ul]:mt-3 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6
+					[&_a]:font-medium [&_a]:text-brand-600 [&_a:hover]:underline"
+				set:html={body}
+			/>
+		</div>
+	</section>
+</BaseLayout>
