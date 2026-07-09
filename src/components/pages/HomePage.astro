@@ -62,8 +62,12 @@ const statusStyles: Record<string, string> = {
 	completed: "bg-emerald-50 text-emerald-700",
 	planned: "bg-amber-50 text-amber-700",
 };
-const statusLabel = (s?: string) =>
-	s ? s.charAt(0).toUpperCase() + s.slice(1) : "Research";
+const statusLabel = (s?: string) => {
+	if (s === "ongoing") return t("res.status.ongoing");
+	if (s === "completed") return t("res.status.completed");
+	if (s === "planned") return t("res.status.planned");
+	return s ? s.charAt(0).toUpperCase() + s.slice(1) : "Research";
+};
 
 // Fallback stats so the advantages strip stays visually balanced before the
 // `stat`/`description` fields are populated in the CMS.
