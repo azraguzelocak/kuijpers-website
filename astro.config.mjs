@@ -13,6 +13,15 @@ export default defineConfig({
   // form posts directly to Web3Forms from the browser.
   output: 'static',
 
+  // Multi-language: English (default, unprefixed), Dutch at /nl/, German at /de/.
+  // Each translated page lives under its locale folder; strings come from
+  // src/i18n/ui.ts via the useTranslations() helper.
+  i18n: {
+    locales: ['en', 'nl', 'de'],
+    defaultLocale: 'en',
+    routing: { prefixDefaultLocale: false },
+  },
+
   // Old standalone Advantages page is now merged into /services.
   // Publications was renamed to Innovations — keep old links working.
   redirects: {

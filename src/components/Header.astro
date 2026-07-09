@@ -1,12 +1,20 @@
 ---
+import { getLangFromUrl, useTranslations, localizePath, localizedHref, switchLangPath } from "../i18n/utils";
+import { languages } from "../i18n/ui";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
 const navLinks = [
-	{ label: "Home", href: "/" },
-	{ label: "About", href: "/about" },
-	{ label: "Services", href: "/services" },
-	{ label: "Research", href: "/research" },
-	{ label: "Innovations", href: "/innovations" },
-	{ label: "Contact", href: "/contact" },
-];
+	{ key: "nav.home", href: "/" },
+	{ key: "nav.about", href: "/about" },
+	{ key: "nav.services", href: "/services" },
+	{ key: "nav.research", href: "/research" },
+	{ key: "nav.innovations", href: "/innovations" },
+	{ key: "nav.contact", href: "/contact" },
+] as const;
+
+const langCodes = ["en", "nl", "de"] as const;
 ---
 
 <header
@@ -17,7 +25,11 @@ const navLinks = [
 		aria-label="Main navigation"
 	>
 		<!-- Logo -->
-		<a href="/" class="shrink-0" aria-label="Kuijpers Research Field — home">
+		<a
+			href={localizePath("/", lang)}
+			class="shrink-0"
+			aria-label="Kuijpers Research Field — home"
+		>
 			<img
 				src="/logo.png"
 				alt="Kuijpers KIP Research Field"
@@ -34,10 +46,10 @@ const navLinks = [
 				navLinks.map((link) => (
 					<li>
 						<a
-							href={link.href}
+							href={localizedHref(link.href, lang)}
 							class="rounded-md px-4 py-2.5 text-lg font-medium text-stone-600 transition-colors hover:bg-brand-50 hover:text-brand-700"
 						>
-							{link.label}
+							{t(link.key)}
 						</a>
 					</li>
 				))
@@ -46,7 +58,27 @@ const navLinks = [
 
 		<!-- Right-side actions -->
 		<div class="flex items-center gap-2">
-			{/* TODO Phase 2: Login button */}
+			<!-- Language switcher (desktop) -->
+			<div
+				class="hidden items-center rounded-lg border border-stone-200 p-0.5 text-sm font-semibold lg:flex"
+				aria-label="Select language"
+			>
+				{
+					langCodes.map((code) => (
+						<a
+							href={switchLangPath(Astro.url, code)}
+							class={`rounded-md px-2 py-1 transition-colors ${
+								code === lang
+									? "bg-brand-600 text-white"
+									: "text-stone-500 hover:text-brand-700"
+							}`}
+							aria-current={code === lang ? "true" : undefined}
+						>
+							{languages[code]}
+						</a>
+					))
+				}
+			</div>
 
 			<!-- Mobile hamburger toggle -->
 			<button
@@ -57,7 +89,6 @@ const navLinks = [
 				aria-controls="mobile-menu"
 				aria-expanded="false"
 			>
-				<!-- Hamburger icon -->
 				<svg
 					id="icon-open"
 					class="h-6 w-6"
@@ -71,7 +102,6 @@ const navLinks = [
 						stroke-linejoin="round"
 						d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"></path>
 				</svg>
-				<!-- Close icon -->
 				<svg
 					id="icon-close"
 					class="hidden h-6 w-6"
@@ -96,15 +126,33 @@ const navLinks = [
 				navLinks.map((link) => (
 					<li>
 						<a
-							href={link.href}
+							href={localizedHref(link.href, lang)}
 							class="block rounded-md px-3 py-2 text-base font-medium text-stone-700 transition-colors hover:bg-brand-50 hover:text-brand-700"
 						>
-							{link.label}
+							{t(link.key)}
 						</a>
 					</li>
 				))
 			}
 		</ul>
+		<!-- Language switcher (mobile) -->
+		<div class="flex items-center gap-2 border-t border-stone-200 px-4 py-4 sm:px-6">
+			{
+				langCodes.map((code) => (
+					<a
+						href={switchLangPath(Astro.url, code)}
+						class={`rounded-md border px-3 py-1.5 text-sm font-semibold transition-colors ${
+							code === lang
+								? "border-brand-600 bg-brand-600 text-white"
+								: "border-stone-200 text-stone-600 hover:bg-stone-50"
+						}`}
+						aria-current={code === lang ? "true" : undefined}
+					>
+						{languages[code]}
+					</a>
+				))
+			}
+		</div>
 	</div>
 </header>
 

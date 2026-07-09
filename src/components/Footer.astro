@@ -1,14 +1,18 @@
 ---
+import { getLangFromUrl, useTranslations, localizedHref } from "../i18n/utils";
+
 const year = new Date().getFullYear();
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 
 const navLinks = [
-	{ label: "Home", href: "/" },
-	{ label: "About", href: "/about" },
-	{ label: "Services", href: "/services" },
-	{ label: "Research", href: "/research" },
-	{ label: "Innovations", href: "/innovations" },
-	{ label: "Contact", href: "/contact" },
-];
+	{ key: "nav.home", href: "/" },
+	{ key: "nav.about", href: "/about" },
+	{ key: "nav.services", href: "/services" },
+	{ key: "nav.research", href: "/research" },
+	{ key: "nav.innovations", href: "/innovations" },
+	{ key: "nav.contact", href: "/contact" },
+] as const;
 ---
 
 <footer class="bg-brand-900 text-stone-200">
@@ -20,9 +24,7 @@ const navLinks = [
 					Kuijpers Research Field
 				</h2>
 				<p class="mt-4 max-w-sm text-sm leading-relaxed text-stone-400">
-					Advancing poultry production through digital twin technology
-					and data-driven research. Bridging science and practice for a
-					more sustainable, efficient future.
+					{t("footer.tagline")}
 				</p>
 			</div>
 
@@ -31,17 +33,17 @@ const navLinks = [
 				<h3
 					class="text-sm font-semibold uppercase tracking-wider text-stone-400"
 				>
-					Navigation
+					{t("footer.navHeading")}
 				</h3>
 				<ul class="mt-4 space-y-2">
 					{
 						navLinks.map((link) => (
 							<li>
 								<a
-									href={link.href}
+									href={localizedHref(link.href, lang)}
 									class="text-sm text-stone-300 transition-colors hover:text-white"
 								>
-									{link.label}
+									{t(link.key)}
 								</a>
 							</li>
 						))
@@ -54,7 +56,7 @@ const navLinks = [
 				<h3
 					class="text-sm font-semibold uppercase tracking-wider text-stone-400"
 				>
-					Contact
+					{t("footer.contactHeading")}
 				</h3>
 				<ul class="mt-4 space-y-2 text-sm text-stone-300">
 					<li>Kuijpers Research Field</li>
@@ -87,23 +89,23 @@ const navLinks = [
 			class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-6 sm:flex-row sm:px-6 lg:px-8"
 		>
 			<p class="text-sm text-stone-400">
-				&copy; {year} Kuijpers Research Field. All rights reserved.
+				&copy; {year} Kuijpers Research Field. {t("footer.rights")}
 			</p>
 			<ul class="flex items-center gap-6">
 				<li>
 					<a
-						href="/privacy"
+						href={localizedHref("/privacy", lang)}
 						class="text-sm text-stone-400 transition-colors hover:text-white"
 					>
-						Privacy Policy
+						{t("footer.privacy")}
 					</a>
 				</li>
 				<li>
 					<a
-						href="/cookies"
+						href={localizedHref("/cookies", lang)}
 						class="text-sm text-stone-400 transition-colors hover:text-white"
 					>
-						Cookies
+						{t("footer.cookies")}
 					</a>
 				</li>
 			</ul>
