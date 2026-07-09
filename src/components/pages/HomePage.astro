@@ -68,10 +68,10 @@ const statusLabel = (s?: string) =>
 // Fallback stats so the advantages strip stays visually balanced before the
 // `stat`/`description` fields are populated in the CMS.
 const advantageFallbacks = [
-	{ stat: "20%", description: "Lower feed conversion ratio." },
-	{ stat: "24/7", description: "Continuous real-time monitoring." },
-	{ stat: "100%", description: "Independently validated results." },
-	{ stat: "3×", description: "Faster intervention testing." },
+	{ stat: "20%", description: t("svc.stat.1") },
+	{ stat: "24/7", description: t("svc.stat.2") },
+	{ stat: "100%", description: t("svc.stat.3") },
+	{ stat: "3×", description: t("svc.stat.4") },
 ];
 
 // Date formatter for news teasers.
@@ -302,7 +302,7 @@ const formatDate = (value?: string) =>
 										.height(500)
 										.fit("crop")
 										.url()}
-									alt={project.title}
+									alt={translateCms(project.title, lang)}
 									width="800"
 									height="500"
 									class="aspect-[8/5] w-full object-cover"
@@ -322,10 +322,10 @@ const formatDate = (value?: string) =>
 									{statusLabel(project.status)}
 								</span>
 								<h3 class="mt-4 text-xl font-semibold text-stone-900 transition-colors group-hover:text-brand-700">
-									{project.title}
+									{translateCms(project.title, lang)}
 								</h3>
 								<p class="mt-2 flex-1 text-sm leading-relaxed text-stone-600">
-									{project.summary}
+									{translateCms(project.summary, lang)}
 								</p>
 								<span class="mt-4 inline-flex items-center text-sm font-semibold text-brand-600">
 									{t("home.research.readMore")} &rarr;
@@ -353,7 +353,7 @@ const formatDate = (value?: string) =>
 									"—"}
 							</p>
 							<p class="mt-3 text-lg font-semibold text-brand-100">
-								{advantage.title}
+								{translateCms(advantage.title, lang)}
 							</p>
 							<p class="mt-2 text-sm leading-relaxed text-brand-200">
 								{advantage.description ??
