@@ -225,24 +225,33 @@ indicative, sourced from the internal cross-table in `visulization/INNOVA~3.HTM.
   all three views and the impact bars derive from it. To reposition a farm pin,
   change its `scene` percentages.
 
-## Internationalization (EN / NL / DE) — in progress
+## Internationalization (EN / NL / DE / FR)
 
-- Astro i18n config in `astro.config.mjs`: `locales: ['en','nl','de']`, `defaultLocale: 'en'`,
-  `prefixDefaultLocale: false` → English at `/`, Dutch at `/nl/`, German at `/de/`.
-- Strings live in **`src/i18n/ui.ts`** (`ui[lang][key]`, falls back to English). Helpers in
-  **`src/i18n/utils.ts`**: `getLangFromUrl(Astro.url)`, `useTranslations(lang)` → `t(key)`,
-  `localizePath`, `localizedHref` (localizes only for pages listed in `TRANSLATED_ROUTES`, else
-  falls back to the English URL so links never 404), and `switchLangPath` (language switcher).
-- **Header/Footer** are fully localized + a language switcher (EN/NL/DE). `BaseLayout` sets
+- Astro i18n config in `astro.config.mjs`: `locales: ['en','nl','de','fr']`, `defaultLocale: 'en'`,
+  `prefixDefaultLocale: false` → English at `/`, Dutch at `/nl/`, German at `/de/`, French at `/fr/`.
+- Adding a language = extend `Lang` + `languages` in `ui.ts`, add the code to `getLangFromUrl` and
+  the `stripLocale` regex in `utils.ts`, add it to `langCodes` in `Header.astro` and the `locale`
+  map in `InnovationDetailPage.astro`, add an `fr:`-style block to `ui.ts` and an entry to every
+  `cmsTranslations` overlay object in `cms.ts`, translate the `meta`/`bodies` blocks in
+  `Privacy/CookiesPage.astro`, and create the `src/pages/<lang>/…` route files.
+- Strings live in **`src/i18n/ui.ts`** (`ui[lang][key]`, falls back to English). CMS/Sanity content
+  is translated via an overlay in **`src/i18n/cms.ts`** (`translateCms(text, lang)` keyed by the
+  English source string; returns the original if no entry). Helpers in **`src/i18n/utils.ts`**:
+  `getLangFromUrl(Astro.url)`, `useTranslations(lang)` → `t(key)`, `localizePath`, `localizedHref`
+  (localizes only for pages listed in `TRANSLATED_ROUTES`, else falls back to the English URL so
+  links never 404), and `switchLangPath` (language switcher; also keeps `/innovations/<id>` detail
+  pages on the same page across languages).
+- **Header/Footer** are fully localized + a language switcher (EN/NL/DE/FR). `BaseLayout` sets
   `<html lang>` from the URL.
+- NL/DE/FR translations were drafted by Claude and still want a native review before go-live.
 - **Pattern for translating a page:** extract its body into `src/components/pages/XxxPage.astro`
   that reads `const lang = getLangFromUrl(Astro.url); const t = useTranslations(lang);` and uses
-  `t("…")`; add keys to `ui.ts` for all 3 langs; create thin routes `src/pages/xxx.astro`,
-  `src/pages/nl/xxx.astro`, `src/pages/de/xxx.astro` (each just `<XxxPage />`); add the route to
-  `TRANSLATED_ROUTES` so nav localizes to it. The **home page** is done this way
-  (`components/pages/HomePage.astro`); **still TODO:** about, services, research (+ `[slug]`),
-  innovations (+ data in `innovations.ts`), contact, news, privacy/cookies, and **Sanity CMS
-  content localization** (schema fields + editor entry — separate, larger task).
+  `t("…")`; add keys to `ui.ts` for all 4 langs; create thin routes `src/pages/xxx.astro`,
+  `src/pages/nl/xxx.astro`, `src/pages/de/xxx.astro`, `src/pages/fr/xxx.astro` (each just
+  `<XxxPage />`); add the route to `TRANSLATED_ROUTES` so nav localizes to it. All main pages are
+  done this way (home, about, services, research + `[slug]`, innovations + `[id]`, contact,
+  privacy, cookies). **Still TODO:** news (index + articles), and proper **Sanity CMS content
+  localization** (schema fields + editor entry) to replace the interim `cms.ts` overlay.
 
 ## Conventions
 

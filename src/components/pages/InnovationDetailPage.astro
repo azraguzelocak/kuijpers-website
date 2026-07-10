@@ -21,7 +21,8 @@ const { id } = Astro.props;
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 const tc = (text: string) => translateCms(text, lang);
-const locale = lang === "nl" ? "nl-NL" : lang === "de" ? "de-DE" : "en-GB";
+const locale =
+	lang === "nl" ? "nl-NL" : lang === "de" ? "de-DE" : lang === "fr" ? "fr-FR" : "en-GB";
 
 const inn = INNOVATIONS.find((i) => i.id === id) as Innovation;
 const byId = Object.fromEntries(INNOVATIONS.map((i) => [i.id, i]));

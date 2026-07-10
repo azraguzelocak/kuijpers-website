@@ -13,11 +13,11 @@ export default defineConfig({
   // form posts directly to Web3Forms from the browser.
   output: 'static',
 
-  // Multi-language: English (default, unprefixed), Dutch at /nl/, German at /de/.
-  // Each translated page lives under its locale folder; strings come from
-  // src/i18n/ui.ts via the useTranslations() helper.
+  // Multi-language: English (default, unprefixed), Dutch at /nl/, German at /de/,
+  // French at /fr/. Each translated page lives under its locale folder; strings
+  // come from src/i18n/ui.ts via the useTranslations() helper.
   i18n: {
-    locales: ['en', 'nl', 'de'],
+    locales: ['en', 'nl', 'de', 'fr'],
     defaultLocale: 'en',
     routing: { prefixDefaultLocale: false },
   },

@@ -7,7 +7,7 @@ export const TRANSLATED_ROUTES = new Set<string>(["", "about", "services", "rese
 
 export function getLangFromUrl(url: URL): Lang {
 	const [, seg] = url.pathname.split("/");
-	if (seg === "nl" || seg === "de") return seg;
+	if (seg === "nl" || seg === "de" || seg === "fr") return seg;
 	return defaultLang;
 }
 
@@ -38,7 +38,7 @@ export function localizedHref(path: string, lang: Lang): string {
 
 /** Strip any locale prefix from a path, giving the canonical English path. */
 export function stripLocale(pathname: string): string {
-	const m = pathname.match(/^\/(nl|de)(\/.*)?$/);
+	const m = pathname.match(/^\/(nl|de|fr)(\/.*)?$/);
 	const rest = m ? m[2] ?? "/" : pathname;
 	return rest;
 }

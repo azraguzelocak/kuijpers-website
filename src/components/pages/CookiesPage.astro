@@ -37,6 +37,14 @@ const meta = {
 		metaTitle: `Cookie-Richtlinie — ${company}`,
 		metaDesc: `Wie ${company} Cookies verwendet. Unsere Website nutzt datenschutzfreundliches Plausible Analytics (keine Cookies) und kein Tracking von Drittanbietern.`,
 	},
+	fr: {
+		eyebrow: "Mentions légales",
+		title: "Politique en matière de cookies",
+		updatedLabel: "Dernière mise à jour :",
+		date: "29 mai 2026",
+		metaTitle: `Politique en matière de cookies — ${company}`,
+		metaDesc: `Comment ${company} utilise les cookies. Notre site web utilise Plausible Analytics, respectueux de la vie privée (sans cookies), et aucun suivi tiers.`,
+	},
 } satisfies Record<Lang, unknown>;
 
 const CHECK = `<svg class="mt-0.5 h-6 w-6 shrink-0 text-brand-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12l2 2 4-4" /><circle cx="12" cy="12" r="10" /></svg>`;
@@ -189,10 +197,59 @@ const bodies: Record<Lang, string> = {
 	<p>Wenn Sie Fragen zu unserer Verwendung von Cookies oder allgemein zum Umgang mit Daten haben, lesen Sie bitte unsere <a href="{PRIVACY}">Datenschutzerklärung</a> oder kontaktieren Sie uns:</p>
 	<p>E-Mail: <a href="mailto:{EMAIL}">{EMAIL}</a></p>
 </div>`,
+	fr: `
+<div>
+	<p class="mt-0">La présente politique en matière de cookies explique comment {COMPANY} (« nous », « notre ») utilise les cookies et technologies similaires sur notre site web. Nous avons délibérément conçu ce site pour qu'il respecte la vie privée, ce qui signifie que nous n'utilisons <strong>aucun cookie de suivi ou de publicité</strong>.</p>
+</div>
+<div class="rounded-xl border border-brand-100 bg-brand-50 p-6 text-stone-700">
+	<div class="flex items-start gap-3">${CHECK}<p class="mt-0"><strong class="text-stone-900">Ce site web n'utilise pas de cookies de suivi.</strong> Vous n'avez aucun choix de cookies à faire pour naviguer sur notre site, et nous n'affichons pas de bandeau de consentement aux cookies car aucun n'est légalement requis pour les technologies que nous utilisons.</p></div>
+</div>
+<div>
+	<h2>1. Que sont les cookies ?</h2>
+	<p>Les cookies sont de petits fichiers texte qu'un site web peut placer sur votre appareil pour stocker des informations, par exemple pour mémoriser vos préférences ou suivre votre activité. Les cookies strictement nécessaires au fonctionnement d'un site web ne requièrent pas de consentement, mais les cookies de suivi et d'analyse en requièrent généralement un.</p>
+</div>
+<div>
+	<h2>2. Les cookies que nous utilisons</h2>
+	<p>Nous ne plaçons aucun cookie de suivi, de publicité ou de profilage. Les technologies que nous utilisons sont décrites ci-dessous.</p>
+	<h3 class="mt-6">Analyse — Plausible (sans cookies)</h3>
+	<p>Nous utilisons <a href="https://plausible.io" target="_blank" rel="noopener noreferrer">Plausible Analytics</a> pour comprendre comment notre site web est utilisé — par exemple, quelles pages sont les plus consultées. Plausible est un outil d'analyse privilégiant la confidentialité qui :</p>
+	<ul>
+		<li>n'utilise <strong>pas</strong> de cookies ;</li>
+		<li>ne collecte <strong>aucune</strong> information personnelle ou personnellement identifiable ;</li>
+		<li>ne vous suit <strong>pas</strong> d'un site ou d'un appareil à l'autre ;</li>
+		<li>mesure le trafic uniquement à l'aide de données agrégées et anonymes, et est entièrement conforme au RGPD et à la directive ePrivacy.</li>
+	</ul>
+	<p>Comme Plausible n'utilise pas de cookies et ne traite pas de données personnelles, aucun consentement n'est requis.</p>
+	<h3 class="mt-6">Gestion de contenu — Sanity (sans suivi)</h3>
+	<p>Le contenu de ce site web est géré et diffusé via <a href="https://www.sanity.io" target="_blank" rel="noopener noreferrer">Sanity</a>. Sanity diffuse notre contenu et ne place pas de cookies de suivi tiers ni ne profile les visiteurs de ce site.</p>
+</div>
+<div>
+	<h2>3. Cookies tiers</h2>
+	<p>Nous n'intégrons pas de publicité tierce, de pixels de suivi des réseaux sociaux ni de technologies similaires qui placeraient des cookies sur votre appareil. Si nous ajoutons à l'avenir une fonctionnalité nécessitant des cookies ou un consentement, nous mettrons à jour la présente politique et demanderons votre consentement lorsque la loi l'exige.</p>
+</div>
+<div>
+	<h2>4. Gérer les cookies dans votre navigateur</h2>
+	<p>Même si notre site web ne place pas de cookies de suivi, vous pouvez contrôler et supprimer les cookies via les paramètres de votre navigateur à tout moment. La plupart des navigateurs vous permettent de bloquer ou de supprimer les cookies et de vous avertir lorsqu'un site tente d'en placer un. Consultez les pages d'aide de votre navigateur pour obtenir des instructions :</p>
+	<ul>
+		<li><a href="https://support.google.com/chrome/answer/95647" target="_blank" rel="noopener noreferrer">Google Chrome</a></li>
+		<li><a href="https://support.mozilla.org/fr/kb/cookies-informations-sites-enregistrent" target="_blank" rel="noopener noreferrer">Mozilla Firefox</a></li>
+		<li><a href="https://support.apple.com/fr-fr/guide/safari/manage-cookies-sfri11471/mac" target="_blank" rel="noopener noreferrer">Apple Safari</a></li>
+		<li><a href="https://support.microsoft.com/fr-fr/microsoft-edge/supprimer-les-cookies-dans-microsoft-edge-63947406-40ac-c3b8-57b9-2a946a29ae09" target="_blank" rel="noopener noreferrer">Microsoft Edge</a></li>
+	</ul>
+</div>
+<div>
+	<h2>5. Modifications de la présente politique</h2>
+	<p>Nous pouvons mettre à jour la présente politique en matière de cookies de temps à autre afin de refléter les évolutions des technologies que nous utilisons ou de la législation. Le cas échéant, nous actualiserons la date de « dernière mise à jour » en haut de cette page.</p>
+</div>
+<div>
+	<h2>6. Des questions ?</h2>
+	<p>Si vous avez des questions sur notre utilisation des cookies, ou plus généralement sur la manière dont nous traitons les données, veuillez consulter notre <a href="{PRIVACY}">Politique de confidentialité</a> ou nous contacter :</p>
+	<p>E-mail : <a href="mailto:{EMAIL}">{EMAIL}</a></p>
+</div>`,
 };
 
-const m = meta[lang];
-const body = bodies[lang]
+const m = meta[lang] ?? meta.en;
+const body = (bodies[lang] ?? bodies.en)
 	.replaceAll("{COMPANY}", company)
 	.replaceAll("{EMAIL}", email)
 	.replaceAll("{PRIVACY}", privacyHref);

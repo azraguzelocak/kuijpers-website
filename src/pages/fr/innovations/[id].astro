@@ -1,0 +1,12 @@
+---
+import InnovationDetailPage from "../../../components/pages/InnovationDetailPage.astro";
+import { INNOVATIONS } from "../../../data/innovations";
+
+export function getStaticPaths() {
+	return INNOVATIONS.map((inn) => ({ params: { id: inn.id } }));
+}
+
+const { id } = Astro.params;
+---
+
+<InnovationDetailPage id={id as string} />

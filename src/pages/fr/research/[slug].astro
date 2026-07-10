@@ -1,0 +1,21 @@
+---
+import { getAllResearchProjects } from "../../../lib/sanity";
+import ResearchDetailPage from "../../../components/pages/ResearchDetailPage.astro";
+
+export async function getStaticPaths() {
+	const projects = (await getAllResearchProjects()) ?? [];
+	return projects
+		.filter((p) => p.slug)
+		.map((project) => ({
+			params: { slug: project.slug },
+			props: {
+				project,
+				related: projects.filter((p) => p.slug && p.slug !== project.slug).slice(0, 3),
+			},
+		}));
+}
+
+const { project, related } = Astro.props;
+---
+
+<ResearchDetailPage project={project} related={related} />
