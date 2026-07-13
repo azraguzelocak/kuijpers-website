@@ -87,7 +87,7 @@ const publishedLabel = fmtDate(post.publishedAt);
 // Built at request time from the canonical post URL. Placeholder buttons for
 // the common networks; wired to share intents where one exists.
 const shareUrl = new URL(`/news/${post.slug}`, Astro.site ?? Astro.url).href;
-const shareTitle = post.title ?? "Kuijpers Research Field";
+const shareTitle = post.title ?? "Kuijpers Kip Research Field";
 const shareLinks = [
 	{
 		label: "Share on LinkedIn",
@@ -108,8 +108,8 @@ const shareLinks = [
 ---
 
 <BaseLayout
-	title={`${post.title} — News — Kuijpers Research Field`}
-	description={post.excerpt ?? `News from the Kuijpers Research Field.`}
+	title={`${post.title} — News — Kuijpers Kip Research Field`}
+	description={post.excerpt ?? `News from the Kuijpers Kip Research Field.`}
 >
 	<!-- 1. Hero image -->
 	<section class="relative bg-stone-900 text-white">
@@ -288,7 +288,7 @@ const shareLinks = [
 									) : (
 										<div class="flex h-full w-full items-center justify-center">
 											<span class="text-sm font-medium text-brand-400">
-												Kuijpers Research Field
+												Kuijpers Kip Research Field
 											</span>
 										</div>
 									)}

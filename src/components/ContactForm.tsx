@@ -85,7 +85,7 @@ export default function ContactForm({ lang = "en" }: { lang?: Lang }) {
 				body: JSON.stringify({
 					access_key: WEB3FORMS_ACCESS_KEY,
 					subject: `Website contact: ${values.subject.trim()}`,
-					from_name: "Kuijpers Research Field website",
+					from_name: "Kuijpers Kip Research Field website",
 					replyto: values.email.trim(),
 					name: values.name.trim(),
 					email: values.email.trim(),

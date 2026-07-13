@@ -31,11 +31,11 @@ export const ui = {
 
 		// home — meta
 		"home.meta.title":
-			"Kuijpers Research Field — Digital Twins for Poultry Production",
+			"Kuijpers Kip Research Field — Digital Twins for Poultry Production",
 		"home.meta.desc":
 			"Digital twin technology for smarter, healthier and more sustainable poultry production.",
 		// home — hero
-		"home.hero.titleA": "Two barns. One real. One digital. Both telling ",
+		"home.hero.titleA": "Two broiler chains. One real. One digital. Both telling ",
 		"home.hero.titleHl": "the truth",
 		"home.hero.subtitle":
 			"We test feed, housing, climate, and welfare interventions inside a fully instrumented research field — paired with a digital twin that captures every variable in real time. By the time an idea leaves us, it's already proven.",
@@ -72,9 +72,9 @@ export const ui = {
 		"home.cta.button": "Contact Us",
 
 		// contact page
-		"contact.meta.title": "Contact — Kuijpers Research Field",
+		"contact.meta.title": "Contact — Kuijpers Kip Research Field",
 		"contact.meta.desc":
-			"Get in touch with Kuijpers Research Field. Send us a message and our team will get back to you about research, partnerships or digital twin technology.",
+			"Get in touch with Kuijpers Kip Research Field. Send us a message and our team will get back to you about research, partnerships or digital twin technology.",
 		"contact.hero.eyebrow": "Work With Us",
 		"contact.hero.titleA": "Let's ",
 		"contact.hero.titleHl": "prove",
@@ -92,7 +92,7 @@ export const ui = {
 		"contact.info.email": "Email",
 		"contact.info.phone": "Phone",
 		"contact.info.address": "Address",
-		"contact.team": "— The Kuijpers Research Field team",
+		"contact.team": "— The Kuijpers Kip Research Field team",
 		// contact form (React island)
 		"form.name": "Name",
 		"form.email": "Email",
@@ -115,15 +115,15 @@ export const ui = {
 		"form.error.generic": "Something went wrong. Please try again.",
 
 		// about page
-		"about.meta.title": "About — Kuijpers Research Field",
+		"about.meta.title": "About — Kuijpers Kip Research Field",
 		"about.meta.desc":
-			"Learn about Kuijpers Research Field: our mission, vision, values, story and the team behind digital twin technology for poultry production.",
+			"Learn about Kuijpers Kip Research Field: our mission, vision, values, story and the team behind digital twin technology for poultry production.",
 		"about.pillar.mission.title": "Our Mission",
 		"about.pillar.mission.tagline": "Turning data into decisions the whole chain can trust.",
 		"about.pillar.mission.body":
 			"We advance animal welfare, production efficiency, and environmental sustainability by transforming real-time data from the poultry chain into validated, actionable insight — insight that producers, suppliers, and policymakers can act on with confidence.",
 		"about.pillar.vision.title": "Our Vision",
-		"about.pillar.vision.tagline": "Every intervention proven before it reaches the barn.",
+		"about.pillar.vision.tagline": "Every intervention proven before it reaches the farm.",
 		"about.pillar.vision.body":
 			"A food system where decisions are no longer made on assumption. Where every new feed, technology, or practice is tested in a controlled, data-rich environment first — making innovation faster, safer, and grounded in evidence the entire sector can rely on.",
 		"about.pillar.values.title": "Our Values",
@@ -134,13 +134,13 @@ export const ui = {
 		"about.hero.p1":
 			"The space between them is where most progress in poultry production gets lost.",
 		"about.hero.p2":
-			"Kuijpers Research Field exists in that space. We build digital twins of the broiler value chain — virtual replicas grounded in real-time data — that give researchers, suppliers, and producers a shared environment where evidence is generated quickly, rigorously, and at commercial scale.",
+			"Kuijpers Kip Research Field exists in that space. We build digital twins of the broiler value chain — virtual replicas grounded in real-time data — that give researchers, suppliers, and producers a shared environment where evidence is generated quickly, rigorously, and at commercial scale.",
 		"about.story.eyebrow": "Our Story",
 		"about.story.title": "From the family farm to a research field",
 		"about.story.p1":
-			"Kuijpers Research Field grew out of generations of hands-on poultry expertise. Working day to day with producers, we kept running into the same question: how do you know whether a new feed, climate setting, or housing approach will actually work — before committing an entire flock to it?",
+			"Kuijpers Kip Research Field grew out of generations of hands-on poultry expertise. Working day to day with producers, we kept running into the same question: how do you know whether a new feed, climate setting, or housing approach will actually work — before committing an entire flock to it?",
 		"about.story.p2":
-			"Trial and error in a live barn is slow, costly, and difficult to measure. So we built a different kind of barn.",
+			"Trial and error in a live farm is slow, costly, and difficult to measure. So we built a different kind of farm.",
 		"about.story.p3":
 			"Today, our facility is a fully instrumented, sensor-rich research environment paired with a digital twin that mirrors it in real time. We partner with universities, suppliers, and producers to validate interventions independently, publish what we learn, and help the sector make decisions that improve welfare, reduce environmental impact, and strengthen the entire broiler value chain.",
 		"about.story.fact1": "Founded by the Kuijpers family",
@@ -155,9 +155,9 @@ export const ui = {
 			"No single organisation can move poultry production forward alone. We work hand in hand with breeders, feed and equipment suppliers, animal-health companies, universities, and public partners — combining their expertise with our research field and digital twin so every innovation is tested and ready for the real world.",
 
 		// services page
-		"svc.meta.title": "Our Services — Kuijpers Research Field",
+		"svc.meta.title": "Our Services — Kuijpers Kip Research Field",
 		"svc.meta.desc":
-			"Digital twin services for poultry production — from trial design and real-time monitoring to independent validation — and why teams choose Kuijpers Research Field.",
+			"Digital twin services for poultry production — from trial design and real-time monitoring to independent validation — and why teams choose Kuijpers Kip Research Field.",
 		"svc.audience.default":
 			"Researchers, suppliers and producers working to improve poultry production.",
 		"svc.audience.suppliers": "Suppliers and innovation partners",
@@ -205,7 +205,7 @@ export const ui = {
 		"svc.intro.eyebrow": "What We Do",
 		"svc.intro.titleA": "Built for ",
 		"svc.intro.titleHl": "the questions",
-		"svc.intro.titleB": " you can't ask a live barn.",
+		"svc.intro.titleB": " you can't ask a live farm.",
 		"svc.intro.subtitle":
 			"Whether you're validating a feed innovation, optimizing a supply chain, or designing a multi-year research program, we run the full process inside the research field — from first hypothesis to publication-grade proof.",
 		"svc.cards.who": "Who it's for",
@@ -213,7 +213,7 @@ export const ui = {
 			"Service details are coming soon — get in touch and we'll walk you through what we offer.",
 		"svc.process.eyebrow": "How We Work",
 		"svc.process.title": "From question to validated insight",
-		"svc.why.eyebrow": "Why Kuijpers Research Field",
+		"svc.why.eyebrow": "Why Kuijpers Kip Research Field",
 		"svc.why.title": "Evidence you can act on",
 		"svc.diff.eyebrow": "The Difference",
 		"svc.diff.title": "Traditional consulting vs. the Kuijpers approach",
@@ -231,7 +231,7 @@ export const ui = {
 		"svc.cta.button": "Get in Touch",
 
 		// research index page
-		"res.meta.title": "Research Projects — Kuijpers Research Field",
+		"res.meta.title": "Research Projects — Kuijpers Kip Research Field",
 		"res.meta.desc":
 			"Explore our research projects in poultry production — from emission monitoring to efficiency measurement — across ongoing, completed and planned work.",
 		"res.hero.title": "Research Projects",
@@ -267,11 +267,11 @@ export const ui = {
 		"res.detail.viewAll": "View all",
 
 		// innovations page
-		"inn.meta.title": "Innovations — Kuijpers Research Field",
+		"inn.meta.title": "Innovations — Kuijpers Kip Research Field",
 		"inn.meta.desc": "From research to real-world impact — 21 interconnected innovations across emissions, production, health and safety, and the measurable impact of each.",
 		"inn.hero.titleA": "From research to ",
 		"inn.hero.titleHl": "real-world impact",
-		"inn.hero.subtitle": "The breakthroughs coming out of the Kuijpers Research Field — and the connected system that turns careful science into measurable results on the farm.",
+		"inn.hero.subtitle": "The breakthroughs coming out of the Kuijpers Kip Research Field — and the connected system that turns careful science into measurable results on the farm.",
 		"exp.pill.selected": "Its connected innovations",
 		"exp.pill.hint": "Drag to rotate · click a node to see its links",
 		"exp.pause": "Pause",
@@ -342,10 +342,10 @@ export const ui = {
 		"lang.switch": "Taal",
 
 		"home.meta.title":
-			"Kuijpers Research Field — Digital twins voor pluimveeproductie",
+			"Kuijpers Kip Research Field — Digital twins voor pluimveeproductie",
 		"home.meta.desc":
 			"Digital-twin-technologie voor slimmere, gezondere en duurzamere pluimveeproductie.",
-		"home.hero.titleA": "Twee stallen. Eén echt. Eén digitaal. Beide vertellen ",
+		"home.hero.titleA": "Twee vleeskuikenketens. Eén echt. Eén digitaal. Beide vertellen ",
 		"home.hero.titleHl": "de waarheid",
 		"home.hero.subtitle":
 			"We testen ingrepen op het gebied van voer, huisvesting, klimaat en welzijn in een volledig uitgerust onderzoeksveld — gekoppeld aan een digital twin die elke variabele in realtime vastlegt. Tegen de tijd dat een idee ons verlaat, is het al bewezen.",
@@ -375,9 +375,9 @@ export const ui = {
 			"Of u nu onderzoeker, leverancier of producent bent — we verkennen graag hoe digital-twin-technologie uw werk vooruit kan helpen.",
 		"home.cta.button": "Neem contact op",
 
-		"contact.meta.title": "Contact — Kuijpers Research Field",
+		"contact.meta.title": "Contact — Kuijpers Kip Research Field",
 		"contact.meta.desc":
-			"Neem contact op met Kuijpers Research Field. Stuur ons een bericht en ons team neemt contact met u op over onderzoek, samenwerkingen of digital-twin-technologie.",
+			"Neem contact op met Kuijpers Kip Research Field. Stuur ons een bericht en ons team neemt contact met u op over onderzoek, samenwerkingen of digital-twin-technologie.",
 		"contact.hero.eyebrow": "Werk met ons samen",
 		"contact.hero.titleA": "Laten we het samen ",
 		"contact.hero.titleHl": "bewijzen",
@@ -395,7 +395,7 @@ export const ui = {
 		"contact.info.email": "E-mail",
 		"contact.info.phone": "Telefoon",
 		"contact.info.address": "Adres",
-		"contact.team": "— Het team van Kuijpers Research Field",
+		"contact.team": "— Het team van Kuijpers Kip Research Field",
 		"form.name": "Naam",
 		"form.email": "E-mail",
 		"form.company": "Bedrijf",
@@ -416,15 +416,15 @@ export const ui = {
 		"form.success.again": "Nog een bericht versturen",
 		"form.error.generic": "Er is iets misgegaan. Probeer het opnieuw.",
 
-		"about.meta.title": "Over ons — Kuijpers Research Field",
+		"about.meta.title": "Over ons — Kuijpers Kip Research Field",
 		"about.meta.desc":
-			"Maak kennis met Kuijpers Research Field: onze missie, visie, waarden, verhaal en het team achter digital-twin-technologie voor de pluimveehouderij.",
+			"Maak kennis met Kuijpers Kip Research Field: onze missie, visie, waarden, verhaal en het team achter digital-twin-technologie voor de pluimveehouderij.",
 		"about.pillar.mission.title": "Onze missie",
 		"about.pillar.mission.tagline": "Data omzetten in beslissingen die de hele keten kan vertrouwen.",
 		"about.pillar.mission.body":
 			"We bevorderen dierenwelzijn, productie-efficiëntie en milieuduurzaamheid door realtime data uit de pluimveeketen om te zetten in gevalideerde, bruikbare inzichten — inzichten waar producenten, leveranciers en beleidsmakers met vertrouwen naar kunnen handelen.",
 		"about.pillar.vision.title": "Onze visie",
-		"about.pillar.vision.tagline": "Elke ingreep bewezen voordat hij de stal bereikt.",
+		"about.pillar.vision.tagline": "Elke ingreep bewezen voordat hij de boerderij bereikt.",
 		"about.pillar.vision.body":
 			"Een voedselsysteem waarin beslissingen niet langer op aannames worden gebaseerd. Waarin elk nieuw voer, elke technologie of werkwijze eerst wordt getest in een gecontroleerde, datarijke omgeving — waardoor innovatie sneller, veiliger en onderbouwd is met bewijs waarop de hele sector kan bouwen.",
 		"about.pillar.values.title": "Onze waarden",
@@ -435,13 +435,13 @@ export const ui = {
 		"about.hero.p1":
 			"In de ruimte daartussen gaat de meeste vooruitgang in de pluimveehouderij verloren.",
 		"about.hero.p2":
-			"Kuijpers Research Field bestaat in die ruimte. We bouwen digital twins van de vleeskuikenketen — virtuele replica's op basis van realtime data — die onderzoekers, leveranciers en producenten een gedeelde omgeving bieden waar bewijs snel, nauwkeurig en op commerciële schaal wordt gegenereerd.",
+			"Kuijpers Kip Research Field bestaat in die ruimte. We bouwen digital twins van de vleeskuikenketen — virtuele replica's op basis van realtime data — die onderzoekers, leveranciers en producenten een gedeelde omgeving bieden waar bewijs snel, nauwkeurig en op commerciële schaal wordt gegenereerd.",
 		"about.story.eyebrow": "Ons verhaal",
 		"about.story.title": "Van het familiebedrijf naar een onderzoeksveld",
 		"about.story.p1":
-			"Kuijpers Research Field is voortgekomen uit generaties praktische pluimvee-expertise. In het dagelijkse werk met producenten liepen we steeds tegen dezelfde vraag aan: hoe weet je of een nieuw voer, klimaatinstelling of huisvestingsaanpak echt werkt — voordat je er een hele koppel aan verbindt?",
+			"Kuijpers Kip Research Field is voortgekomen uit generaties praktische pluimvee-expertise. In het dagelijkse werk met producenten liepen we steeds tegen dezelfde vraag aan: hoe weet je of een nieuw voer, klimaatinstelling of huisvestingsaanpak echt werkt — voordat je er een hele koppel aan verbindt?",
 		"about.story.p2":
-			"Trial-and-error in een echte stal is traag, kostbaar en moeilijk te meten. Daarom bouwden we een ander soort stal.",
+			"Trial-and-error in een echte boerderij is traag, kostbaar en moeilijk te meten. Daarom bouwden we een ander soort boerderij.",
 		"about.story.p3":
 			"Vandaag is onze faciliteit een volledig uitgeruste, sensorrijke onderzoeksomgeving, gekoppeld aan een digital twin die deze in realtime weerspiegelt. We werken samen met universiteiten, leveranciers en producenten om ingrepen onafhankelijk te valideren, publiceren wat we leren en helpen de sector beslissingen te nemen die het welzijn verbeteren, de milieu-impact verminderen en de hele vleeskuikenketen versterken.",
 		"about.story.fact1": "Opgericht door de familie Kuijpers",
@@ -455,9 +455,9 @@ export const ui = {
 		"about.partners.body":
 			"Geen enkele organisatie kan de pluimveehouderij alleen vooruithelpen. We werken hand in hand met fokkerijen, voer- en apparatuurleveranciers, diergezondheidsbedrijven, universiteiten en publieke partners — en combineren hun expertise met ons onderzoeksveld en digital twin, zodat elke innovatie getest en klaar is voor de praktijk.",
 
-		"svc.meta.title": "Onze diensten — Kuijpers Research Field",
+		"svc.meta.title": "Onze diensten — Kuijpers Kip Research Field",
 		"svc.meta.desc":
-			"Digital-twin-diensten voor de pluimveehouderij — van proefopzet en realtime monitoring tot onafhankelijke validatie — en waarom teams voor Kuijpers Research Field kiezen.",
+			"Digital-twin-diensten voor de pluimveehouderij — van proefopzet en realtime monitoring tot onafhankelijke validatie — en waarom teams voor Kuijpers Kip Research Field kiezen.",
 		"svc.audience.default":
 			"Onderzoekers, leveranciers en producenten die de pluimveeproductie willen verbeteren.",
 		"svc.audience.suppliers": "Leveranciers en innovatiepartners",
@@ -505,7 +505,7 @@ export const ui = {
 		"svc.intro.eyebrow": "Wat we doen",
 		"svc.intro.titleA": "Gebouwd voor ",
 		"svc.intro.titleHl": "de vragen",
-		"svc.intro.titleB": " die u niet aan een echte stal kunt stellen.",
+		"svc.intro.titleB": " die u niet aan een echte boerderij kunt stellen.",
 		"svc.intro.subtitle":
 			"Of u nu een voerinnovatie valideert, een toeleveringsketen optimaliseert of een meerjarig onderzoeksprogramma opzet — we doorlopen het hele proces binnen het onderzoeksveld, van eerste hypothese tot publicatiewaardig bewijs.",
 		"svc.cards.who": "Voor wie",
@@ -513,7 +513,7 @@ export const ui = {
 			"Details over de diensten volgen binnenkort — neem contact op en we lichten graag toe wat we bieden.",
 		"svc.process.eyebrow": "Hoe we werken",
 		"svc.process.title": "Van vraag naar gevalideerd inzicht",
-		"svc.why.eyebrow": "Waarom Kuijpers Research Field",
+		"svc.why.eyebrow": "Waarom Kuijpers Kip Research Field",
 		"svc.why.title": "Bewijs waar u naar kunt handelen",
 		"svc.diff.eyebrow": "Het verschil",
 		"svc.diff.title": "Traditioneel advies vs. de Kuijpers-aanpak",
@@ -530,7 +530,7 @@ export const ui = {
 			"Vertel ons wat u wilt leren of valideren, en we laten u zien hoe digital-twin-technologie u daar kan brengen.",
 		"svc.cta.button": "Neem contact op",
 
-		"res.meta.title": "Onderzoeksprojecten — Kuijpers Research Field",
+		"res.meta.title": "Onderzoeksprojecten — Kuijpers Kip Research Field",
 		"res.meta.desc":
 			"Ontdek onze onderzoeksprojecten in de pluimveehouderij — van emissiemonitoring tot efficiëntiemeting — voor lopend, afgerond en gepland werk.",
 		"res.hero.title": "Onderzoeksprojecten",
@@ -565,11 +565,11 @@ export const ui = {
 		"res.detail.related": "Gerelateerde projecten",
 		"res.detail.viewAll": "Bekijk alle",
 
-		"inn.meta.title": "Innovaties — Kuijpers Research Field",
+		"inn.meta.title": "Innovaties — Kuijpers Kip Research Field",
 		"inn.meta.desc": "Van onderzoek naar impact in de praktijk — 21 met elkaar verbonden innovaties op het gebied van emissies, productie, gezondheid en veiligheid, en de meetbare impact van elk.",
 		"inn.hero.titleA": "Van onderzoek naar ",
 		"inn.hero.titleHl": "impact in de praktijk",
-		"inn.hero.subtitle": "De doorbraken uit het Kuijpers Research Field — en het verbonden systeem dat zorgvuldige wetenschap omzet in meetbare resultaten op het bedrijf.",
+		"inn.hero.subtitle": "De doorbraken uit het Kuijpers Kip Research Field — en het verbonden systeem dat zorgvuldige wetenschap omzet in meetbare resultaten op het bedrijf.",
 		"exp.pill.selected": "De verbonden innovaties",
 		"exp.pill.hint": "Sleep om te draaien · klik op een knooppunt voor de verbindingen",
 		"exp.pause": "Pauze",
@@ -640,10 +640,10 @@ export const ui = {
 		"lang.switch": "Sprache",
 
 		"home.meta.title":
-			"Kuijpers Research Field — Digitale Zwillinge für die Geflügelproduktion",
+			"Kuijpers Kip Research Field — Digitale Zwillinge für die Geflügelproduktion",
 		"home.meta.desc":
 			"Digital-Twin-Technologie für eine smartere, gesündere und nachhaltigere Geflügelproduktion.",
-		"home.hero.titleA": "Zwei Ställe. Einer real. Einer digital. Beide sagen ",
+		"home.hero.titleA": "Zwei Broilerketten. Einer real. Einer digital. Beide sagen ",
 		"home.hero.titleHl": "die Wahrheit",
 		"home.hero.subtitle":
 			"Wir testen Maßnahmen zu Futter, Haltung, Klima und Tierwohl in einem vollständig instrumentierten Forschungsfeld — gekoppelt mit einem digitalen Zwilling, der jede Variable in Echtzeit erfasst. Wenn eine Idee uns verlässt, ist sie bereits bewiesen.",
@@ -673,9 +673,9 @@ export const ui = {
 			"Ob Forscher, Lieferant oder Produzent — wir erkunden gern, wie die Digital-Twin-Technologie Ihre Arbeit voranbringen kann.",
 		"home.cta.button": "Kontakt aufnehmen",
 
-		"contact.meta.title": "Kontakt — Kuijpers Research Field",
+		"contact.meta.title": "Kontakt — Kuijpers Kip Research Field",
 		"contact.meta.desc":
-			"Nehmen Sie Kontakt mit Kuijpers Research Field auf. Schreiben Sie uns eine Nachricht und unser Team meldet sich zu Forschung, Partnerschaften oder Digital-Twin-Technologie bei Ihnen.",
+			"Nehmen Sie Kontakt mit Kuijpers Kip Research Field auf. Schreiben Sie uns eine Nachricht und unser Team meldet sich zu Forschung, Partnerschaften oder Digital-Twin-Technologie bei Ihnen.",
 		"contact.hero.eyebrow": "Arbeiten Sie mit uns",
 		"contact.hero.titleA": "Lassen Sie es uns gemeinsam ",
 		"contact.hero.titleHl": "beweisen",
@@ -693,7 +693,7 @@ export const ui = {
 		"contact.info.email": "E-Mail",
 		"contact.info.phone": "Telefon",
 		"contact.info.address": "Adresse",
-		"contact.team": "— Das Team von Kuijpers Research Field",
+		"contact.team": "— Das Team von Kuijpers Kip Research Field",
 		"form.name": "Name",
 		"form.email": "E-Mail",
 		"form.company": "Unternehmen",
@@ -714,15 +714,15 @@ export const ui = {
 		"form.success.again": "Weitere Nachricht senden",
 		"form.error.generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
 
-		"about.meta.title": "Über uns — Kuijpers Research Field",
+		"about.meta.title": "Über uns — Kuijpers Kip Research Field",
 		"about.meta.desc":
-			"Lernen Sie Kuijpers Research Field kennen: unsere Mission, Vision, Werte, Geschichte und das Team hinter der Digital-Twin-Technologie für die Geflügelproduktion.",
+			"Lernen Sie Kuijpers Kip Research Field kennen: unsere Mission, Vision, Werte, Geschichte und das Team hinter der Digital-Twin-Technologie für die Geflügelproduktion.",
 		"about.pillar.mission.title": "Unsere Mission",
 		"about.pillar.mission.tagline": "Daten in Entscheidungen verwandeln, denen die gesamte Kette vertrauen kann.",
 		"about.pillar.mission.body":
 			"Wir fördern Tierwohl, Produktionseffizienz und ökologische Nachhaltigkeit, indem wir Echtzeitdaten aus der Geflügelkette in validierte, umsetzbare Erkenntnisse verwandeln — Erkenntnisse, auf die Produzenten, Lieferanten und Entscheidungsträger mit Zuversicht bauen können.",
 		"about.pillar.vision.title": "Unsere Vision",
-		"about.pillar.vision.tagline": "Jede Maßnahme bewiesen, bevor sie den Stall erreicht.",
+		"about.pillar.vision.tagline": "Jede Maßnahme bewiesen, bevor sie den Hof erreicht.",
 		"about.pillar.vision.body":
 			"Ein Lebensmittelsystem, in dem Entscheidungen nicht länger auf Annahmen beruhen. In dem jedes neue Futter, jede Technologie und jede Praxis zuerst in einer kontrollierten, datenreichen Umgebung getestet wird — damit Innovation schneller, sicherer und auf Belege gestützt ist, auf die sich die gesamte Branche verlassen kann.",
 		"about.pillar.values.title": "Unsere Werte",
@@ -733,13 +733,13 @@ export const ui = {
 		"about.hero.p1":
 			"Im Raum dazwischen geht der meiste Fortschritt in der Geflügelproduktion verloren.",
 		"about.hero.p2":
-			"Kuijpers Research Field existiert in diesem Raum. Wir bauen digitale Zwillinge der Broiler-Wertschöpfungskette — virtuelle Abbilder auf Basis von Echtzeitdaten — die Forschern, Lieferanten und Produzenten eine gemeinsame Umgebung bieten, in der Belege schnell, rigoros und in kommerziellem Maßstab entstehen.",
+			"Kuijpers Kip Research Field existiert in diesem Raum. Wir bauen digitale Zwillinge der Broiler-Wertschöpfungskette — virtuelle Abbilder auf Basis von Echtzeitdaten — die Forschern, Lieferanten und Produzenten eine gemeinsame Umgebung bieten, in der Belege schnell, rigoros und in kommerziellem Maßstab entstehen.",
 		"about.story.eyebrow": "Unsere Geschichte",
 		"about.story.title": "Vom Familienbetrieb zum Forschungsfeld",
 		"about.story.p1":
-			"Kuijpers Research Field ist aus Generationen praktischer Geflügelexpertise entstanden. In der täglichen Arbeit mit Produzenten stießen wir immer wieder auf dieselbe Frage: Woher weiß man, ob ein neues Futter, eine Klimaeinstellung oder ein Haltungskonzept wirklich funktioniert — bevor man eine ganze Herde darauf festlegt?",
+			"Kuijpers Kip Research Field ist aus Generationen praktischer Geflügelexpertise entstanden. In der täglichen Arbeit mit Produzenten stießen wir immer wieder auf dieselbe Frage: Woher weiß man, ob ein neues Futter, eine Klimaeinstellung oder ein Haltungskonzept wirklich funktioniert — bevor man eine ganze Herde darauf festlegt?",
 		"about.story.p2":
-			"Versuch und Irrtum in einem echten Stall ist langsam, teuer und schwer messbar. Also bauten wir einen anderen Stall.",
+			"Versuch und Irrtum in einem echten Hof ist langsam, teuer und schwer messbar. Also bauten wir einen anderen Hof.",
 		"about.story.p3":
 			"Heute ist unsere Anlage eine vollständig instrumentierte, sensorreiche Forschungsumgebung, gekoppelt mit einem digitalen Zwilling, der sie in Echtzeit abbildet. Wir arbeiten mit Universitäten, Lieferanten und Produzenten zusammen, um Maßnahmen unabhängig zu validieren, veröffentlichen, was wir lernen, und helfen der Branche, Entscheidungen zu treffen, die das Tierwohl verbessern, die Umweltbelastung verringern und die gesamte Broiler-Wertschöpfungskette stärken.",
 		"about.story.fact1": "Gegründet von der Familie Kuijpers",
@@ -753,9 +753,9 @@ export const ui = {
 		"about.partners.body":
 			"Keine einzelne Organisation kann die Geflügelproduktion allein voranbringen. Wir arbeiten Hand in Hand mit Züchtern, Futter- und Ausrüstungslieferanten, Tiergesundheitsunternehmen, Universitäten und öffentlichen Partnern — und verbinden ihr Fachwissen mit unserem Forschungsfeld und digitalen Zwilling, sodass jede Innovation getestet und praxisreif ist.",
 
-		"svc.meta.title": "Unsere Leistungen — Kuijpers Research Field",
+		"svc.meta.title": "Unsere Leistungen — Kuijpers Kip Research Field",
 		"svc.meta.desc":
-			"Digital-Twin-Leistungen für die Geflügelproduktion — von der Versuchsplanung über Echtzeit-Monitoring bis zur unabhängigen Validierung — und warum Teams sich für Kuijpers Research Field entscheiden.",
+			"Digital-Twin-Leistungen für die Geflügelproduktion — von der Versuchsplanung über Echtzeit-Monitoring bis zur unabhängigen Validierung — und warum Teams sich für Kuijpers Kip Research Field entscheiden.",
 		"svc.audience.default":
 			"Forscher, Lieferanten und Produzenten, die die Geflügelproduktion verbessern wollen.",
 		"svc.audience.suppliers": "Lieferanten und Innovationspartner",
@@ -803,7 +803,7 @@ export const ui = {
 		"svc.intro.eyebrow": "Was wir tun",
 		"svc.intro.titleA": "Gebaut für ",
 		"svc.intro.titleHl": "die Fragen",
-		"svc.intro.titleB": ", die Sie einem echten Stall nicht stellen können.",
+		"svc.intro.titleB": ", die Sie einem echten Hof nicht stellen können.",
 		"svc.intro.subtitle":
 			"Ob Sie eine Futterinnovation validieren, eine Lieferkette optimieren oder ein mehrjähriges Forschungsprogramm gestalten — wir durchlaufen den gesamten Prozess im Forschungsfeld, von der ersten Hypothese bis zum publikationsreifen Nachweis.",
 		"svc.cards.who": "Für wen",
@@ -811,7 +811,7 @@ export const ui = {
 			"Details zu den Leistungen folgen in Kürze — nehmen Sie Kontakt auf und wir erläutern Ihnen gern, was wir bieten.",
 		"svc.process.eyebrow": "Wie wir arbeiten",
 		"svc.process.title": "Von der Frage zur validierten Erkenntnis",
-		"svc.why.eyebrow": "Warum Kuijpers Research Field",
+		"svc.why.eyebrow": "Warum Kuijpers Kip Research Field",
 		"svc.why.title": "Belege, auf die Sie bauen können",
 		"svc.diff.eyebrow": "Der Unterschied",
 		"svc.diff.title": "Klassische Beratung vs. der Kuijpers-Ansatz",
@@ -828,7 +828,7 @@ export const ui = {
 			"Sagen Sie uns, was Sie lernen oder validieren möchten, und wir zeigen Ihnen, wie die Digital-Twin-Technologie Sie dorthin bringt.",
 		"svc.cta.button": "Kontakt aufnehmen",
 
-		"res.meta.title": "Forschungsprojekte — Kuijpers Research Field",
+		"res.meta.title": "Forschungsprojekte — Kuijpers Kip Research Field",
 		"res.meta.desc":
 			"Entdecken Sie unsere Forschungsprojekte in der Geflügelproduktion — von der Emissionsüberwachung bis zur Effizienzmessung — für laufende, abgeschlossene und geplante Arbeiten.",
 		"res.hero.title": "Forschungsprojekte",
@@ -863,11 +863,11 @@ export const ui = {
 		"res.detail.related": "Verwandte Projekte",
 		"res.detail.viewAll": "Alle ansehen",
 
-		"inn.meta.title": "Innovationen — Kuijpers Research Field",
+		"inn.meta.title": "Innovationen — Kuijpers Kip Research Field",
 		"inn.meta.desc": "Von der Forschung zur Wirkung in der Praxis — 21 miteinander verbundene Innovationen in den Bereichen Emissionen, Produktion, Gesundheit und Sicherheit, samt der messbaren Wirkung jeder einzelnen.",
 		"inn.hero.titleA": "Von der Forschung zur ",
 		"inn.hero.titleHl": "Wirkung in der Praxis",
-		"inn.hero.subtitle": "Die Durchbrüche aus dem Kuijpers Research Field — und das vernetzte System, das sorgfältige Wissenschaft in messbare Ergebnisse auf dem Betrieb verwandelt.",
+		"inn.hero.subtitle": "Die Durchbrüche aus dem Kuijpers Kip Research Field — und das vernetzte System, das sorgfältige Wissenschaft in messbare Ergebnisse auf dem Betrieb verwandelt.",
 		"exp.pill.selected": "Die verbundenen Innovationen",
 		"exp.pill.hint": "Ziehen zum Drehen · auf einen Knoten klicken für die Verbindungen",
 		"exp.pause": "Pause",
@@ -934,9 +934,9 @@ export const ui = {
 		"footer.privacy": "Politique de confidentialité",
 		"footer.cookies": "Cookies",
 		"lang.switch": "Langue",
-		"home.meta.title": "Kuijpers Research Field — Jumeaux numériques pour la production avicole",
+		"home.meta.title": "Kuijpers Kip Research Field — Jumeaux numériques pour la production avicole",
 		"home.meta.desc": "La technologie des jumeaux numériques pour une production avicole plus intelligente, plus saine et plus durable.",
-		"home.hero.titleA": "Deux poulaillers. L'un réel. L'un numérique. Tous deux disant ",
+		"home.hero.titleA": "Deux chaînes de poulets de chair. L'un réel. L'un numérique. Tous deux disant ",
 		"home.hero.titleHl": "la vérité",
 		"home.hero.subtitle": "Nous testons les interventions sur l'alimentation, le logement, le climat et le bien-être dans un champ de recherche entièrement instrumenté — associé à un jumeau numérique qui capture chaque variable en temps réel. Lorsqu'une idée nous quitte, elle est déjà prouvée.",
 		"home.hero.cta1": "Découvrir le fonctionnement",
@@ -961,8 +961,8 @@ export const ui = {
 		"home.cta.title": "Envie de travailler avec nous ?",
 		"home.cta.text": "Que vous soyez chercheur, fournisseur ou producteur, nous serions ravis d'explorer comment la technologie des jumeaux numériques peut faire avancer votre travail.",
 		"home.cta.button": "Contactez-nous",
-		"contact.meta.title": "Contact — Kuijpers Research Field",
-		"contact.meta.desc": "Contactez Kuijpers Research Field. Envoyez-nous un message et notre équipe vous répondra au sujet de la recherche, des partenariats ou de la technologie des jumeaux numériques.",
+		"contact.meta.title": "Contact — Kuijpers Kip Research Field",
+		"contact.meta.desc": "Contactez Kuijpers Kip Research Field. Envoyez-nous un message et notre équipe vous répondra au sujet de la recherche, des partenariats ou de la technologie des jumeaux numériques.",
 		"contact.hero.eyebrow": "Travaillez avec nous",
 		"contact.hero.titleA": "Prouvons-le ",
 		"contact.hero.titleHl": "ensemble",
@@ -978,7 +978,7 @@ export const ui = {
 		"contact.info.email": "E-mail",
 		"contact.info.phone": "Téléphone",
 		"contact.info.address": "Adresse",
-		"contact.team": "— L'équipe de Kuijpers Research Field",
+		"contact.team": "— L'équipe de Kuijpers Kip Research Field",
 		"form.name": "Nom",
 		"form.email": "E-mail",
 		"form.company": "Entreprise",
@@ -997,24 +997,24 @@ export const ui = {
 		"form.success.text": "Votre message a été envoyé. Nous vous répondrons dès que possible.",
 		"form.success.again": "Envoyer un autre message",
 		"form.error.generic": "Une erreur s'est produite. Veuillez réessayer.",
-		"about.meta.title": "À propos — Kuijpers Research Field",
-		"about.meta.desc": "Découvrez Kuijpers Research Field : notre mission, notre vision, nos valeurs, notre histoire et l'équipe derrière la technologie des jumeaux numériques pour la production avicole.",
+		"about.meta.title": "À propos — Kuijpers Kip Research Field",
+		"about.meta.desc": "Découvrez Kuijpers Kip Research Field : notre mission, notre vision, nos valeurs, notre histoire et l'équipe derrière la technologie des jumeaux numériques pour la production avicole.",
 		"about.pillar.mission.title": "Notre mission",
 		"about.pillar.mission.tagline": "Transformer les données en décisions auxquelles toute la filière peut se fier.",
 		"about.pillar.mission.body": "Nous faisons progresser le bien-être animal, l'efficacité de la production et la durabilité environnementale en transformant les données en temps réel de la filière avicole en connaissances validées et exploitables — des connaissances sur lesquelles producteurs, fournisseurs et décideurs peuvent s'appuyer en toute confiance.",
 		"about.pillar.vision.title": "Notre vision",
-		"about.pillar.vision.tagline": "Chaque intervention prouvée avant d'arriver au poulailler.",
+		"about.pillar.vision.tagline": "Chaque intervention prouvée avant d'arriver à la ferme.",
 		"about.pillar.vision.body": "Un système alimentaire où les décisions ne reposent plus sur des suppositions. Où chaque nouvel aliment, technologie ou pratique est d'abord testé dans un environnement contrôlé et riche en données — rendant l'innovation plus rapide, plus sûre et fondée sur des preuves sur lesquelles tout le secteur peut compter.",
 		"about.pillar.values.title": "Nos valeurs",
 		"about.pillar.values.tagline": "Rigueur. Transparence. Partenariat.",
 		"about.pillar.values.body": "Nous nous imposons les standards de la science indépendante : nous publions ce que nous apprenons, validons nos résultats ouvertement et protégeons l'intégrité de nos méthodes. Nous travaillons côte à côte avec les chercheurs, les fournisseurs et les producteurs — car un réel progrès dans la production avicole se construit sur la confiance, non sur des promesses.",
 		"about.hero.hl": "La science avance prudemment. L'industrie avance vite.",
 		"about.hero.p1": "C'est dans l'espace entre les deux que se perd la plupart des progrès de la production avicole.",
-		"about.hero.p2": "Kuijpers Research Field existe dans cet espace. Nous construisons des jumeaux numériques de la filière du poulet de chair — des répliques virtuelles fondées sur des données en temps réel — qui offrent aux chercheurs, aux fournisseurs et aux producteurs un environnement commun où les preuves sont générées rapidement, rigoureusement et à l'échelle commerciale.",
+		"about.hero.p2": "Kuijpers Kip Research Field existe dans cet espace. Nous construisons des jumeaux numériques de la filière du poulet de chair — des répliques virtuelles fondées sur des données en temps réel — qui offrent aux chercheurs, aux fournisseurs et aux producteurs un environnement commun où les preuves sont générées rapidement, rigoureusement et à l'échelle commerciale.",
 		"about.story.eyebrow": "Notre histoire",
 		"about.story.title": "De la ferme familiale à un champ de recherche",
-		"about.story.p1": "Kuijpers Research Field est né de générations d'expertise avicole de terrain. En travaillant au quotidien avec les producteurs, nous nous heurtions sans cesse à la même question : comment savoir si un nouvel aliment, un réglage climatique ou une approche de logement fonctionnera réellement — avant d'y engager tout un troupeau ?",
-		"about.story.p2": "Les essais et erreurs dans un poulailler en activité sont lents, coûteux et difficiles à mesurer. Nous avons donc construit un autre type de poulailler.",
+		"about.story.p1": "Kuijpers Kip Research Field est né de générations d'expertise avicole de terrain. En travaillant au quotidien avec les producteurs, nous nous heurtions sans cesse à la même question : comment savoir si un nouvel aliment, un réglage climatique ou une approche de logement fonctionnera réellement — avant d'y engager tout un troupeau ?",
+		"about.story.p2": "Les essais et erreurs dans une ferme en activité sont lents, coûteux et difficiles à mesurer. Nous avons donc construit un autre type de ferme.",
 		"about.story.p3": "Aujourd'hui, notre installation est un environnement de recherche entièrement instrumenté et riche en capteurs, associé à un jumeau numérique qui le reflète en temps réel. Nous collaborons avec des universités, des fournisseurs et des producteurs pour valider les interventions de manière indépendante, publier ce que nous apprenons et aider le secteur à prendre des décisions qui améliorent le bien-être, réduisent l'impact environnemental et renforcent toute la filière du poulet de chair.",
 		"about.story.fact1": "Fondé par la famille Kuijpers",
 		"about.story.fact2": "Basé aux Pays-Bas",
@@ -1025,8 +1025,8 @@ export const ui = {
 		"about.partners.eyebrow": "Nos partenaires",
 		"about.partners.title": "Plus forts ensemble",
 		"about.partners.body": "Aucune organisation ne peut faire progresser seule la production avicole. Nous travaillons main dans la main avec des sélectionneurs, des fournisseurs d'aliments et d'équipements, des entreprises de santé animale, des universités et des partenaires publics — en combinant leur expertise avec notre champ de recherche et notre jumeau numérique pour que chaque innovation soit testée et prête pour le monde réel.",
-		"svc.meta.title": "Nos services — Kuijpers Research Field",
-		"svc.meta.desc": "Des services de jumeaux numériques pour la production avicole — de la conception d'essais au suivi en temps réel jusqu'à la validation indépendante — et pourquoi les équipes choisissent Kuijpers Research Field.",
+		"svc.meta.title": "Nos services — Kuijpers Kip Research Field",
+		"svc.meta.desc": "Des services de jumeaux numériques pour la production avicole — de la conception d'essais au suivi en temps réel jusqu'à la validation indépendante — et pourquoi les équipes choisissent Kuijpers Kip Research Field.",
 		"svc.audience.default": "Chercheurs, fournisseurs et producteurs œuvrant à améliorer la production avicole.",
 		"svc.audience.suppliers": "Fournisseurs et partenaires d'innovation",
 		"svc.audience.processors": "Transformateurs et acheteurs",
@@ -1068,13 +1068,13 @@ export const ui = {
 		"svc.intro.eyebrow": "Ce que nous faisons",
 		"svc.intro.titleA": "Conçu pour ",
 		"svc.intro.titleHl": "les questions",
-		"svc.intro.titleB": " que l'on ne peut pas poser à un poulailler en activité.",
+		"svc.intro.titleB": " que l'on ne peut pas poser à une ferme en activité.",
 		"svc.intro.subtitle": "Que vous validiez une innovation alimentaire, optimisiez une chaîne d'approvisionnement ou conceviez un programme de recherche pluriannuel, nous menons l'ensemble du processus au sein du champ de recherche — de la première hypothèse à une preuve de qualité publiable.",
 		"svc.cards.who": "À qui cela s'adresse",
 		"svc.cards.empty": "Les détails des services arrivent bientôt — contactez-nous et nous vous présenterons ce que nous proposons.",
 		"svc.process.eyebrow": "Notre façon de travailler",
 		"svc.process.title": "De la question à la connaissance validée",
-		"svc.why.eyebrow": "Pourquoi Kuijpers Research Field",
+		"svc.why.eyebrow": "Pourquoi Kuijpers Kip Research Field",
 		"svc.why.title": "Des preuves sur lesquelles agir",
 		"svc.diff.eyebrow": "La différence",
 		"svc.diff.title": "Le conseil traditionnel face à l'approche Kuijpers",
@@ -1088,7 +1088,7 @@ export const ui = {
 		"svc.cta.title": "Discutons de votre projet",
 		"svc.cta.text": "Dites-nous ce que vous voulez apprendre ou valider, et nous vous montrerons comment la technologie des jumeaux numériques peut vous y mener.",
 		"svc.cta.button": "Contactez-nous",
-		"res.meta.title": "Projets de recherche — Kuijpers Research Field",
+		"res.meta.title": "Projets de recherche — Kuijpers Kip Research Field",
 		"res.meta.desc": "Explorez nos projets de recherche en production avicole — du suivi des émissions à la mesure de l'efficacité — parmi les travaux en cours, achevés et planifiés.",
 		"res.hero.title": "Projets de recherche",
 		"res.hero.bodyA": "Du suivi des émissions en temps réel à la mesure de l'efficacité, notre recherche transforme les données d'un environnement contrôlé et riche en capteurs en ",
@@ -1117,11 +1117,11 @@ export const ui = {
 		"res.detail.funding": "Financement :",
 		"res.detail.related": "Projets liés",
 		"res.detail.viewAll": "Voir tout",
-		"inn.meta.title": "Innovations — Kuijpers Research Field",
+		"inn.meta.title": "Innovations — Kuijpers Kip Research Field",
 		"inn.meta.desc": "De la recherche à l'impact concret — 21 innovations interconnectées en matière d'émissions, de production, de santé et de sécurité, et l'impact mesurable de chacune.",
 		"inn.hero.titleA": "De la recherche à ",
 		"inn.hero.titleHl": "l'impact concret",
-		"inn.hero.subtitle": "Les avancées issues du Kuijpers Research Field — et le système connecté qui transforme une science rigoureuse en résultats mesurables à la ferme.",
+		"inn.hero.subtitle": "Les avancées issues du Kuijpers Kip Research Field — et le système connecté qui transforme une science rigoureuse en résultats mesurables à la ferme.",
 		"exp.pill.selected": "Ses innovations connectées",
 		"exp.pill.hint": "Faites glisser pour tourner · cliquez sur un nœud pour voir ses liens",
 		"exp.pause": "Pause",

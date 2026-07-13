@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------------------
-// Innovation dataset — Kuijpers Research Field (broiler)
+// Innovation dataset — Kuijpers Kip Research Field (broiler)
 // -----------------------------------------------------------------------------
 // Source of truth: the "Innovatiekaart" cross-table prepared internally
 // (visulization/INNOVA~3.HTM.html). Names translated to English; the impact
@@ -262,8 +262,8 @@ export const INNOVATIONS: Innovation[] = [
 	},
 	{
 		id: "n2",
-		name: "Bioenergy plant — N₂ stripper (digestate)",
-		short: "N₂ stripper",
+		name: "Bioenergy plant — NH₃ stripper (digestate)",
+		short: "NH₃ stripper",
 		category: "emissions",
 		description:
 			"Recovers ammonia-nitrogen from digestate as a usable product instead of an emission.",
