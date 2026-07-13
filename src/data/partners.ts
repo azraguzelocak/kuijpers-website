@@ -22,5 +22,13 @@ export const PARTNERS: Partner[] = [
 	{
 		name: "Kuijperskip",
 		src: "/logo.png"
+	},
+	{
+		name: "Kloek",
+		src: "/images/partners/kloek.jpg"
+	},
+	{
+		name: "MR",
+		src: "/images/partners/mr.jpg"
 	}
 ];
