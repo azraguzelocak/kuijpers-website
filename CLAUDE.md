@@ -48,7 +48,7 @@ astro-site/
 │   │   └── innovations/
 │   │       └── InnovationExplorer.tsx  # React island: rotatable network + farm scene + cards
 │   ├── data/
-│   │   └── innovations.ts     # 21 innovations, impacts, and interconnections (see below)
+│   │   └── innovations.ts     # 25 innovations, impacts, and interconnections (see below)
 │   ├── lib/
 │   │   ├── sanity.ts          # Sanity client + typed fetch helpers
 │   │   ├── queries.ts         # GROQ queries
@@ -140,7 +140,7 @@ plus a dark gradient overlay for text legibility. Because heroes are wide/short:
 ## Innovation Explorer (Innovations page centrepiece)
 
 An interactive React island (`src/components/innovations/InnovationExplorer.tsx`,
-rendered with `client:visible` from `innovations.astro`) that visualises 21
+rendered with `client:visible` from `innovations.astro`) that visualises 25
 interconnected innovations. Three synced views share one `selectedId`:
 
 The explorer has two synced views (the "Explore the site" 360° tour is a separate section
@@ -219,6 +219,18 @@ category, description, 6 yearly impact figures, scene pin), `RELATIONS` (a↔b, 
 on-site generation, green); **negative = extra use/discharge** (red). Figures are
 indicative, sourced from the internal cross-table in `visulization/INNOVA~3.HTM.html`
 (Dutch; the original 2D chicken-silhouette map — read it for the data, not the design).
+
+The **2026-07-10 revision** of the Innovatiekaart (`visulization/Kopie van 20260706 …
+(MK).xlsx`, sheet `Tabel`) added four innovations — `dt` (Digital twin), `broed`
+(in-house hatching), `patio`, `veranda` — taking the total to 25. The categories stay at
+four: the sheet files the Digital twin under "Alle categorieën R&D" and Patio/Veranda
+under a dual "Gezondheid & welzijn / Productie efficiency", but all four are mapped to
+`health` on the site. Two caveats, both flagged in the source file: that xlsx's
+`Kruistabel voor visualisatie` sheet was **not** extended, so it still verifies only the
+original 21 innovations' 77 links — **the four new innovations' RELATIONS are inferred
+from their row text and await MK's confirmation**. They also carry no impact figures in
+the site's units (the sheet gives percentages like "NH₃ −70%", not yearly absolutes), so
+they ship as indirect innovations with `impact(0,…)`.
 
 - Pin pulse animation: `.fscl-pulse` keyframes in `src/styles/global.css`.
 - To add/edit an innovation or a connection, edit `src/data/innovations.ts` only —

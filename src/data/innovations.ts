@@ -5,6 +5,11 @@
 // (visulization/INNOVA~3.HTM.html). Names translated to English; the impact
 // figures, categories and relationships are taken verbatim from that file.
 //
+// The 2026-07-10 revision (visulization/"Kopie van 20260706 Innovatiekaart …
+// (MK).xlsx", sheet "Tabel") adds four innovations: dt, broed, patio, veranda.
+// Its cross-table sheet is unchanged, so those four have no verified links and
+// no impact figures in these units yet — see the note above their RELATIONS.
+//
 // Impact values are stored as YEARLY totals for the reference operation
 // (256,000 places x 7 cycles/year -> SLAUGHTER_KG kg live weight / year).
 // SIGN CONVENTION: positive = a saving (reduction / retention / on-site
@@ -344,6 +349,54 @@ export const INNOVATIONS: Innovation[] = [
 		impact: impact(0, 0, 0, 0, 0, 0),
 		scene: { x: 32, y: 73 },
 	},
+	{
+		id: "dt",
+		name: "Digital twin — Kuijpers Kip Research Field",
+		short: "Digital twin",
+		category: "health",
+		description:
+			"A dashboard linking every stage of the chain, for in-line steering and third-party research.",
+		details:
+			"A digital twin of the whole operation: a dashboard that links every stage of the chain — parent stock, hatchery, broilers and the systems around them — so management parameters can be steered in-line during a cycle as well as reviewed after it. It answers two needs at once. Internally, it puts all chain information in one place, closing long-standing traceability gaps and raising the quality of everyday decisions. Externally, it opens the site up to partners: as research facilities in the Netherlands decline, there is growing demand for somewhere innovations can be tested at genuine commercial scale, and the twin is what makes that testable and measurable. Its effects are indirect but wide — health, welfare, emission steering and efficiency all improve once the people running the farm can finally see the whole picture at once.",
+		impact: impact(0, 0, 0, 0, 0, 0),
+		scene: { x: 50, y: 60 },
+	},
+	{
+		id: "broed",
+		name: "Own hatching-egg production — hatching in the house",
+		short: "In-house hatching",
+		category: "health",
+		description:
+			"Chicks hatch in the house itself, at the right temperature and with feed and water from the first minute.",
+		details:
+			"Conventionally, chicks hatch in a hatchery and are then transported to the farm — arriving hours old, without food or water, and having already been exposed to other flocks along the way. Here the eggs are moved to the house while they are still eggs, and the chicks hatch in place: at the right temperature, with feed and water immediately within reach. The start of life becomes something optimal rather than something to recover from. Maternal immunity is preserved, cross-contamination between flocks is avoided, and the flock comes up more uniform. Reported effects include a 1–3% higher hatch rate, one animal transport removed from the chain altogether, and no need for cooling in the hatcher. Because every step stays in-house, traceability is complete.",
+		impact: impact(0, 0, 0, 0, 0, 0),
+		scene: { x: 38, y: 66 },
+	},
+	{
+		id: "patio",
+		name: "Patio system",
+		short: "Patio",
+		category: "health",
+		description:
+			"An all-round housing system where chicks hatch and grow on in the same place — reported NH₃ down ~70%.",
+		details:
+			"The Patio system is the housing that makes in-house hatching possible: an all-round system in which chicks hatch and then grow on in the same place, without the handling, transport and cross-contamination that normally separate those two stages. Keeping the birds in one system from egg to slaughter weight improves the start of life, and the reported effects are substantial — around 70% lower ammonia emission, a better feed conversion ratio, and lower mortality. It also improves working conditions for the staff who care for the birds and for the catching crews. Combined with family heat for warmth and the site's own feed programme, it removes several of the traditional reasons a flock would ever need antibiotics.",
+		impact: impact(0, 0, 0, 0, 0, 0),
+		scene: { x: 30, y: 70 },
+	},
+	{
+		id: "veranda",
+		name: "Veranda system (with Meggius)",
+		short: "Veranda",
+		category: "health",
+		description:
+			"Parent stock in small groups with scratching space and automatic egg collection — reported NH₃ down ~45%.",
+		details:
+			"The Veranda system houses the parent stock: hens and roosters live in small groups of around 600 birds, with roughly 30% scratching space and an automatic laying net, so no eggs end up on the floor. Roosters and hens are fed separately, which means each gets what it actually needs and the feed is used to its full value. The result is a better climate around the animals, closer control over the flock, and efficient use of raw materials — with a reported ~45% lower ammonia emission, a better feed conversion ratio, lower mortality and reduced feed use. Its real value shows in combination with the site's own hatchery and broiler houses: fewer losses anywhere in the chain, because every link sits under the same roof.",
+		impact: impact(0, 0, 0, 0, 0, 0),
+		scene: { x: 24, y: 64 },
+	},
 ];
 
 // Relationships from the cross-table. 1 = required, 2 = enhancing.
@@ -370,6 +423,23 @@ export const RELATIONS: Relation[] = [
 	{ a: "vac", b: "vacm", type: 2 }, { a: "vac", b: "vet", type: 2 },
 	{ a: "vacm", b: "vet", type: 2 },
 	{ a: "ws", b: "zon", type: 2 },
+
+	// ⚠️ PROVISIONAL — the four innovations below (dt, broed, patio, veranda) were added to the
+	// "Tabel" sheet of the 2026-07-10 Innovatiekaart but NOT to its "Kruistabel voor visualisatie",
+	// so no verified links exist for them. The links below are inferred from each row's own text
+	// (e.g. Patio/Eigen broedei are both filed under the form name "Korte keten, vermeden
+	// kruisbesmettingsrisico"; Veranda feeds roosters and hens separately). They still need MK's
+	// confirmation — replace them once the cross-table is extended.
+	{ a: "dt", b: "dash", type: 1 }, { a: "dt", b: "ai", type: 1 }, { a: "dt", b: "vet", type: 2 },
+	{ a: "dt", b: "voer", type: 2 }, { a: "dt", b: "licht", type: 2 }, { a: "dt", b: "omg", type: 2 },
+	{ a: "dt", b: "anti", type: 2 },
+	{ a: "broed", b: "kkb", type: 1 }, { a: "broed", b: "patio", type: 1 }, { a: "broed", b: "kkt", type: 2 },
+	{ a: "broed", b: "fam", type: 2 }, { a: "broed", b: "anti", type: 2 }, { a: "broed", b: "vac", type: 2 },
+	{ a: "patio", b: "kkb", type: 1 }, { a: "patio", b: "omg", type: 2 }, { a: "patio", b: "lw", type: 2 },
+	{ a: "patio", b: "anti", type: 2 }, { a: "patio", b: "licht", type: 2 }, { a: "patio", b: "dash", type: 2 },
+	{ a: "patio", b: "fam", type: 2 },
+	{ a: "veranda", b: "haan", type: 1 }, { a: "veranda", b: "broed", type: 1 }, { a: "veranda", b: "omg", type: 2 },
+	{ a: "veranda", b: "voer", type: 2 }, { a: "veranda", b: "kkb", type: 2 }, { a: "veranda", b: "licht", type: 2 },
 ];
 
 /** Is this a direct, quantified innovation (vs. an indirect one)? */

@@ -268,7 +268,7 @@ export const ui = {
 
 		// innovations page
 		"inn.meta.title": "Innovations — Kuijpers Kip Research Field",
-		"inn.meta.desc": "From research to real-world impact — 21 interconnected innovations across emissions, production, health and safety, and the measurable impact of each.",
+		"inn.meta.desc": "From research to real-world impact — 25 interconnected innovations across emissions, production, health and safety, and the measurable impact of each.",
 		"inn.hero.titleA": "From research to ",
 		"inn.hero.titleHl": "real-world impact",
 		"inn.hero.subtitle": "The breakthroughs coming out of the Kuijpers Kip Research Field — and the connected system that turns careful science into measurable results on the farm.",
@@ -566,7 +566,7 @@ export const ui = {
 		"res.detail.viewAll": "Bekijk alle",
 
 		"inn.meta.title": "Innovaties — Kuijpers Kip Research Field",
-		"inn.meta.desc": "Van onderzoek naar impact in de praktijk — 21 met elkaar verbonden innovaties op het gebied van emissies, productie, gezondheid en veiligheid, en de meetbare impact van elk.",
+		"inn.meta.desc": "Van onderzoek naar impact in de praktijk — 25 met elkaar verbonden innovaties op het gebied van emissies, productie, gezondheid en veiligheid, en de meetbare impact van elk.",
 		"inn.hero.titleA": "Van onderzoek naar ",
 		"inn.hero.titleHl": "impact in de praktijk",
 		"inn.hero.subtitle": "De doorbraken uit het Kuijpers Kip Research Field — en het verbonden systeem dat zorgvuldige wetenschap omzet in meetbare resultaten op het bedrijf.",
@@ -864,7 +864,7 @@ export const ui = {
 		"res.detail.viewAll": "Alle ansehen",
 
 		"inn.meta.title": "Innovationen — Kuijpers Kip Research Field",
-		"inn.meta.desc": "Von der Forschung zur Wirkung in der Praxis — 21 miteinander verbundene Innovationen in den Bereichen Emissionen, Produktion, Gesundheit und Sicherheit, samt der messbaren Wirkung jeder einzelnen.",
+		"inn.meta.desc": "Von der Forschung zur Wirkung in der Praxis — 25 miteinander verbundene Innovationen in den Bereichen Emissionen, Produktion, Gesundheit und Sicherheit, samt der messbaren Wirkung jeder einzelnen.",
 		"inn.hero.titleA": "Von der Forschung zur ",
 		"inn.hero.titleHl": "Wirkung in der Praxis",
 		"inn.hero.subtitle": "Die Durchbrüche aus dem Kuijpers Kip Research Field — und das vernetzte System, das sorgfältige Wissenschaft in messbare Ergebnisse auf dem Betrieb verwandelt.",
@@ -1118,7 +1118,7 @@ export const ui = {
 		"res.detail.related": "Projets liés",
 		"res.detail.viewAll": "Voir tout",
 		"inn.meta.title": "Innovations — Kuijpers Kip Research Field",
-		"inn.meta.desc": "De la recherche à l'impact concret — 21 innovations interconnectées en matière d'émissions, de production, de santé et de sécurité, et l'impact mesurable de chacune.",
+		"inn.meta.desc": "De la recherche à l'impact concret — 25 innovations interconnectées en matière d'émissions, de production, de santé et de sécurité, et l'impact mesurable de chacune.",
 		"inn.hero.titleA": "De la recherche à ",
 		"inn.hero.titleHl": "l'impact concret",
 		"inn.hero.subtitle": "Les avancées issues du Kuijpers Kip Research Field — et le système connecté qui transforme une science rigoureuse en résultats mesurables à la ferme.",
