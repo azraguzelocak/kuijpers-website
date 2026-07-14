@@ -197,59 +197,78 @@ const t = useTranslations(lang);
 
 			// ---------- barn shell ----------
 			var L = 84, HW = 9, WH = 8, RID = 8.4, HX = L / 2, aF = Math.atan2(RID - WH, HW), slopeLen = Math.hypot(HW, RID - WH);
-			var barn = new THREE.Group();
 			// full half-hexagon cross-section: angled sides run from the GROUND up to a flat top
 			var topZ = 4.6, topY = 9.4;
 			var sideAng = Math.atan2(HW - topZ, topY), sideLen = Math.hypot(HW - topZ, topY);
-			var frontSide = planeMesh(L, sideLen, redPanel(6, 1.6)); frontSide.rotation.x = -sideAng; frontSide.position.set(0, topY / 2, (HW + topZ) / 2); barn.add(frontSide);
-			var backSide = planeMesh(L, sideLen, redPanel(6, 1.6)); backSide.rotation.x = sideAng; backSide.position.set(0, topY / 2, -(HW + topZ) / 2); barn.add(backSide);
-			var topRoof = planeMesh(L, 2 * topZ, roofMat); topRoof.rotation.x = -Math.PI / 2; topRoof.position.set(0, topY, 0); barn.add(topRoof);
-			// half-hexagon end walls (full height, to the ground)
-			[-HX, HX].forEach(function (ex) {
-				barn.add(tri([ex, 0, HW], [ex, topY, topZ], [ex, 0, -HW], redPanel(1, 1)));
-				barn.add(tri([ex, topY, topZ], [ex, topY, -topZ], [ex, 0, -HW], redPanel(1, 1)));
-			});
-			var floor = planeMesh(L - 0.4, 2 * HW - 0.4, litterMat); floor.rotation.x = -Math.PI / 2; floor.position.set(0, 0.05, 0); barn.add(floor);
-
-			// flat, horizontal solar panels laid across the flat top of the roof
 			var solZ = [-3.7, -1.9, 1.9, 3.7];
-			for (var sxp = -HX + 2.4; sxp <= HX - 2.4; sxp += 3.05) {
-				for (var sj = 0; sj < solZ.length; sj++) {
-					var panel = boxMesh(2.85, 0.09, 1.6, solarMat);
-					panel.position.set(sxp, topY + 0.12, solZ[sj]);
-					barn.add(panel);
-				}
-			}
-			// ridge ventilation caps along the centre (as on the real barn)
-			for (var vx = -(HX - 5); vx <= HX - 5; vx += 4.2) {
-				var vent = boxMesh(1.3, 0.9, 1.4, darkMetal); vent.position.set(vx, topY + 0.35, 0); barn.add(vent);
-			}
-			// windows on the two END walls only (not the front/back long faces); doors on one end
 			var winMat = mat("#26333d", { metalness: 0.35, roughness: 0.18, envMapIntensity: 0.9 });
 			var doorMat = mat("#37302a", { roughness: 0.55, metalness: 0.25, envMapIntensity: 0.5 });
-			var onEnd = function (mesh, ex, yy, zz) { mesh.position.set(ex + (ex > 0 ? 0.12 : -0.12), yy, zz); barn.add(mesh); };
-			// an upper row of windows on both end walls
-			[-HX, HX].forEach(function (ex) {
-				[-3.5, 0, 3.5].forEach(function (zz) { onEnd(boxMesh(0.1, 1.2, 1.5, winMat), ex, 6.4, zz); });
-			});
-			// the -X end (no doors) gets a mid row of windows too
-			[-4.5, 0, 4.5].forEach(function (zz) { onEnd(boxMesh(0.1, 1.2, 1.5, winMat), -HX, 3.6, zz); });
-			// the +X end carries the doors: a big garage door + a normal personnel door
-			onEnd(boxMesh(0.16, 4.0, 5.0, doorMat), HX, 2.0, 0);
-			onEnd(boxMesh(0.16, 2.4, 1.4, doorMat), HX, 1.2, 6.4);
+
+			// Builds ONE barn shell spanning x0..x1, closed with a half-hexagon gable at BOTH
+			// ends. `doorEnd` is the end (x0 or x1) carrying the garage + personnel doors; pass
+			// null for a segment with no doors. Every other end gets the extra mid window row.
+			// Called once for a full-length barn and twice for the split (silo) barn.
+			function buildShell(x0, x1, doorEnd) {
+				var g = new THREE.Group();
+				var len = x1 - x0, cx = (x0 + x1) / 2, reps = Math.max(1, Math.round(6 * len / L));
+				var frontSide = planeMesh(len, sideLen, redPanel(reps, 1.6)); frontSide.rotation.x = -sideAng; frontSide.position.set(cx, topY / 2, (HW + topZ) / 2); g.add(frontSide);
+				var backSide = planeMesh(len, sideLen, redPanel(reps, 1.6)); backSide.rotation.x = sideAng; backSide.position.set(cx, topY / 2, -(HW + topZ) / 2); g.add(backSide);
+				var topRoof = planeMesh(len, 2 * topZ, roofMat); topRoof.rotation.x = -Math.PI / 2; topRoof.position.set(cx, topY, 0); g.add(topRoof);
+				// half-hexagon end walls (full height, to the ground)
+				[x0, x1].forEach(function (ex) {
+					g.add(tri([ex, 0, HW], [ex, topY, topZ], [ex, 0, -HW], redPanel(1, 1)));
+					g.add(tri([ex, topY, topZ], [ex, topY, -topZ], [ex, 0, -HW], redPanel(1, 1)));
+				});
+				var floor = planeMesh(len - 0.4, 2 * HW - 0.4, litterMat); floor.rotation.x = -Math.PI / 2; floor.position.set(cx, 0.05, 0); g.add(floor);
+
+				// flat, horizontal solar panels laid across the flat top of the roof
+				for (var sxp = x0 + 2.4; sxp <= x1 - 2.4; sxp += 3.05) {
+					for (var sj = 0; sj < solZ.length; sj++) {
+						var panel = boxMesh(2.85, 0.09, 1.6, solarMat);
+						panel.position.set(sxp, topY + 0.12, solZ[sj]);
+						g.add(panel);
+					}
+				}
+				// ridge ventilation caps along the centre (as on the real barn)
+				for (var vx = x0 + 5; vx <= x1 - 5; vx += 4.2) {
+					var vent = boxMesh(1.3, 0.9, 1.4, darkMetal); vent.position.set(vx, topY + 0.35, 0); g.add(vent);
+				}
+				// windows on the END walls only (never on the long front/back faces). `dir` is
+				// the outward normal of that end, so a mesh sits just proud of the wall.
+				[[x0, -1], [x1, 1]].forEach(function (e) {
+					var ex = e[0], dir = e[1];
+					var put = function (mesh, yy, zz) { mesh.position.set(ex + dir * 0.12, yy, zz); g.add(mesh); };
+					[-3.5, 0, 3.5].forEach(function (zz) { put(boxMesh(0.1, 1.2, 1.5, winMat), 6.4, zz); });
+					if (ex === doorEnd) {
+						put(boxMesh(0.16, 4.0, 5.0, doorMat), 2.0, 0); // garage door
+						put(boxMesh(0.16, 2.4, 1.4, doorMat), 1.2, 6.4); // personnel door
+					} else {
+						[-4.5, 0, 4.5].forEach(function (zz) { put(boxMesh(0.1, 1.2, 1.5, winMat), 3.6, zz); });
+					}
+				});
+				return g;
+			}
 
 			// interior is built ONCE as its own group below (not cloned into all five barns)
 
-			scene.add(barn);
-
-			// two more identical buildings — cloned BEFORE the silos are added, so the whole
-			// row shares the single silo cluster (no new silos). Spacing = 2*HW makes their
-			// half-hexagon bases just touch at ground level (walls lean apart above). The
-			// original (silo-bearing) barn sits at the RIGHT (+Z) end of the row.
-			[-4 * HW, -2 * HW, 0, 2 * HW].forEach(function (oz) {
-				var c = barn.clone(); c.position.z = oz; scene.add(c);
+			// four identical full-length buildings. Spacing = 2*HW makes their half-hexagon
+			// bases just touch at ground level (walls lean apart above).
+			var full = buildShell(-HX, HX, HX);
+			[-4 * HW, -2 * HW, 0, 2 * HW].forEach(function (oz, i) {
+				var b = i === 0 ? full : full.clone();
+				b.position.z = oz; scene.add(b);
 			});
+
+			// The fifth (right-hand) barn has its MIDDLE SECTION removed: a "beginning" and an
+			// "end" segment, each closed off with its own gable, and an open roofless gap
+			// between them. The silos stand in that gap — inside the building's outline, but
+			// still outdoors. `barn` stays the silo-bearing group, as the rest of the file expects.
+			var GAP = 12; // the missing middle spans x = -GAP .. +GAP
+			var barn = new THREE.Group();
 			barn.position.z = 4 * HW;
+			barn.add(buildShell(-HX, -GAP, null)); // beginning
+			barn.add(buildShell(GAP, HX, HX)); // end — keeps the doors
+			scene.add(barn);
 
 			// ================= INTERIOR (built once, in the z=0 barn you step into) =================
 			var inside = new THREE.Group(); inside.position.z = 0; scene.add(inside);
@@ -375,15 +394,18 @@ const t = useTranslations(lang);
 			eyes.instanceMatrix.needsUpdate = true; inside.add(eyes);
 			// ================= end interior =================
 
-			// ---------- silos: on the OUTER (+Z) side of the right-hand barn ----------
-			[-8, -4, 0, 4, 8].forEach(function (xp) {
-				var sz = HW + 2.6;
-				var body = new THREE.Mesh(new THREE.CylinderGeometry(1.55, 1.55, 10, 20), metalMat); body.castShadow = true; body.position.set(xp, 6.5, sz); barn.add(body);
-				var cone = new THREE.Mesh(new THREE.CylinderGeometry(0, 1.7, 2.1, 20), metalMat); cone.castShadow = true; cone.position.set(xp, 12.5, sz); barn.add(cone);
-				var hop = new THREE.Mesh(new THREE.CylinderGeometry(1.55, 0.3, 2.0, 20), metalMat); hop.castShadow = true; hop.position.set(xp, 2.4, sz); barn.add(hop);
-				// support legs standing on the ground
-				[[1.3, 1.3], [1.3, -1.3], [-1.3, 1.3], [-1.3, -1.3]].forEach(function (o) {
-					var leg = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 3.4, 8), metalMat); leg.castShadow = true; leg.position.set(xp + o[0], 1.7, sz + o[1]); barn.add(leg);
+			// ---------- silos: TEN, standing in the gap left by the barn's missing middle ----------
+			// Two rows of five. Each row spans x = -9.55..9.55 with the 1.55 radius, so they clear
+			// the GAP (±12) end walls; the rows sit at z = ±4.2, well inside the half-width (HW 9).
+			[-4.2, 4.2].forEach(function (sz) {
+				[-8, -4, 0, 4, 8].forEach(function (xp) {
+					var body = new THREE.Mesh(new THREE.CylinderGeometry(1.55, 1.55, 10, 20), metalMat); body.castShadow = true; body.position.set(xp, 6.5, sz); barn.add(body);
+					var cone = new THREE.Mesh(new THREE.CylinderGeometry(0, 1.7, 2.1, 20), metalMat); cone.castShadow = true; cone.position.set(xp, 12.5, sz); barn.add(cone);
+					var hop = new THREE.Mesh(new THREE.CylinderGeometry(1.55, 0.3, 2.0, 20), metalMat); hop.castShadow = true; hop.position.set(xp, 2.4, sz); barn.add(hop);
+					// support legs standing on the ground
+					[[1.3, 1.3], [1.3, -1.3], [-1.3, 1.3], [-1.3, -1.3]].forEach(function (o) {
+						var leg = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 3.4, 8), metalMat); leg.castShadow = true; leg.position.set(xp + o[0], 1.7, sz + o[1]); barn.add(leg);
+					});
 				});
 			});
 
