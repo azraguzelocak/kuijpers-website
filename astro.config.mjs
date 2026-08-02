@@ -4,9 +4,17 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 
 import react from '@astrojs/react';
+import sitemap from '@astrojs/sitemap';
+
+// Public URL the site is served from. Canonical links and sitemap.xml are built
+// from this, so it must match the live domain. Set SITE_URL in the host's build
+// environment (Netlify/Vercel/Cloudflare) or edit the fallback below.
+const SITE = process.env.SITE_URL ?? 'https://www.kuijperskip.com';
 
 // https://astro.build/config
 export default defineConfig({
+  site: SITE,
+
   // Fully static output — `npm run build` writes plain HTML/CSS/JS to ./dist,
   // which can be hosted on ANY web host (Bluehost/shared Apache, Netlify,
   // Vercel-static, GitHub Pages, etc.). No server/adapter needed: the contact
@@ -33,5 +41,15 @@ export default defineConfig({
     plugins: [tailwindcss()]
   },
 
-  integrations: [react()]
+  integrations: [
+    react(),
+    // One sitemap per language, cross-linked with hreflang so Google serves the
+    // right locale. Regenerated on every build.
+    sitemap({
+      i18n: {
+        defaultLocale: 'en',
+        locales: { en: 'en', nl: 'nl', de: 'de', fr: 'fr' },
+      },
+    }),
+  ]
 });
