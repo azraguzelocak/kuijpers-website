@@ -39,3 +39,69 @@
 	transform-origin: center;
 	animation: fscl-ping-svg 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
+
+/* Phone-only card rows: swipe sideways instead of stacking vertically.
+   Above 640px nothing changes — the original grid classes take over again. */
+@media (max-width: 639.98px) {
+	.swipe-row {
+		display: flex;
+		overflow-x: auto;
+		scroll-snap-type: x mandatory;
+		-webkit-overflow-scrolling: touch;
+		margin-inline: -1rem;
+		padding-inline: 1rem;
+		padding-bottom: 0.25rem;
+		scrollbar-width: none;
+	}
+	.swipe-row::-webkit-scrollbar { display: none; }
+	.swipe-row > * {
+		flex: 0 0 80%;
+		scroll-snap-align: start;
+	}
+	/* Variant: no snapping, wider cards — free to drag either way from the middle. */
+	.swipe-row--free { scroll-snap-type: none; }
+	.swipe-row--free > * { flex: 0 0 88%; scroll-snap-align: none; }
+}
+
+/* Phone-only: heroes fill the screen the page opens on (minus the header),
+   with their text vertically centred. Unchanged from 640px up. */
+@media (max-width: 639.98px) {
+	.hero-full {
+		display: flex;
+		align-items: center;
+		min-height: calc(100svh - 6rem);
+	}
+	.hero-full > *:not(img) { width: 100%; }
+}
+
+/* Long-language hero fit ---------------------------------------------------
+   The NL/DE/FR translations are 15-25% longer than the English source, so at
+   the English type size they wrap onto extra lines and the hero stops looking
+   like the English one. Nudge the hero heading down (and let the browser
+   balance the line breaks) for those languages only — English is untouched. */
+html:lang(nl) .hero-full h1:not(.hero-title-brand),
+html:lang(de) .hero-full h1:not(.hero-title-brand),
+html:lang(fr) .hero-full h1:not(.hero-title-brand) {
+	font-size: 1.875rem;
+	text-wrap: balance;
+}
+html:lang(nl) .hero-full p,
+html:lang(de) .hero-full p,
+html:lang(fr) .hero-full p {
+	font-size: 1rem;
+}
+
+@media (min-width: 640px) {
+	html:lang(nl) .hero-full h1:not(.hero-title-brand),
+	html:lang(de) .hero-full h1:not(.hero-title-brand),
+	html:lang(fr) .hero-full h1:not(.hero-title-brand) { font-size: 3rem; }
+	html:lang(nl) .hero-full p,
+	html:lang(de) .hero-full p,
+	html:lang(fr) .hero-full p { font-size: 1.125rem; }
+}
+
+@media (min-width: 1024px) {
+	html:lang(nl) .hero-full h1:not(.hero-title-brand),
+	html:lang(de) .hero-full h1:not(.hero-title-brand),
+	html:lang(fr) .hero-full h1:not(.hero-title-brand) { font-size: 3.5rem; }
+}

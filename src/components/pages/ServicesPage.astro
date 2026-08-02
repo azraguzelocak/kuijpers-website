@@ -107,7 +107,7 @@ const comparison = [
 	description={t("svc.meta.desc")}
 >
 	<!-- 1. Hero -->
-	<section class="relative overflow-hidden bg-stone-900">
+	<section class="hero-full relative overflow-hidden bg-stone-900">
 		<!-- Full-bleed background photograph -->
 		<img
 			src="/images/service-hero.jpg"
@@ -165,7 +165,7 @@ const comparison = [
 		<div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
 			{
 				services.length > 0 ? (
-					<div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+					<div class="swipe-row grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
 						{services.map((service: any) => (
 							<div class="flex flex-col overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm transition-shadow hover:shadow-md">
 								{/* Image */}
@@ -266,7 +266,7 @@ const comparison = [
 				</h2>
 			</div>
 
-			<div class="mt-16 grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4">
+			<div class="mt-16 grid grid-cols-2 gap-8 sm:gap-12 lg:grid-cols-4">
 				{
 					steps.map((step, i) => (
 						<div class="flex flex-col items-center text-center sm:items-start sm:text-left">
@@ -303,7 +303,7 @@ const comparison = [
 			</div>
 
 			<div
-				class="mt-12 grid grid-cols-1 gap-10 text-center sm:grid-cols-2 lg:grid-cols-4"
+				class="mt-12 grid grid-cols-2 gap-8 text-center sm:gap-10 lg:grid-cols-4"
 			>
 				{
 					statBlocks.map((block) => (
@@ -340,7 +340,7 @@ const comparison = [
 				</h2>
 			</div>
 
-			<div class="mt-12 grid items-stretch gap-6 lg:grid-cols-2 lg:gap-8">
+			<div id="diff-row" class="swipe-row swipe-row--free mt-12 grid items-stretch gap-4 sm:gap-6 lg:grid-cols-2 lg:gap-8">
 				<!-- {t("svc.diff.trad")} -->
 				<div
 					class="flex flex-col rounded-2xl border border-stone-200 bg-white p-8 shadow-sm"
@@ -381,11 +381,6 @@ const comparison = [
 				<div
 					class="relative flex flex-col rounded-2xl bg-brand-700 p-8 text-white shadow-xl ring-1 ring-brand-600 lg:-translate-y-2"
 				>
-					<span
-						class="absolute right-6 top-6 inline-flex items-center rounded-full bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white"
-					>
-						{t("svc.diff.ourApproach")}
-					</span>
 					<h3 class="text-lg font-bold text-white">
 						{t("svc.diff.kuijpers")}
 					</h3>
@@ -489,4 +484,21 @@ const comparison = [
 			</div>
 		</div>
 	</section>
+
+	<script is:inline>
+		// Phones show the comparison as a side-scrolling pair — open it halfway so
+		// both cards peek in and it reads as draggable either way. On wider screens
+		// it is a plain grid, so there is nothing to scroll and this does nothing.
+		(function () {
+			var row = document.getElementById("diff-row");
+			if (!row) return;
+			function centre() {
+				var extra = row.scrollWidth - row.clientWidth;
+				if (extra > 0) row.scrollLeft = extra / 2;
+			}
+			requestAnimationFrame(centre);
+			window.addEventListener("load", centre);
+			window.addEventListener("resize", centre);
+		})();
+	</script>
 </BaseLayout>

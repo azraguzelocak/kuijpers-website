@@ -41,7 +41,7 @@ const navLinks = [
 							<li>
 								<a
 									href={localizedHref(link.href, lang)}
-									class="text-sm text-stone-300 transition-colors hover:text-white"
+									class="inline-block py-1 text-sm text-stone-300 transition-colors hover:text-white"
 								>
 									{t(link.key)}
 								</a>
@@ -65,7 +65,7 @@ const navLinks = [
 					<li>
 						<a
 							href="mailto:jan@kuijperskip.com"
-							class="transition-colors hover:text-white"
+							class="inline-block py-1 transition-colors hover:text-white"
 						>
 							jan@kuijperskip.com
 						</a>
@@ -73,7 +73,7 @@ const navLinks = [
 					<li>
 						<a
 							href="tel:+31628427410"
-							class="transition-colors hover:text-white"
+							class="inline-block py-1 transition-colors hover:text-white"
 						>
 							+31 (0)6 28427410
 						</a>
@@ -95,7 +95,7 @@ const navLinks = [
 				<li>
 					<a
 						href={localizedHref("/privacy", lang)}
-						class="text-sm text-stone-400 transition-colors hover:text-white"
+						class="inline-block py-1 text-sm text-stone-400 transition-colors hover:text-white"
 					>
 						{t("footer.privacy")}
 					</a>
@@ -103,7 +103,7 @@ const navLinks = [
 				<li>
 					<a
 						href={localizedHref("/cookies", lang)}
-						class="text-sm text-stone-400 transition-colors hover:text-white"
+						class="inline-block py-1 text-sm text-stone-400 transition-colors hover:text-white"
 					>
 						{t("footer.cookies")}
 					</a>

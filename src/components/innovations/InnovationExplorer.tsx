@@ -100,6 +100,10 @@ function NetworkSphere({
 	const [spin, setSpin] = useState(true);
 	const [hover, setHover] = useState<string | null>(null);
 	const [phase, setPhase] = useState(0);
+	// viewBox units per rendered CSS pixel — labels multiply by this so they stay
+	// the same physical size on a phone as on a desktop.
+	const [k, setK] = useState(1);
+	const svgRef = useRef<SVGSVGElement | null>(null);
 	const dragging = useRef(false);
 	const moved = useRef(false);
 	const last = useRef({ x: 0, y: 0 });
@@ -137,6 +141,23 @@ function NetworkSphere({
 	}, [activeId]);
 
 	const W = 560, H = 500, CX = 280, CY = 250, R = 205;
+
+	useEffect(() => {
+		const el = svgRef.current;
+		if (!el) return;
+		const measure = () => {
+			const r = el.getBoundingClientRect();
+			if (r.width && r.height) setK(clamp(Math.max(W / r.width, H / r.height), 1, 1.9));
+		};
+		measure();
+		if (typeof ResizeObserver === "undefined") {
+			window.addEventListener("resize", measure);
+			return () => window.removeEventListener("resize", measure);
+		}
+		const ro = new ResizeObserver(measure);
+		ro.observe(el);
+		return () => ro.disconnect();
+	}, []);
 
 	const nodes = useMemo(() => {
 		return INNOVATIONS.map((inn, i) => {
@@ -197,7 +218,7 @@ const pulses = useMemo(() => {
 				const direct = isDirect(n.inn);
 				const rr = (direct ? 9 : 6.5) * (0.65 + n.depth * 0.5) * (n.inn.id === selectedId ? 1.35 : 1);
 				const short = tc(n.inn.short, lang);
-				return { id: n.inn.id, short, isSel: n.inn.id === selectedId, nx: n.x, ny: n.y, rr, w: short.length * 6.3 + 16, px: 0, py: 0 };
+				return { id: n.inn.id, short, isSel: n.inn.id === selectedId, nx: n.x, ny: n.y, rr, w: (short.length * 6.3 + 16) * k, px: 0, py: 0 };
 			});
 		for (const it of items) {
 			let px = it.nx + it.rr + 5;
@@ -207,11 +228,12 @@ const pulses = useMemo(() => {
 		}
 		items.sort((a, b) => a.ny - b.ny);
 		const placed: any[] = [];
-		const hit = (a: any, b: any) => a.px < b.px + b.w && a.px + a.w > b.px && a.py - 10 < b.py + 10 && a.py + 10 > b.py - 10;
+		const hit = (a: any, b: any) => a.px < b.px + b.w && a.px + a.w > b.px && a.py - 10 * k < b.py + 10 * k && a.py + 10 * k > b.py - 10 * k;
 		for (const it of items) {
 			let tries = 0;
-			while (placed.some((q) => hit(it, q)) && tries < 70) { it.py += 5; tries++; }
-			it.py = Math.max(12, Math.min(it.py, H - 12));
+			while (placed.some((q) => hit(it, q)) && tries < 70) { it.py += 5 * k; tries++; }
+			// Keep clear of the Pause button sitting in the bottom strip.
+			it.py = Math.max(14 * k, Math.min(it.py, H - 30 * k));
 			placed.push(it);
 		}
 		return items;
@@ -221,7 +243,8 @@ const pulses = useMemo(() => {
 		<div className="relative">
 			<svg
 				viewBox={`0 0 ${W} ${H}`}
-				className="w-full touch-none select-none"
+				ref={svgRef}
+				className="max-h-[270px] w-full touch-none select-none sm:max-h-none"
 				style={{ cursor: dragging.current ? "grabbing" : "grab" }}
 				onPointerDown={onPointerDown}
 				onPointerMove={onPointerMove}
@@ -297,17 +320,24 @@ const pulses = useMemo(() => {
 									stroke="#fff"
 									strokeWidth={isSel ? 2.4 : 1.6}
 								/>
-																{!activeSet && depth > 0.6 && (
-									<text
-										x={x + r + 4} y={y + 4}
-										fontSize={12}
-										fontWeight={500}
-										fill="#1f2937"
-										style={{ paintOrder: "stroke", stroke: "#eef2f8", strokeWidth: 3, strokeLinejoin: "round" }}
-									>
-										{tc(inn.short, lang)}
-									</text>
-								)}
+																{!activeSet && depth > 0.6 && (() => {
+									// Flip the label to the left of the node when it would run off
+									// the edge — at phone widths there is far less room to the right.
+									const label = tc(inn.short, lang);
+									const toRight = x + r + 4 + label.length * 6.3 * k <= W - 4;
+									return (
+										<text
+											x={toRight ? x + r + 4 : x - r - 4} y={y + 4 * k}
+											textAnchor={toRight ? "start" : "end"}
+											fontSize={12 * k}
+											fontWeight={500}
+											fill="#1f2937"
+											style={{ paintOrder: "stroke", stroke: "#eef2f8", strokeWidth: 3 * k, strokeLinejoin: "round" }}
+										>
+											{label}
+										</text>
+									);
+								})()}
 							</g>
 						);
 					})}
@@ -318,22 +348,22 @@ const pulses = useMemo(() => {
 					{activeLabels.map((it) => (
 						<g key={"lbl-" + it.id}>
 							<line x1={it.nx} y1={it.ny} x2={it.px < it.nx ? it.px + it.w : it.px} y2={it.py} stroke="#94a3b8" strokeWidth={1} opacity={0.75} />
-							<rect x={it.px} y={it.py - 9} width={it.w} height={18} rx={9} fill={it.isSel ? "#054c9c" : "#1c1917"} />
-							<text x={it.px + 8} y={it.py + 3.5} fontSize={11} fontWeight={600} fill="#fff">{it.short}</text>
+							<rect x={it.px} y={it.py - 9 * k} width={it.w} height={18 * k} rx={9 * k} fill={it.isSel ? "#054c9c" : "#1c1917"} />
+							<text x={it.px + 8 * k} y={it.py + 3.5 * k} fontSize={11 * k} fontWeight={600} fill="#fff">{it.short}</text>
 						</g>
 					))}
 				</g>
 			</svg>
 
-			<span className="pointer-events-none absolute left-3 top-3 max-w-[75%] rounded-full bg-white/80 px-3 py-1 text-xs font-medium text-stone-500 backdrop-blur">
-				{selectedId ? t("exp.pill.selected") : t("exp.pill.hint")}
-			</span>
-
-			<div className="absolute inset-x-0 bottom-2 flex items-center justify-center px-3">
+			{/* Hint and play/pause share the bottom strip so neither sits over the nodes */}
+			<div className="absolute inset-x-0 bottom-2 flex items-center justify-between gap-2 px-3">
+				<span className="pointer-events-none min-w-0 rounded-full bg-white/80 px-3 py-1 text-xs font-medium text-stone-500 backdrop-blur">
+					{selectedId ? t("exp.pill.selected") : t("exp.pill.hint")}
+				</span>
 				<button
 					type="button"
 					onClick={() => setSpin((s) => !s)}
-					className="rounded-full bg-white/85 px-3 py-1 text-xs font-semibold text-stone-600 backdrop-blur transition-colors hover:bg-white"
+					className="shrink-0 rounded-full bg-white/85 px-3 py-1 text-xs font-semibold text-stone-600 backdrop-blur transition-colors hover:bg-white"
 				>
 					{spin ? `❚❚ ${t("exp.pause")}` : `▶ ${t("exp.spin")}`}
 				</button>
@@ -408,7 +438,7 @@ function DetailPanel({ selectedId, lang }: { selectedId: string | null; lang: La
 	const inn = selectedId ? BY_ID[selectedId] : null;
 	if (!inn) {
 		return (
-			<div className="flex h-full min-h-[320px] flex-col items-center justify-center rounded-2xl border border-dashed border-stone-300 bg-stone-50 p-8 text-center">
+			<div className="hidden h-full min-h-[320px] flex-col items-center justify-center rounded-2xl border border-dashed border-stone-300 bg-stone-50 p-8 text-center lg:flex">
 				<p className="text-lg font-semibold text-stone-700">{t("exp.empty.title")}</p>
 				<p className="mt-2 max-w-xs text-sm text-stone-500">
 					{t("exp.empty.body")}

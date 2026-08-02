@@ -31,6 +31,7 @@ const t = useTranslations(lang);
 			data-t-fullscreen={t("f3d.fullscreen")}
 			data-t-exit={t("f3d.exit")}
 			data-t-failed={t("f3d.failed")}
+		data-t-hint-touch={t("f3d.hintTouch")}
 			data-t-aria-pause={t("f3d.aria.pause")}
 			data-t-aria-play={t("f3d.aria.play")}
 		>
@@ -94,6 +95,14 @@ const t = useTranslations(lang);
 	.farm3d .meta { flex: 1 1 200px; min-width: 0; }
 	.farm3d .meta .lead { font-size: 13px; line-height: 1.5; }
 	.farm3d .meta .sub { font-size: 12px; line-height: 1.5; color: var(--muted); margin-top: 2px; }
+	/* Phones: a shorter stage so the Outside/Inside controls stay on screen with it. */
+	@media (max-width: 640px) {
+		.farm3d .stage { height: 380px; }
+		.farm3d .stage:fullscreen { height: 100vh; }
+		.farm3d .head { flex-wrap: wrap; gap: 6px; }
+		.farm3d .hint { font-size: 10.5px; letter-spacing: 0.12em; }
+		.farm3d .controls { gap: 8px; }
+	}
 </style>
 
 <script is:inline>
@@ -103,6 +112,11 @@ const t = useTranslations(lang);
 		if (!stage) return;
 		var root = stage.closest(".farm3d");
 		var T = (root && root.dataset) || {};
+
+		// On a touch screen there is no scroll wheel — tell people to pinch instead.
+		var hintEl = document.getElementById("f3d-hint");
+		if (hintEl && T.tHintTouch && window.matchMedia && window.matchMedia("(pointer: coarse)").matches) hintEl.textContent = T.tHintTouch;
+
 		function fail() { if (loadEl) { loadEl.textContent = T.tFailed || "3D failed to load — refresh the page"; loadEl.classList.remove("done"); } }
 
 		var s = document.createElement("script");
@@ -483,10 +497,46 @@ const t = useTranslations(lang);
 			}
 
 			var last = { x: 0, y: 0 };
-			stage.addEventListener("pointerdown", function (e) { dragging = true; stage.classList.add("drag", "touched"); last.x = e.clientX; last.y = e.clientY; stage.setPointerCapture && stage.setPointerCapture(e.pointerId); });
-			stage.addEventListener("pointermove", function (e) { if (!dragging) return; var dx = e.clientX - last.x, dy = e.clientY - last.y; last.x = e.clientX; last.y = e.clientY; sph.theta -= dx * 0.005; sph.phi = clampN(sph.phi - dy * 0.005, 0.22, 1.5); if (!tween) applyCam(); });
-			function endDrag() { dragging = false; stage.classList.remove("drag"); }
-			stage.addEventListener("pointerup", endDrag); stage.addEventListener("pointerleave", endDrag);
+			// Touch: one finger orbits, two fingers pinch to zoom (the wheel handler below
+			// only covers mice/trackpads).
+			var pointers = {}, pinchDist = 0;
+			function pointerIds() { return Object.keys(pointers); }
+			function spread() {
+				var ids = pointerIds();
+				if (ids.length < 2) return 0;
+				var a = pointers[ids[0]], b = pointers[ids[1]];
+				return Math.sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
+			}
+			stage.addEventListener("pointerdown", function (e) {
+				pointers[e.pointerId] = { x: e.clientX, y: e.clientY };
+				stage.classList.add("touched");
+				if (pointerIds().length >= 2) { pinchDist = spread(); dragging = false; stage.classList.remove("drag"); }
+				else { dragging = true; stage.classList.add("drag"); last.x = e.clientX; last.y = e.clientY; }
+				stage.setPointerCapture && stage.setPointerCapture(e.pointerId);
+			});
+			stage.addEventListener("pointermove", function (e) {
+				if (!(e.pointerId in pointers)) return;
+				pointers[e.pointerId] = { x: e.clientX, y: e.clientY };
+				if (pointerIds().length >= 2) {
+					var d = spread();
+					if (pinchDist > 0 && d > 0) { sph.r = clampN(sph.r * (pinchDist / d), 8, 170); if (!tween) applyCam(); }
+					pinchDist = d;
+					return;
+				}
+				if (!dragging) return;
+				var dx = e.clientX - last.x, dy = e.clientY - last.y;
+				last.x = e.clientX; last.y = e.clientY;
+				sph.theta -= dx * 0.005; sph.phi = clampN(sph.phi - dy * 0.005, 0.22, 1.5);
+				if (!tween) applyCam();
+			});
+			function endDrag(e) {
+				if (e && e.pointerId != null) delete pointers[e.pointerId];
+				var ids = pointerIds();
+				if (ids.length < 2) pinchDist = 0;
+				if (ids.length === 1) { last.x = pointers[ids[0]].x; last.y = pointers[ids[0]].y; dragging = true; }
+				else if (ids.length === 0) { dragging = false; stage.classList.remove("drag"); }
+			}
+			stage.addEventListener("pointerup", endDrag); stage.addEventListener("pointercancel", endDrag); stage.addEventListener("pointerleave", endDrag);
 			stage.addEventListener("wheel", function (e) { e.preventDefault(); stage.classList.add("touched"); sph.r = clampN(sph.r * (1 + e.deltaY * 0.0012), 8, 170); if (!tween) applyCam(); }, { passive: false });
 
 			function setSeg(which) { var o = document.getElementById("f3d-out"), n = document.getElementById("f3d-in"); o.classList.toggle("on", which === "out"); n.classList.toggle("on", which === "in"); o.setAttribute("aria-selected", which === "out"); n.setAttribute("aria-selected", which === "in"); }
