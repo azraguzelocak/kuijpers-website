@@ -20,10 +20,6 @@ export const PARTNERS: Partner[] = [
 		src: "/images/partners/food-insights.png"
 	},
 	{
-		name: "Kuijperskip",
-		src: "/logo.png"
-	},
-	{
 		name: "Kloek",
 		src: "/images/partners/kloek.jpg"
 	},
