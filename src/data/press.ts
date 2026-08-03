@@ -2,22 +2,26 @@
 // Kip Research Field. The "In the press" section on the home page renders this
 // list; newest first is the usual order.
 //
-// TO ADD A REAL ARTICLE: copy one of the entries below, fill in the real outlet,
-// headline, date and URL, and DELETE the `example: true` line.
+// TO ADD A REAL ARTICLE: copy an entry, fill in the real outlet, headline, date
+// and URL, and DELETE the `example: true` line.
 //
-// The `example: true` entries below exist only so the section can be previewed
-// while the real links are gathered. They are shown by `npm run dev` and are
-// LEFT OUT of `npm run build`, so no invented coverage can reach the live site.
-// Once every entry is real, the section appears in production automatically.
+// WRITING THE SUMMARY: one or two short sentences IN YOUR OWN WORDS — what the
+// piece was about and why it matters to us. Do not paste sentences from the
+// article itself; that is the publisher's text, and the card is only a pointer
+// to it. Keep it under ~110 characters or the card will clamp it to three lines.
+//
+// The `example: true` entries are shown by `npm run dev` and LEFT OUT of
+// `npm run build`, so placeholder coverage can never reach the live site. The
+// section appears in production as soon as one real entry exists.
 
 export interface PressItem {
 	/** Publication, programme or site that published the piece. */
 	outlet: string;
-	/** Headline, as published. */
+	/** Headline, as published — not translated. */
 	title: string;
-	/** One or two sentences in your own words: what the piece was about. */
+	/** Our own one-line description of the piece. Keep it short. */
 	summary: string;
-	/** Publication date, ISO format: "2026-05-14". Shown as e.g. 14 May 2026. */
+	/** Publication date, ISO format: "2026-07-29". Shown as e.g. July 2026. */
 	date: string;
 	/** Link to the article. Opens in a new tab. */
 	url: string;
@@ -32,36 +36,36 @@ export const PRESS: PressItem[] = [
 		outlet: "Nieuwe Oogst",
 		title: "Studenten maken dierenwelzijn in pluimveehouderij meetbaar",
 		summary:
-			"Students from HAS green academy built a dashboard that scores broiler welfare objectively, using Mellor's five-domain model applied to data already collected on the farm. They developed and tested it on the Kuijpers Kip site in Grubbenvorst, so management decisions can be judged on measured welfare rather than impressions.",
+			"HAS students turned broiler welfare into measurable scores, using farm data from our site in Grubbenvorst.",
 		date: "2026-07-29",
 		url: "https://www.nieuweoogst.nl/nieuws/2026/07/29/studenten-maken-dierenwelzijn-in-pluimveehouderij-meetbaar",
 		language: "NL",
 	},
 	{
-		outlet: "Example outlet — replace with the real one",
-		title: "Headline of the article goes here",
+		outlet: "Example magazine",
+		title: "Add the published headline here, in its own language",
 		summary:
-			"A sentence or two describing what the article covered — for instance the digital twin, an emission result, or a visit to the research field.",
+			"One line in your own words: what the piece covered and why it matters.",
 		date: "2026-06-18",
 		url: "https://example.com/article",
 		language: "NL",
 		example: true,
 	},
 	{
-		outlet: "Example outlet — replace with the real one",
-		title: "Second article headline goes here",
+		outlet: "Example newspaper",
+		title: "A second headline, to show how two lines look",
 		summary:
-			"Keep these summaries short: readers scan them. Say what the piece was about and why it matters, not the whole story.",
+			"Keep it under about 110 characters so the card never has to cut it off.",
 		date: "2026-03-05",
 		url: "https://example.com/article-2",
 		language: "EN",
 		example: true,
 	},
 	{
-		outlet: "Example outlet — replace with the real one",
-		title: "Third article headline goes here",
+		outlet: "Example broadcast",
+		title: "A third headline, for a radio or television item",
 		summary:
-			"Three to six items works best. Beyond that the section is worth splitting onto its own page.",
+			"Four to eight items suit this row; past that, give press its own page.",
 		date: "2025-11-21",
 		url: "https://example.com/article-3",
 		language: "NL",

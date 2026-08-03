@@ -130,8 +130,27 @@ html:lang(fr) .hero-full p {
 	.press-row > * { flex-basis: calc((100% - 1.5rem) / 2); }
 }
 @media (min-width: 1024px) {
-	.press-row > * { flex-basis: calc((100% - 3rem) / 3); }
+	.press-row > * { flex-basis: calc((100% - 4.5rem) / 4); }
 }
 @media (prefers-reduced-motion: reduce) {
 	.press-row { scroll-behavior: auto; }
 }
+
+/* Press cards are square, so the row reads as an even band whatever length the
+   summaries are. Headline and summary are clamped rather than allowed to push
+   the card taller; the full piece is one click away anyway. */
+.press-row > * {
+	aspect-ratio: 1 / 1;
+	overflow: hidden;
+}
+/* Clamped on an inner span on purpose: a flex item's display is blockified, so
+   -webkit-box (which line-clamp needs) is discarded when applied to the h3/p
+   themselves and the text overflows instead of truncating. */
+.press-title,
+.press-summary {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+.press-title { -webkit-line-clamp: 3; }
+.press-summary { -webkit-line-clamp: 3; }
