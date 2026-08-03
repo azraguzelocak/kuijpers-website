@@ -17,7 +17,8 @@
 export interface PressItem {
 	/** Publication, programme or site that published the piece. */
 	outlet: string;
-	/** Headline, as published — not translated. */
+	/** Headline in English. Per-language versions live in src/i18n/cms.ts —
+	 *  keep the original published wording as the entry for its own language. */
 	title: string;
 	/** Our own one-line description of the piece. Keep it short. */
 	summary: string;
@@ -34,7 +35,7 @@ export interface PressItem {
 export const PRESS: PressItem[] = [
 	{
 		outlet: "Nieuwe Oogst",
-		title: "Studenten maken dierenwelzijn in pluimveehouderij meetbaar",
+		title: "Students make broiler welfare measurable",
 		summary:
 			"HAS students turned broiler welfare into measurable scores, using farm data from our site in Grubbenvorst.",
 		date: "2026-07-29",

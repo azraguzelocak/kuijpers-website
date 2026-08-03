@@ -5,6 +5,13 @@ import type { Lang } from "./ui";
 // the CMS itself is localized; keep entries in sync if the Sanity text changes.
 // Draft NL/DE — please review.
 export const cmsTranslations: Record<string, { nl: string; de: string }> = {
+	// --- press coverage headlines (src/data/press.ts) ---
+	// NL is the headline exactly as Nieuwe Oogst published it.
+	"Students make broiler welfare measurable": {
+		nl: "Studenten maken dierenwelzijn in pluimveehouderij meetbaar",
+		de: "Studierende machen Tierwohl in der Geflügelhaltung messbar",
+		fr: "Des étudiants rendent mesurable le bien-être en aviculture",
+	},
 	// --- press coverage summaries (src/data/press.ts) ---
 	"HAS students turned broiler welfare into measurable scores, using farm data from our site in Grubbenvorst.": {
 		nl: "HAS-studenten maakten dierenwelzijn meetbaar met data van onze locatie.",
