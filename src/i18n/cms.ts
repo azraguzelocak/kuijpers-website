@@ -7,10 +7,10 @@ import type { Lang } from "./ui";
 export const cmsTranslations: Record<string, { nl: string; de: string }> = {
 	// --- press coverage headlines (src/data/press.ts) ---
 	// NL is the headline exactly as Nieuwe Oogst published it.
-	"Students make broiler welfare measurable": {
+	"Students make welfare measurable on our research field": {
 		nl: "Studenten maken dierenwelzijn in pluimveehouderij meetbaar",
-		de: "Studierende machen Tierwohl in der Geflügelhaltung messbar",
-		fr: "Des étudiants rendent mesurable le bien-être en aviculture",
+		de: "Studierende machen Tierwohl auf unserem Research Field messbar",
+		fr: "Des étudiants rendent le bien-être mesurable sur notre research field",
 	},
 	// --- press coverage summaries (src/data/press.ts) ---
 	"HAS students turned broiler welfare into measurable scores, using farm data from our site in Grubbenvorst.": {

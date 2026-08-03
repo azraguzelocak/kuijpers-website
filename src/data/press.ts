@@ -35,7 +35,7 @@ export interface PressItem {
 export const PRESS: PressItem[] = [
 	{
 		outlet: "Nieuwe Oogst",
-		title: "Students make broiler welfare measurable",
+		title: "Students make welfare measurable on our research field",
 		summary:
 			"HAS students turned broiler welfare into measurable scores, using farm data from our site in Grubbenvorst.",
 		date: "2026-07-29",
