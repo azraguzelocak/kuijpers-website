@@ -7,16 +7,16 @@ import type { Lang } from "./ui";
 export const cmsTranslations: Record<string, { nl: string; de: string }> = {
 	// --- press coverage headlines (src/data/press.ts) ---
 	// NL is the headline exactly as Nieuwe Oogst published it.
-	"Students make welfare measurable on our research field": {
+	"How students put a number on chicken welfare": {
 		nl: "Studenten maken dierenwelzijn in pluimveehouderij meetbaar",
-		de: "Studierende machen Tierwohl auf unserem Research Field messbar",
-		fr: "Des étudiants rendent le bien-être mesurable sur notre research field",
+		de: "Wie Studierende Tierwohl in Zahlen fassen",
+		fr: "Comment des étudiants chiffrent le bien-être animal",
 	},
 	// --- press coverage summaries (src/data/press.ts) ---
-	"HAS students turned broiler welfare into measurable scores, using farm data from our site in Grubbenvorst.": {
-		nl: "HAS-studenten maakten dierenwelzijn meetbaar met data van onze locatie.",
-		de: "HAS-Studierende machten Tierwohl messbar — mit Daten unseres Standorts.",
-		fr: "Des étudiants de la HAS ont rendu le bien-être mesurable, avec les données de notre site.",
+	"Welfare scored from real data on our research field — no more gut feeling.": {
+		nl: "Welzijn gescoord met echte data van ons research field — geen onderbuikgevoel meer.",
+		de: "Tierwohl mit echten Daten aus unserem Research Field bewertet — statt Bauchgefühl.",
+		fr: "Le bien-être noté à partir de données réelles de notre research field, sans intuition.",
 	},
 	// --- service titles ---
 	"Integrated Innovation Trials": {

@@ -35,9 +35,9 @@ export interface PressItem {
 export const PRESS: PressItem[] = [
 	{
 		outlet: "Nieuwe Oogst",
-		title: "Students make welfare measurable on our research field",
+		title: "How students put a number on chicken welfare",
 		summary:
-			"HAS students turned broiler welfare into measurable scores, using farm data from our site in Grubbenvorst.",
+			"Welfare scored from real data on our research field — no more gut feeling.",
 		date: "2026-07-29",
 		url: "https://www.nieuweoogst.nl/nieuws/2026/07/29/studenten-maken-dierenwelzijn-in-pluimveehouderij-meetbaar",
 		language: "NL",
