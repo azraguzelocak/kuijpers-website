@@ -29,6 +29,15 @@ export interface PressItem {
 
 export const PRESS: PressItem[] = [
 	{
+		outlet: "Nieuwe Oogst",
+		title: "Studenten maken dierenwelzijn in pluimveehouderij meetbaar",
+		summary:
+			"Students from HAS green academy built a dashboard that scores broiler welfare objectively, using Mellor's five-domain model applied to data already collected on the farm. They developed and tested it on the Kuijpers Kip site in Grubbenvorst, so management decisions can be judged on measured welfare rather than impressions.",
+		date: "2026-07-29",
+		url: "https://www.nieuweoogst.nl/nieuws/2026/07/29/studenten-maken-dierenwelzijn-in-pluimveehouderij-meetbaar",
+		language: "NL",
+	},
+	{
 		outlet: "Example outlet — replace with the real one",
 		title: "Headline of the article goes here",
 		summary:

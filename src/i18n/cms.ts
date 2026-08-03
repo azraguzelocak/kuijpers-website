@@ -5,6 +5,12 @@ import type { Lang } from "./ui";
 // the CMS itself is localized; keep entries in sync if the Sanity text changes.
 // Draft NL/DE — please review.
 export const cmsTranslations: Record<string, { nl: string; de: string }> = {
+	// --- press coverage summaries (src/data/press.ts) ---
+	"Students from HAS green academy built a dashboard that scores broiler welfare objectively, using Mellor's five-domain model applied to data already collected on the farm. They developed and tested it on the Kuijpers Kip site in Grubbenvorst, so management decisions can be judged on measured welfare rather than impressions.": {
+		nl: "Studenten van HAS green academy ontwikkelden een dashboard dat het welzijn van vleeskuikens objectief beoordeelt, op basis van het vijfdomeinenmodel van Mellor toegepast op data die al op het bedrijf worden verzameld. Zij bouwden en testten het op de locatie van Kuijpers Kip in Grubbenvorst, zodat managementbeslissingen kunnen worden beoordeeld op gemeten welzijn in plaats van op indrukken.",
+		de: "Studierende der HAS green academy entwickelten ein Dashboard, das das Wohlergehen von Masthähnchen objektiv bewertet — auf Basis des Fünf-Domänen-Modells von Mellor, angewandt auf Daten, die auf dem Betrieb ohnehin erhoben werden. Aufgebaut und erprobt wurde es am Standort von Kuijpers Kip in Grubbenvorst, damit Managemententscheidungen an gemessenem Tierwohl statt an Eindrücken gemessen werden können.",
+		fr: "Des étudiants de la HAS green academy ont conçu un tableau de bord qui évalue objectivement le bien-être des poulets de chair, à partir du modèle des cinq domaines de Mellor appliqué aux données déjà collectées sur l'exploitation. Ils l'ont développé et testé sur le site de Kuijpers Kip à Grubbenvorst, afin que les décisions de gestion reposent sur un bien-être mesuré plutôt que sur des impressions.",
+	},
 	// --- service titles ---
 	"Integrated Innovation Trials": {
 		nl: "Geïntegreerde innovatieproeven",
