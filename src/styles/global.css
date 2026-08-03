@@ -105,3 +105,33 @@ html:lang(fr) .hero-full p {
 	html:lang(de) .hero-full h1:not(.hero-title-brand),
 	html:lang(fr) .hero-full h1:not(.hero-title-brand) { font-size: 3.5rem; }
 }
+
+/* Press row: side-scrolling at every width (phones swipe, desktop uses the
+   arrow buttons or a trackpad). Three cards fit exactly on a large screen, so
+   it only actually scrolls once there is a fourth article. */
+.press-row {
+	display: flex;
+	gap: 1.5rem;
+	overflow-x: auto;
+	scroll-snap-type: x mandatory;
+	scroll-behavior: smooth;
+	scrollbar-width: none;
+	margin-inline: -1rem;
+	padding-inline: 1rem;
+	padding-bottom: 0.25rem;
+}
+.press-row::-webkit-scrollbar { display: none; }
+.press-row > * {
+	flex: 0 0 82%;
+	scroll-snap-align: start;
+}
+@media (min-width: 640px) {
+	.press-row { margin-inline: 0; padding-inline: 0; }
+	.press-row > * { flex-basis: calc((100% - 1.5rem) / 2); }
+}
+@media (min-width: 1024px) {
+	.press-row > * { flex-basis: calc((100% - 3rem) / 3); }
+}
+@media (prefers-reduced-motion: reduce) {
+	.press-row { scroll-behavior: auto; }
+}

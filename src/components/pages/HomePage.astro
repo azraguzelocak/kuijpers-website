@@ -26,6 +26,8 @@ const latestPublications = allPublications.slice(0, 3);
 // Featured innovations for the home teaser (from src/data/innovations.ts, not Sanity).
 const featuredInnovations = INNOVATIONS.slice(0, 3);
 
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 // Press coverage (src/data/press.ts). Entries still flagged `example: true` are
 // visible while developing but never built into the live site, so placeholder
 // coverage cannot ship; the section disappears when nothing real is left.
@@ -35,8 +37,6 @@ const pressDate = (iso: string) =>
 		lang === "nl" ? "nl-NL" : lang === "de" ? "de-DE" : lang === "fr" ? "fr-FR" : "en-GB",
 		{ month: "long", year: "numeric" },
 	);
-const lang = getLangFromUrl(Astro.url);
-const t = useTranslations(lang);
 
 // --- Publication helpers ------------------------------------------------
 const TYPE_META: Record<string, { label: string; badge: string }> = {
@@ -382,7 +382,24 @@ const formatDate = (value?: string) =>
 						</p>
 					</div>
 
-					<div class="swipe-row mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+					<div class="relative mt-12">
+						<button
+							type="button"
+							id="press-prev"
+							class="absolute -left-4 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-600 shadow-md transition hover:text-brand-700 disabled:pointer-events-none disabled:opacity-0 lg:flex"
+							aria-label={t("home.press.prev")}
+						>
+							&#8592;
+						</button>
+						<button
+							type="button"
+							id="press-next"
+							class="absolute -right-4 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-600 shadow-md transition hover:text-brand-700 disabled:pointer-events-none disabled:opacity-0 lg:flex"
+							aria-label={t("home.press.next")}
+						>
+							&#8594;
+						</button>
+						<div class="press-row" id="press-row">
 						{press.map((item) => (
 							<a
 								href={item.url}
@@ -416,11 +433,40 @@ const formatDate = (value?: string) =>
 								</div>
 							</a>
 						))}
+						</div>
 					</div>
 				</div>
 			</section>
 		)
 	}
+
+	<script is:inline>
+		// Arrow buttons for the press row: mouse users cannot swipe, and the row
+		// only overflows once there are more articles than fit, so the arrows hide
+		// themselves when there is nothing to scroll.
+		(function () {
+			var row = document.getElementById("press-row");
+			var prev = document.getElementById("press-prev");
+			var next = document.getElementById("press-next");
+			if (!row || !prev || !next) return;
+
+			function step() {
+				var card = row.firstElementChild;
+				return card ? card.getBoundingClientRect().width + 24 : row.clientWidth * 0.8;
+			}
+			function sync() {
+				var max = row.scrollWidth - row.clientWidth;
+				var scrollable = max > 4;
+				prev.disabled = !scrollable || row.scrollLeft <= 2;
+				next.disabled = !scrollable || row.scrollLeft >= max - 2;
+			}
+			prev.addEventListener("click", function () { row.scrollBy({ left: -step() }); });
+			next.addEventListener("click", function () { row.scrollBy({ left: step() }); });
+			row.addEventListener("scroll", sync, { passive: true });
+			window.addEventListener("resize", sync);
+			sync();
+		})();
+	</script>
 
 	<!-- 6. Partner logos -->
 	<section class="bg-white">
